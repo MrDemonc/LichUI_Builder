@@ -66,6 +66,17 @@ run() {
 
 # Handle arguments
 case "$1" in
+    *)
+        log " "
+        log_info "Enter option for build"
+        log " "
+        log "Use:"
+        log "• ./build.sh <target>          >| Build rom for device"
+        log "• ./build.sh <target> -i       >| Build only img's"
+        log "• ./build.sh clear             >| Clean directories"
+        log "• ./build.sh tools             >| Build tools"
+        exit 1
+        ;;
     tools)
         log_warning " Building tools..."
         run "$dir_scr/dependencies/build_tools.sh"
