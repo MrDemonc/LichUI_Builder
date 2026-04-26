@@ -49,7 +49,7 @@ run() {
     shift
 
     if [ ! -f "$script_path" ]; then
-        # Búsqueda recursiva en la carpeta de scripts
+
         local search_result=$(find "$dir_scr" -name "$script_path" -o -name "$script_path.sh" -type f -print -quit 2>/dev/null)
         if [ -n "$search_result" ]; then
             script_path="$search_result"
@@ -123,7 +123,6 @@ case "$1" in
                 grep -v '^#' "$config_file" | grep '=' | sed 's/^/  /'
                 echo "============================================"
 
-                # Aquí continuará la lógica de construcción para el target
                 return 0 2>/dev/null || exit 0
             else
                 log_error "Configuration file not found in: $config_file"
