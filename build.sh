@@ -67,8 +67,18 @@ run() {
 # Handle arguments
 case "$1" in
     tools)
-        log_warning " Building tools..."
+        log_warning " Building tools..."
         run "$dir_scr/dependencies/build_tools.sh"
+        exit 0
+        ;;
+    clear)
+        log_warning "🧹 Cleaning build directories..."
+        for dir in "firmware" "rom" "apktool" "flags"; do
+            if [ -d "$dir_work/out/$dir" ]; then
+                log_warning "   cleaning $dir"
+                rm -rf "$dir_work/out/$dir"
+            fi
+        done
         exit 0
         ;;
 esac
