@@ -40,6 +40,11 @@ export dir_scr
 
 # Run function for Scripts
 run() {
+    if [ -z "$1" ]; then
+        log_error "Usage: run <script_name> [args]"
+        return 1 2>/dev/null || exit 1
+    fi
+
     local script_path="$1"
     shift
 
