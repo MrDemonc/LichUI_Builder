@@ -66,17 +66,6 @@ run() {
 
 # Handle arguments
 case "$1" in
-    *)
-        log " "
-        log_info "Enter option for build"
-        log " "
-        log "Use:"
-        log "• ./build.sh <target>          >| Build rom for device"
-        log "• ./build.sh <target> -i       >| Build only img's"
-        log "• ./build.sh clear             >| Clean directories"
-        log "• ./build.sh tools             >| Build tools"
-        exit 1
-        ;;
     tools)
         log_warning " Building tools..."
         run "$dir_scr/dependencies/build_tools.sh"
@@ -91,6 +80,31 @@ case "$1" in
             fi
         done
         exit 0
+        ;;
+    *)
+        log " "
+        log_info "Enter option for build"
+        log " "
+        log "Use:"
+        log "• ./build.sh <target>          >| Build rom for device"
+        log "• ./build.sh <target> -i       >| Build only img's"
+        log "• ./build.sh clear             >| Clean directories"
+        log "• ./build.sh tools             >| Build tools"
+        log " "
+        log "Target availables:"
+        
+        targets=($(ls -d "$dir_work/target/"*/ 2>/dev/null | xargs -n 1 basename))
+        if [ ${#targets[@]} -gt 0 ]; then
+            output=""
+            for i in "${!targets[@]}"; do
+                output+="$((i+1)). ${targets[$i]}  "
+            done
+            log "$output"
+        else
+            log_warning "No targets found in target/"
+        fi
+        log " "
+        exit 1
         ;;
 esac
 
