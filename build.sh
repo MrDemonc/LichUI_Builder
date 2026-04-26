@@ -49,10 +49,10 @@ run() {
     shift
 
     if [ ! -f "$script_path" ]; then
-        if [ -f "$dir_work/$script_path" ]; then
-            script_path="$dir_work/$script_path"
-        elif [ -f "$dir_work/$script_path.sh" ]; then
-            script_path="$dir_work/$script_path.sh"
+        # Búsqueda recursiva en la carpeta de scripts
+        local search_result=$(find "$dir_scr" -name "$script_path" -o -name "$script_path.sh" -type f -print -quit 2>/dev/null)
+        if [ -n "$search_result" ]; then
+            script_path="$search_result"
         fi
     fi
 
@@ -157,5 +157,3 @@ case "$1" in
         fi
         ;;
 esac
-
-run test
