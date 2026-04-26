@@ -72,7 +72,7 @@ case "$1" in
         exit 0
         ;;
     clear)
-        log_warning "🧹 Cleaning build directories..."
+        log_warning " Cleaning build directories..."
         for dir in "firmware" "rom" "apktool" "flags"; do
             if [ -d "$dir_work/out/$dir" ]; then
                 log_warning "   cleaning $dir"
