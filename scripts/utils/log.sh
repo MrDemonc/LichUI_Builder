@@ -23,3 +23,7 @@ log_success_compile() {
 log_info() {
     echo -e "\033[1;34m[I]\033[0m $1"
 }
+
+if [ -n "$BASH_VERSION" ]; then
+    export -f log log_warning log_error log_success log_success_compile log_info
+fi
