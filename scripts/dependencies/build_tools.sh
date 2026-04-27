@@ -97,8 +97,11 @@ build_android_tools() {
     folder "android-tools" || { log_error "Could not access the android-tools directory"; exit 1; }
     
     local cmds=(
+        "git am --abort 2>/dev/null || true"
+        "git submodule foreach --recursive \"git am --abort 2>/dev/null || true\""
         "git submodule init --quiet"
         "git submodule update --init --recursive --quiet --force"
+
         "rm -rf build"
         "cmake -B \"build\" $(get_cmake_flags) -DANDROID_TOOLS_USE_BUNDLED_FMT=ON -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON"
         "make -C \"build\" -j1 VERBOSE=1"

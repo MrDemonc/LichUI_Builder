@@ -1,0 +1,4 @@
+# Change
+ro.security.fips.ux=Disabled
+ro.security.fips_skc.ver=
+ro.security.fips_scrypto.ver=

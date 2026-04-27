@@ -1,0 +1,24 @@
+diff --color -ruN a/smali/com/android/systemui/bixby2/controller/DeviceController.smali b/smali/com/android/systemui/bixby2/controller/DeviceController.smali
+--- a/smali/com/android/systemui/bixby2/controller/DeviceController.smali	2025-11-26 16:14:28.362266570 -0500
++++ b/smali/com/android/systemui/bixby2/controller/DeviceController.smali	2025-11-26 16:26:53.146122225 -0500
+@@ -139,17 +139,9 @@
+ .method private isSupportPowerOffLock()Z
+     .locals 1
+ 
+-    invoke-static {}, Lcom/samsung/android/feature/SemCscFeature;->getInstance()Lcom/samsung/android/feature/SemCscFeature;
+-
+-    move-result-object p0
+-
+-    const-string v0, "CscFeature_SystemUI_SupportPowerOffLock"
+-
+-    invoke-virtual {p0, v0}, Lcom/samsung/android/feature/SemCscFeature;->getBoolean(Ljava/lang/String;)Z
+-
+-    move-result p0
+-
+-    return p0
++    const/4 v0, 0x1
++    
++    return v0
+ .end method
+ 
+ .method private setOrientationMode(Landroid/content/Context;I)Lcom/android/systemui/bixby2/CommandActionResponse;

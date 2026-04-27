@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+     
+<exceptions>
+    <exception package="com.lichui.settings">
+        <!-- Notifications -->
+        <permission name="android.permission.POST_NOTIFICATIONS" fixed="false"/>
+        <!-- Battery Optimization Whitelist -->
+        <allow-in-power-save-except-idle package="com.lichui.settings" />
+        <allow-in-power-save package="com.lichui.settings" />
+        <allow-in-data-usage-save package="com.lichui.settings" />
+        <allow-restrict-background package="com.lichui.settings" />
+        <allow-ignore-battery-optimization package="com.lichui.settings" />
+    </exception>
+</exceptions>

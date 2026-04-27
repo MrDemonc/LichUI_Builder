@@ -1,0 +1,6 @@
+# Add
+dalvik.vm.dex2oat64.enabled=true
+
+# Change
+ro.security.keystore.keytype=gak
+ro.vendor.nfc.info.antpos=1

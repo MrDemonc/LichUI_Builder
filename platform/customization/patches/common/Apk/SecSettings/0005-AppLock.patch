@@ -1,0 +1,14 @@
+diff --color -ruN a/smali_classes3/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali b/smali_classes3/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali
+--- a/smali_classes3/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali	2025-11-26 14:53:33.420058529 -0500
++++ b/smali_classes3/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali	2025-11-26 14:59:27.861594691 -0500
+@@ -123,10 +123,6 @@
+ 
+     sget-object p0, Lcom/android/settings/Utils;->sBuilder:Ljava/lang/StringBuilder;
+ 
+-    sget-boolean p0, Lcom/samsung/android/settings/Rune;->SUPPORT_SMARTMANAGER_CN:Z
+-
+-    if-eqz p0, :cond_0
+-
+     invoke-static {}, Landroid/os/UserHandle;->myUserId()I
+ 
+     move-result p0

@@ -1,0 +1,12 @@
+diff --color -ruN a/smali_classes4/com/samsung/android/settings/deviceinfo/aboutphone/ModelNameGetter.smali b/smali_classes4/com/samsung/android/settings/deviceinfo/aboutphone/ModelNameGetter.smali
+--- a/smali_classes4/com/samsung/android/settings/deviceinfo/aboutphone/ModelNameGetter.smali	2025-11-26 14:09:52.259806262 -0500
++++ b/smali_classes4/com/samsung/android/settings/deviceinfo/aboutphone/ModelNameGetter.smali	2025-11-26 14:14:24.858647842 -0500
+@@ -48,7 +48,7 @@
+ 
+     invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+ 
+-    const-string/jumbo v2, "ro.product.model"
++    const-string/jumbo v2, "ro.boot.em.model"
+ 
+     invoke-static {v2}, Landroid/os/SystemProperties;->get(Ljava/lang/String;)Ljava/lang/String;
+ 

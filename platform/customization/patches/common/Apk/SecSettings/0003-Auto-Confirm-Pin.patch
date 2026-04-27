@@ -1,0 +1,21 @@
+diff --color -ruN a/smali/com/android/settings/password/ChooseLockPassword$ChooseLockPasswordFragment.smali b/smali/com/android/settings/password/ChooseLockPassword$ChooseLockPasswordFragment.smali
+--- a/smali/com/android/settings/password/ChooseLockPassword$ChooseLockPasswordFragment.smali	2025-11-26 14:09:49.666250169 -0500
++++ b/smali/com/android/settings/password/ChooseLockPassword$ChooseLockPasswordFragment.smali	2025-11-26 14:23:39.664922724 -0500
+@@ -2309,7 +2309,7 @@
+ 
+     move-result v2
+ 
+-    const/4 v4, 0x6
++    const/4 v4, 0x4
+ 
+     if-lt v2, v4, :cond_13
+ 
+@@ -6307,7 +6307,7 @@
+ 
+     if-nez p2, :cond_4
+ 
+-    const/4 p2, 0x6
++    const/4 p2, 0x4
+ 
+     if-lt p1, p2, :cond_2
+ 

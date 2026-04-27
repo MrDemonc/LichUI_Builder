@@ -1,0 +1,23 @@
+# Delete
+ro.config.iccc_version=3.0
+# end of file
+
+# Add
+persist.vendor.camera.HAL3.enabled=1
+persist.camera.HAL3.enabled=1
+persist.camera.eis.enable=1
+dalvik.vm.dex2oat64.enabled=true
+wlan.wfd.hdcp=disable
+wifi.interface=wlan0
+fw.max_users=5
+fw.show_multiuserui=1
+ro.on.core.version=${LICH_VERSION}
+ro.on.core.build=${CURRENT_DATE}
+debug.codec2.stop_hal_before_surface=1
+debug.hwui.renderer=skiagl
+ro.factory.model=SM-A546E
+
+# Change
+ro.oem_unlock_supported=0
+ro.security.fips.ux=Disabled
+ro.netflix.bsp_rev=EXYNOS1380-36589-1

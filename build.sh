@@ -1,10 +1,24 @@
 #!/bin/bash
 
-source scripts/utils/log.sh
+# Setup project environment (Bash/Zsh compatible detection)
+if [ -n "$BASH_SOURCE" ]; then
+    _SCRIPT="${BASH_SOURCE[0]}"
+elif [ -n "$ZSH_VERSION" ]; then
+    _SCRIPT="${(%):-%x}"
+else
+    _SCRIPT="$0"
+fi
+export dir_work="$(cd "$(dirname "$_SCRIPT")" && pwd)"
+export dir_scr="$dir_work/scripts"
+
+# Source Core Utilities (Auto-loads common and logs)
+source "$dir_scr/utils/utils.sh"
+
+
 
 # Timestamp log for build
 # Keep only the last 5 logs
-log_dir="$PWD/logs"
+log_dir="$dir_work/logs"
 mkdir -p "$log_dir"
 
 timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
@@ -14,80 +28,6 @@ ls -t "$log_dir"/script_*.log 2>/dev/null | tail -n +6 | xargs rm -f
 
 exec > >(tee -a "$log_file") 2>&1
 
-# Root directory 
-find_project_root() {
-    local dir="$PWD"
-
-    while [[ "$dir" != "/" ]]; do
-        if [[ -d "$dir/.git" ]]; then
-            dir_work="$dir"
-            dir_scr="$dir_work/scripts"
-            return 0
-        fi
-        dir="${dir%/*}"
-    done
-
-    log_error "No found source root directory (.git)."
-    return 1
-}
-
-if ! find_project_root; then
-    return 1 2>/dev/null || exit 1
-fi
-
-export dir_work
-export dir_scr
-
-# Run function for Scripts
-run() {
-    if [ -z "$1" ]; then
-        log_error "Usage: run <script_name> [args]"
-        return 1 2>/dev/null || exit 1
-    fi
-
-    local script_path="$1"
-    shift
-
-    if [ ! -f "$script_path" ]; then
-
-        local search_result=$(find "$dir_scr" -name "$script_path" -o -name "$script_path.sh" -type f -print -quit 2>/dev/null)
-        if [ -n "$search_result" ]; then
-            script_path="$search_result"
-        fi
-    fi
-
-    if [ ! -f "$script_path" ]; then
-        log_error "Script not found: $script_path"
-        return 1 2>/dev/null || exit 1
-    fi
-
-    script_name=$(basename "$script_path")
-
-    echo "-----------------------------------"
-    log_warning "Running: $script_name"
-    echo "-----------------------------------"
-
-    if [ -x "$script_path" ]; then
-        "$script_path" "$@"
-    else
-        bash "$script_path" "$@"
-    fi
-
-    if [ $? -ne 0 ]; then
-        echo "-----------------------------------"
-        log_error "Failed: $script_name"
-        echo "-----------------------------------"
-        return 1 2>/dev/null || exit 1
-    fi
-
-    echo "-----------------------------------"
-    log_success "Completed: $script_name"
-    echo "-----------------------------------"
-}
-
-if [ -n "$BASH_VERSION" ]; then
-    export -f run
-fi
 
 # Handle arguments
 case "$1" in
@@ -122,6 +62,9 @@ case "$1" in
                 echo "  TARGET_DEVICE: $target"
                 grep -v '^#' "$config_file" | grep '=' | sed 's/^/  /'
                 echo "============================================"
+
+                export target
+                export TARGET="$target"
 
                 return 0 2>/dev/null || exit 0
             else

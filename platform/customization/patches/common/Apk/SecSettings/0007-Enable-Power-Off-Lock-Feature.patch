@@ -1,0 +1,35 @@
+diff --color -ruN a/smali_classes3/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali b/smali_classes3/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali
+--- a/smali_classes3/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali	2025-11-26 14:53:33.415870550 -0500
++++ b/smali_classes3/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali	2025-11-26 15:09:59.526740826 -0500
+@@ -41,29 +41,13 @@
+ 
+     move-result p0
+ 
+-    if-eqz p0, :cond_1
++    if-eqz p0, :cond_0
+ 
+-    const-string p0, "BR"
+-
+-    invoke-static {}, Landroid/os/SemSystemProperties;->getCountryIso()Ljava/lang/String;
+-
+-    move-result-object v0
+-
+-    invoke-virtual {p0, v0}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+-
+-    move-result p0
+-
+-    if-nez p0, :cond_0
+-
+-    goto :goto_0
+-
+-    :cond_0
+     const/4 p0, 0x0
+ 
+     return p0
+ 
+-    :cond_1
+-    :goto_0
++    :cond_0
+     const/4 p0, 0x3
+ 
+     return p0
