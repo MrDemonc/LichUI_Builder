@@ -1,4 +1,0 @@
-#!/bin/bash
-
-LICH_VERSION=5.2.6
-BOOTLOADER=XXUFEYI4

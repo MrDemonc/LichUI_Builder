@@ -1,27 +1,26 @@
-#Log system
+#!/bin/bash
+# ---------------------------------------------------------
+# LichUI Logging System
+# ---------------------------------------------------------
 
+# Colors
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+PURPLE='\033[1;35m'
+CYAN='\033[1;36m'
+NC='\033[0m' # No Color
+
+# Indentation variable (can be set by other scripts)
+# LOG_INDENT=""
+
+log_info()    { echo -e "${LOG_INDENT}${BLUE}[I]${NC} $1"; }
+log_success() { echo -e "${LOG_INDENT}${GREEN}[S]${NC} $1"; }
+log_warning() { echo -e "${LOG_INDENT}${YELLOW}[W]${NC} $1"; }
+log_error()   { echo -e "${LOG_INDENT}${RED}[E]${NC} $1"; }
+
+# Simple echo wrapper
 log() {
-    printf "\e[33m%s\e[0m\n" "$1"
+    echo -e "$1"
 }
-
-log_warning() {
-    echo -e "\033[1;33m[W]\033[0m $1"
-}
-
-log_error() {
-    echo -e "\033[1;31m[E]\033[0m $1"
-}
-
-log_success() {
-    echo -e "\033[1;32m[S]\033[0m $1"
-}
-
-log_success_compile() {
-    echo -e "\033[1;32m$1\033[0m"
-}
-
-log_info() {
-    echo -e "\033[1;34m[I]\033[0m $1"
-}
-
-# No exports here, handled by common.sh or sourced directly

@@ -1,5 +1,0 @@
-# Delete
-ro.config.iccc_version=
-# Change
-wlan.wfd.hdcp=disable
-ro.oem_unlock_supported=0

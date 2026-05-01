@@ -7,8 +7,9 @@ Para usar estas funciones en cualquier script, primero debes importar el archivo
 
 ```bash
 #!/bin/bash
-source "scripts/utils/utils.sh"
+source "$dir_scr/utils/utils.sh"
 ```
+
 
 ---
 
@@ -87,6 +88,46 @@ El archivo que pases como parámetro debe estar dividido por estos encabezados:
 ```bash
 setprop system "patches/tweaks.prop"
 ```
+
+---
+
+## 4. Función `hex_patch`
+Permite modificar el contenido binario de un archivo (como librerías `.so` o binarios) buscando y reemplazando patrones en formato hexadecimal.
+
+**Sintaxis:**
+```bash
+hex_patch <archivo> <patron_hex_original> <patron_hex_nuevo>
+```
+
+**Ejemplo:**
+```bash
+hex_patch "system/lib64/libbluetooth_jni.so" "00122A01" "00122A02"
+```
+
+---
+
+## 5. Función `update_config` (XML)
+Edita de forma inteligente el archivo `floating_feature.xml` de Samsung. Permite añadir, modificar o borrar etiquetas XML sin romper el formato.
+
+**Sintaxis:**
+```bash
+update_config <nombre_feature> <valor|delete>
+```
+
+**Parámetros:**
+- `<nombre_feature>`: El nombre de la característica (ej: `SEC_FLOATING_FEATURE_COMMON_CONFIG_FLOATING_FEATURE`).
+- `<valor>`: El nuevo valor que quieres poner entre las etiquetas.
+- `delete`: Si pasas esta palabra como valor, la característica se eliminará del XML.
+
+**Ejemplo:**
+```bash
+update_config "SEC_FLOATING_FEATURE_COMMON_CONFIG_FLOATING_FEATURE" "LichUI-A54"
+```
+
+---
+
+## Notas Adicionales
+
 
 - **Permisos automáticos**: Si el archivo que añades con `add` tiene permisos de ejecución en tu PC, se guardará con permisos `755`. Si no, se guardará como `644`.
 - **Rutas**: No importa si pones una `/` al principio de la ruta de destino, la función la limpiará automáticamente para evitar errores.

@@ -14,6 +14,21 @@ export dir_scr="$dir_work/scripts"
 # Source Core Utilities (Auto-loads common and logs)
 source "$dir_scr/utils/utils.sh"
 
+# Ask for sudo upfront and keep it alive
+check_sudo() {
+    if sudo -v; then
+        # Keep-alive sudo until the script finishes (Fully Silent)
+        ( (while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done) 2>/dev/null & )
+    else
+
+
+        log_error "Sudo access denied. Some patches may fail."
+        exit 1
+    fi
+}
+check_sudo
+
+
 
 
 # Timestamp log for build
@@ -52,13 +67,20 @@ case "$1" in
             config_file="$dir_work/target/$target/config.sh"
 
             if [ -f "$config_file" ]; then
-                log " "
+                echo ""
                 log_info "Loading configuration for $target..."
                 set -a
                 source "$config_file"
                 set +a
+                
+                # Set base firmware directory
+                export FW_DIR="$dir_work/out/firmware"
+                
+                # Derive SOURCE_DIR and TARGET_DIR from config strings
+                setup_firmware_vars
 
                 echo "============================================"
+
                 echo "  TARGET_DEVICE: $target"
                 grep -v '^#' "$config_file" | grep '=' | sed 's/^/  /'
                 echo "============================================"

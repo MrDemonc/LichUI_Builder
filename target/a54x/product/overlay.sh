@@ -1,14 +1,27 @@
 #!/bin/bash
 
-delete_items "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "arrays.xml"
-delete_items "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "bools.xml"
-delete_items "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "dimens.xml"
-delete_items "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "integers.xml"
-delete_items "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "public.xml"
-delete_items "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "strings.xml"
-copy_items "$dir_work/target/$TARGET/product/overlay/values" "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "arrays.xml"
-copy_items "$dir_work/target/$TARGET/product/overlay/values" "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "bools.xml"
-copy_items "$dir_work/target/$TARGET/product/overlay/values" "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "dimens.xml"
-copy_items "$dir_work/target/$TARGET/product/overlay/values" "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "integers.xml"
-copy_items "$dir_work/target/$TARGET/product/overlay/values" "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "public.xml"
-copy_items "$dir_work/target/$TARGET/product/overlay/values" "$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values" "strings.xml"
+RRO_DIR="$dir_work/out/apktool/working/framework-res__r11sxxx__auto_generated_rro_product/res/values"
+SRC_DIR="$dir_work/target/$TARGET/product/overlay/values"
+
+FILES_TO_REPLACE=(
+    "arrays.xml"
+    "bools.xml"
+    "dimens.xml"
+    "integers.xml"
+    "public.xml"
+    "strings.xml"
+)
+
+log_info "Applying overlay values to framework-res__r11sxxx__auto_generated_rro_product..."
+
+for file in "${FILES_TO_REPLACE[@]}"; do
+    if [ -f "$RRO_DIR/$file" ]; then
+        rm -f "$RRO_DIR/$file"
+    fi
+    
+    if [ -f "$SRC_DIR/$file" ]; then
+        cp -f "$SRC_DIR/$file" "$RRO_DIR/$file"
+    fi
+done
+
+log_success "Overlay values applied successfully"
