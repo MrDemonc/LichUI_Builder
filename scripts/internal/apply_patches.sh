@@ -10,7 +10,7 @@ source "$dir_scr/utils/utils.sh"
 set -e
 
 # Persistent state file
-STATE_FILE="$dir_work/out/.applied_patches"
+STATE_FILE="$dir_work/out/flags/.applied_patches"
 mkdir -p "$(dirname "$STATE_FILE")"
 touch "$STATE_FILE"
 

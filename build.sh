@@ -53,7 +53,7 @@ case "$1" in
         ;;
     clear)
         log_warning " Cleaning build directories..."
-        for dir in "firmware" "rom" "apktool" "flags"; do
+        for dir in "firmware" "rom" "apktool" "flags" "rom_workspace" "rom_assembly"; do
             if [ -d "$dir_work/out/$dir" ]; then
                 log_warning "   cleaning $dir"
                 rm -rf "$dir_work/out/$dir"

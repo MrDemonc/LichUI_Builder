@@ -1,3 +1,3 @@
 #!/bin/bash
 
-LICH_VERSION=5.2.6
+LICH_VERSION=5.2.7

@@ -1,6 +1,14 @@
 #!/bin/bash
+set -e
 source "$dir_scr/utils/common.sh"
-source "$dir_work/platform/core/config/version.sh
+source "$dir_work/platform/core/config/version.sh"
+
+failure() {
+    echo ""
+    log_error "LichUI for $TARGET build failed"
+    exit 1
+}
+trap failure ERR
 
 # Download and Extract firmware
 run make_firmware
@@ -16,3 +24,8 @@ run apply_patches
 
 # Apply smali patches
 run apktool
+
+# Create rom zip
+run flashable_zip
+
+log_success "LichUI for $TARGET built successfully"

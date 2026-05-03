@@ -8,10 +8,12 @@ if [ -d "$FW_DIR/$SOURCE_DIR/system/system/etc/mediacontextanalyzer" ]; then
     :
 else
     mkdir -p "$FW_DIR/$SOURCE_DIR/system/system/etc/mediacontextanalyzer"
+    set_metadata system "etc/mediacontextanalyzer"
 fi
 
 cat "system/etc/mediacontextanalyzer/human-pet-pose_SR-V200.tflite."* \
     > "$FW_DIR/$SOURCE_DIR/system/system/etc/mediacontextanalyzer/human-pet-pose_SR-V200.tflite"
+set_metadata system "etc/mediacontextanalyzer/human-pet-pose_SR-V200.tflite"
 
 add system "system/etc/audio_ae_intervals.conf" "etc/audio_ae_intervals.conf" 
 add system "system/etc/fastScanner.tflite" "etc/fastScanner.tflite"

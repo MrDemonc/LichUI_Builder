@@ -12,12 +12,8 @@ camera_patch(){
         fi
     done
 
-    rm -rf "${cam_port}" || log_warning "Failed to delete directory: ${cam_port}"
-   
-    cp -r ${cam_stock} ${cam_port} || log_warning "Failed to copy cameradata"
-
-    rm -rf "${cam_port}/myfilter" || log_warning "Failed to delete myfilter"
-    cp -r "${filter}" "${cam_port}" || log_warning "Failed to copy myfilter"
+    add system "${cam_stock}" "cameradata"
+    add system "${filter}" "cameradata/myfilter"
 
 }
 
@@ -51,6 +47,8 @@ ai_portrait(){
         log_error "Error change MODEL_TYPE_INSTANCE_CAPTURE for MODEL_TYPE_OBJ_INSTANCE_CAPTURE" >&2
         return 1
         }
+
+    set_metadata system "cameradata/portrait_data/singl_bokeh_feature.json"
 }
 
 patch_midas(){
