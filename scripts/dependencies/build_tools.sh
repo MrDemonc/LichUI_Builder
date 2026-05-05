@@ -56,8 +56,9 @@ get_cmake_flags() {
         flags+="-DCMAKE_C_COMPILER_LAUNCHER=\"ccache\" "
         flags+="-DCMAKE_CXX_COMPILER_LAUNCHER=\"ccache\" "
     fi
-    flags+="-DCMAKE_C_COMPILER=\"clang\" "
-    flags+="-DCMAKE_CXX_COMPILER=\"clang++\""
+    # Default compilers were moved to individual functions to allow hybrid builds
+    # flags+="-DCMAKE_C_COMPILER=\"clang\" "
+    # flags+="-DCMAKE_CXX_COMPILER=\"clang++\""
     echo "$flags"
 }
 # ========================================================
@@ -103,7 +104,10 @@ build_android_tools() {
         "git submodule update --init --recursive --quiet --force"
 
         "rm -rf build"
-        "cmake -B \"build\" $(get_cmake_flags) -DANDROID_TOOLS_USE_BUNDLED_FMT=ON -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON"
+        # Use GCC for android-tools due to compatibility issues with GCC 16.1.1 headers and Clang 18
+        "cmake -B \"build\" $(get_cmake_flags) -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CXX_FLAGS=\"-D_Static_assert=static_assert\" -DANDROID_TOOLS_USE_BUNDLED_FMT=ON -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON"
+        # Original Clang command:
+        # "cmake -B \"build\" $(get_cmake_flags) -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DANDROID_TOOLS_USE_BUNDLED_FMT=ON -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON"
         "make -C \"build\" -j1 VERBOSE=1"
         "find \"build/vendor\" -maxdepth 1 -type f -exec test -x {} \; -exec cp -a {} \"$dir_work/tools/bin\" \;"
         "cp -a \"vendor/avb/avbtool.py\" \"$dir_work/tools/bin/avbtool\""
@@ -139,7 +143,10 @@ build_erofs_utils() {
     folder "erofs-utils" || { log_error "Could not access the erofs-utils directory"; exit 1; }
 
     local cmds=(
-        "cmake -S \"build/cmake\" -B \"out\" $(get_cmake_flags) -DRUN_ON_WSL=\"$(IS_WSL)\" -DENABLE_FULL_LTO=\"ON\" -DMAX_BLOCK_SIZE=\"4096\""
+        # Use Clang for erofs-utils as it requires Clang-specific flags for its vendored libcxx
+        "cmake -S \"build/cmake\" -B \"out\" $(get_cmake_flags) -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DRUN_ON_WSL=\"$(IS_WSL)\" -DENABLE_FULL_LTO=\"ON\" -DMAX_BLOCK_SIZE=\"4096\""
+        # Original GCC command attempt:
+        # "cmake -S \"build/cmake\" -B \"out\" $(get_cmake_flags) -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DRUN_ON_WSL=\"$(IS_WSL)\" -DENABLE_FULL_LTO=\"ON\" -DMAX_BLOCK_SIZE=\"4096\""
         "make -C \"out\" -j\"$(nproc)\""
         "find \"out/erofs-tools\" -maxdepth 1 -type f -exec test -x {} \; -exec cp -a {} \"$dir_work/tools/bin\" \;"
     )
