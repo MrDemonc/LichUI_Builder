@@ -1,9 +1,6 @@
 # Delete
 ro.config.iccc_version
 
-# Clear
-ro.config.iccc_version=
-
 # Add
 persist.vendor.camera.HAL3.enabled=1
 persist.camera.HAL3.enabled=1

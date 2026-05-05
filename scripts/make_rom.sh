@@ -28,4 +28,7 @@ run apktool
 # Create rom zip
 run flashable_zip
 
+# Get manifest
+run get_manifest
+
 log_success "LichUI for $TARGET built successfully"

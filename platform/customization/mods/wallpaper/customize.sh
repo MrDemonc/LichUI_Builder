@@ -1,8 +1,10 @@
 #!/bin/bash
 
-delete system "priv-app/wallpaper-res/wallpaper-res.apk"
+# For divide apk
+# delete system "priv-app/wallpaper-res/wallpaper-res.apk"
+# cat "system/priv-app/wallpaper-res/wallpaper-res.apk."* \
+#     > "$FW_DIR/$SOURCE_DIR/system/system/priv-app/wallpaper-res/wallpaper-res.apk"
+# set_metadata system "priv-app/wallpaper-res/wallpaper-res.apk"
 
-cat "system/priv-app/wallpaper-res/wallpaper-res.apk."* \
-    > "$FW_DIR/$SOURCE_DIR/system/system/priv-app/wallpaper-res/wallpaper-res.apk"
-
-set_metadata system "priv-app/wallpaper-res/wallpaper-res.apk"
+# Single apk
+add system "system/priv-app/wallpaper-res" "priv-app/wallpaper-res"

@@ -535,7 +535,7 @@ get_galaxy_store_url() {
     local sdk=$(get_prop system "ro.build.version.sdk")
     local oneui=$(get_prop system "ro.build.version.oneui")
     
-    [ -z "$sdk" ] && sdk="34"
+    [ -z "$sdk" ] && sdk="36"
     [ -z "$oneui" ] && oneui="80000"
 
     local protocol="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>"
@@ -547,8 +547,8 @@ get_galaxy_store_url() {
     protocol+="<param name=\"productID\">PRODUCTID</param>"
     protocol+="</request></SamsungProtocol>"
 
-    for device in "$devices[@]"; do
-        local check_url="https://vas.samsungapps.com/stub/stubUpdateCheck.as?appId=$package&versionCode=0&deviceId=$device&mcc=262&mnc=01&csc=EUX&sdkVer=$sdk&oneUiVersion=$oneui"
+    for device in "${devices[@]}"; do
+        local check_url="https://vas.samsungapps.com/stub/stubUpdateCheck.as?appId=$package&versionCode=0&deviceId=$device&mcc=262&mnc=01&csc=EUX&sdkVer=$sdk&oneUiVersion=$oneui&systemId=0"
         local product_id=$(curl -L -s "$check_url" | grep -o -P "(?<=<productId>)[^<]+")
         
         if [ -n "$product_id" ]; then

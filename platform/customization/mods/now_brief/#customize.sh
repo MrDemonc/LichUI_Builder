@@ -17,3 +17,6 @@ log_warning "Downloading SamsungSmartSuggestions APK..."
 download_file "$(get_galaxy_store_url "com.samsung.android.smartsuggestions")" \
     "$FW_DIR/$SOURCE_DIR/system/system/priv-app/SamsungSmartSuggestions/SamsungSmartSuggestions.apk"
 
+set_metadata system "priv-app/SamsungSmartSuggestions"
+set_metadata system "priv-app/SamsungSmartSuggestions/SamsungSmartSuggestions.apk"
+

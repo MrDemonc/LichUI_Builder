@@ -27,14 +27,14 @@ fi
 
 log_info "Processing APEX: $(basename "$BT_APEX")"
 
-TEMP_WORK="$dir_work/out/tmp/bt_patch"
+TEMP_WORK="$dir_work/out/bt_patch"
 mkdir -p "$TEMP_WORK/mnt"
 
 cleanup() {
     if mountpoint -q "$TEMP_WORK/mnt"; then
         sudo umount "$TEMP_WORK/mnt" 2>/dev/null || true
     fi
-    rm -rf "$TEMP_WORK" 2>/dev/null || true
+    rm -rf "$TEMP_WORK"
 }
 trap cleanup EXIT
 
@@ -79,7 +79,7 @@ if ! add system "$PATCH_LIB" "/lib64/libbluetooth_jni.so"; then
     exit 1
 fi
 
-rm -rf "$TEMP_WORK"
+# Cleanup handled by trap EXIT
 
 mkdir -p "$(dirname "$BT_FLAG")"
 touch "$BT_FLAG"

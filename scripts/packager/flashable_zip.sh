@@ -11,6 +11,12 @@ if [ -f "$dir_work/platform/core/config/version.sh" ]; then
     ROM_VERSION="$LICH_VERSION"
 fi
 
+ROM_BUILD_TIMESTAMP="${ROM_BUILD_TIMESTAMP:-$(get_prop system "ro.build.date.utc")}"
+ROM_BUILD_TIMESTAMP="${ROM_BUILD_TIMESTAMP:-$(date +%s)}"
+
+ROM_BUILD_INCREMENTAL="${ROM_BUILD_INCREMENTAL:-$(get_prop system "ro.build.version.incremental")}"
+ROM_BUILD_INCREMENTAL="${ROM_BUILD_INCREMENTAL:-0}"
+
 SOURCE_FIRMWARE_PATH="$SOURCE_DIR"
 TARGET_FIRMWARE_PATH="$TARGET_DIR"
 
@@ -20,6 +26,7 @@ TARGET_FINGERPRINT="$(grep "^ro.system.build.fingerprint=" "$FW_DIR/$TARGET_DIR/
 TARGET_FINGERPRINT="${TARGET_FINGERPRINT//$(grep "^ro.build.product=" "$FW_DIR/$TARGET_DIR/system/system/build.prop" 2>/dev/null | cut -d'=' -f2-)/$(grep "^ro.product.vendor.device=" "$FW_DIR/$TARGET_DIR/vendor/build.prop" 2>/dev/null | cut -d'=' -f2-)}"
 
 TARGET_SUPER_GROUP_NAME="${TARGET_SUPER_GROUP_NAME:-qti_dynamic_partitions}"
+TARGET_OS_BOOT_DEVICE_PATH="${TARGET_OS_BOOT_DEVICE_PATH:-/dev/block/by-name}"
 
 IS_VALID_PARTITION_NAME() {
     [[ "$1" == "system" ]] || [[ "$1" == "vendor" ]] || [[ "$1" == "product" ]] || [[ "$1" == "odm" ]] || [[ "$1" == "system_ext" ]] || [[ "$1" == "vendor_dlkm" ]] || [[ "$1" == "odm_dlkm" ]] || [[ "$1" == "system_dlkm" ]]
@@ -34,10 +41,7 @@ ZIP_FILE_SUFFIX="-sign.zip"
 $DEBUG && ! $ROM_IS_OFFICIAL && ZIP_FILE_SUFFIX=".zip"
 
 ZIP_FILE_NAME="LichUI_${ROM_VERSION}_$(date +%Y%m%d)_${TARGET}${ZIP_FILE_SUFFIX}"
-while [ -f "$OUT_DIR/$ZIP_FILE_NAME" ]; do
-    INCREMENTAL=$((INCREMENTAL + 1))
-    ZIP_FILE_NAME="LichUI_${ROM_VERSION}_$(date +%Y%m%d)_${TARGET}${ZIP_FILE_SUFFIX}"
-done
+rm -f "$OUT_DIR/$ZIP_FILE_NAME"
 
 PRIVATE_KEY_PATH="$dir_work/platform/security/lich-ota.pk8"
 PUBLIC_KEY_PATH="$dir_work/platform/security/lich-ota.x509.pem"
@@ -96,8 +100,7 @@ GENERATE_BUILD_INFO()
         echo "version=$ROM_VERSION"
         echo "timestamp=$ROM_BUILD_TIMESTAMP"
         echo "security_patch_version=$(get_prop system "ro.build.version.security_patch")"
-        # TODO
-        echo "incremental=0"
+        echo "incremental=$ROM_BUILD_INCREMENTAL"
     } > "$BUILD_INFO_FILE"
 }
 
@@ -208,15 +211,11 @@ GENERATE_OTA_METADATA()
 {
     local PROTO_FILE="$dir_work/external/android-tools/vendor/build/tools/releasetools/ota_metadata.proto"
 
-    local INCREMENTAL
     local RELEASE
     local SECURITY_PATCH_LEVEL
-    local TIMESTAMP
 
-    INCREMENTAL="$(get_prop system "ro.build.version.incremental")"
     RELEASE="$(get_prop system "ro.build.version.release")"
     SECURITY_PATCH_LEVEL="$(get_prop system "ro.build.version.security_patch")"
-    TIMESTAMP="$(get_prop system "ro.build.date.utc")"
 
     mkdir -p "$TMP_DIR/META-INF/com/android"
 
@@ -228,8 +227,8 @@ GENERATE_OTA_METADATA()
         MESSAGE+=", precondition: {device: \\\"$TARGET\\\"}"
         MESSAGE+=", postcondition: {device: \\\"$TARGET\\\""
         MESSAGE+=", build: \\\"$SOURCE_FINGERPRINT\\\""
-        MESSAGE+=", build_incremental: \\\"$INCREMENTAL\\\""
-        MESSAGE+=", timestamp: $TIMESTAMP"
+        MESSAGE+=", build_incremental: \\\"$ROM_BUILD_INCREMENTAL\\\""
+        MESSAGE+=", timestamp: $ROM_BUILD_TIMESTAMP"
         MESSAGE+=", sdk_level: \\\"$RELEASE\\\""
         MESSAGE+=", security_patch_level: \\\"$SECURITY_PATCH_LEVEL\\\"}"
 
@@ -241,10 +240,10 @@ GENERATE_OTA_METADATA()
         echo "ota-required-cache=0"
         echo "ota-type=BLOCK"
         echo "post-build=$SOURCE_FINGERPRINT"
-        echo "post-build-incremental=$INCREMENTAL"
+        echo "post-build-incremental=$ROM_BUILD_INCREMENTAL"
         echo "post-sdk-level=$RELEASE"
         echo "post-security-patch-level=$SECURITY_PATCH_LEVEL"
-        echo "post-timestamp=$TIMESTAMP"
+        echo "post-timestamp=$ROM_BUILD_TIMESTAMP"
         echo "pre-device=$TARGET"
     } > "$TMP_DIR/META-INF/com/android/metadata"
 }
@@ -394,10 +393,12 @@ GENERATE_UPDATER_SCRIPT()
         fi
         echo -e "\n# --- End patching dynamic partitions ---\n"
         if $HAS_UP_PARAM_BIN; then
+            echo -e "\n# Flash up_param\n"
             echo    'ui_print("Flashing up_param...");'
             echo -n 'package_extract_file("up_param.bin", "'
             echo -n "$TARGET_OS_BOOT_DEVICE_PATH"
-            echo    '/up_param");'
+            echo    '/up_param") ||'
+            echo    '  abort("E3001: Failed to flash up_param.");'
         fi
 
         if [ -f "$dir_work/target/$TARGET/installer/install-end.edify" ]; then
@@ -452,7 +453,7 @@ PRINT_HEADER()
     echo    'ui_print("Built with LichUI Builder");'
     echo    'ui_print("****************************************");'
     echo -n 'ui_print("'
-    echo -n "One UI version: $ONEUI_VERSION"
+    echo -n "OneUI version: $ONEUI_VERSION"
     echo    '");'
     echo -n 'ui_print("'
     echo -n "Source: $SOURCE_FINGERPRINT"
@@ -563,9 +564,9 @@ while IFS= read -r f; do
     fi
 done < <(find "$TMP_DIR" -maxdepth 1 -type f -name "*.img")
 
-if [ -d "$dir_work/prebuilt/samsung/device/$TARGET/up_param" ]; then
+if [ -d "$dir_work/prebuilt/samsung/devices/$TARGET/up_param" ]; then
     log_info "- Copying up_param"
-    cp -a "$dir_work/prebuilt/samsung/device/$TARGET/up_param/"* "$TMP_DIR/" 2>/dev/null || true
+    cp -a "$dir_work/prebuilt/samsung/devices/$TARGET/up_param/"* "$TMP_DIR/" 2>/dev/null || true
 fi
 
 log_info "- Generating updater-script"

@@ -15,10 +15,10 @@ NC='\033[0m' # No Color
 # Indentation variable (can be set by other scripts)
 # LOG_INDENT=""
 
-log_info()    { echo -e "${LOG_INDENT}${BLUE}[I]${NC} $1"; }
-log_success() { echo -e "${LOG_INDENT}${GREEN}[S]${NC} $1"; }
-log_warning() { echo -e "${LOG_INDENT}${YELLOW}[W]${NC} $1"; }
-log_error()   { echo -e "${LOG_INDENT}${RED}[E]${NC} $1"; }
+log_info()    { echo -e "${LOG_INDENT}${BLUE}[I]${NC} $1" >&2; }
+log_success() { echo -e "${LOG_INDENT}${GREEN}[S]${NC} $1" >&2; }
+log_warning() { echo -e "${LOG_INDENT}${YELLOW}[W]${NC} $1" >&2; }
+log_error()   { echo -e "${LOG_INDENT}${RED}[E]${NC} $1" >&2; }
 
 # Simple echo wrapper
 log() {

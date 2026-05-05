@@ -5,6 +5,7 @@
 
 # Load core utilities (Auto-loads common and logs)
 source "$dir_scr/utils/utils.sh"
+source "$dir_work/platform/core/config/version.sh"
 
 # Ensure environment is strictly managed
 set -e

@@ -1,12 +1,12 @@
 #!/bin/bash
 
+source "$dir_work/scripts/utils/apktool_utils.sh"
+source "$dir_work/scripts/utils/smali_utils.sh"
+
 if [ -f "${dir_work}/out/flags/.apktool" ]; then
     log_success "Apktool patches are already applied"
     exit 0
 fi
-
-source "$dir_work/scripts/utils/apktool_utils.sh"
-source "$dir_work/scripts/utils/smali_utils.sh"
 
 # Framework configuration
 setup_framework
