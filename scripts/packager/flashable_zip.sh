@@ -283,26 +283,30 @@ GENERATE_UPDATER_SCRIPT()
     [ -f "$TMP_DIR/system_dlkm.new.dat${BROTLI_EXTENSION}" ] && HAS_SYSTEM_DLKM=true && PARTITION_COUNT=$((PARTITION_COUNT + 1))
 
     {
-        if [ -n "$TARGET_ASSERT_MODEL" ]; then
-            IFS=':' read -r -a TARGET_ASSERT_MODEL <<< "$TARGET_ASSERT_MODEL"
-            for i in "${TARGET_ASSERT_MODEL[@]}"; do
-                echo -n 'getprop("ro.boot.em.model") == "'
-                echo -n "$i"
-                echo -n '" || '
-            done
-            echo -n 'abort("E3004: This package is for \"'
-            echo -n "$TARGET"
-            echo    '\" devices; this is a \"" + getprop("ro.product.device") + "\".");'
+        if [ -f "$dir_work/target/$TARGET/package/assertions.edify" ]; then
+            cat "$dir_work/target/$TARGET/package/assertions.edify"
         else
-            echo -n 'getprop("ro.product.device") == "'
-            echo -n "$TARGET"
-            echo -n '" || abort("E3004: This package is for \"'
-            echo -n "$TARGET"
-            echo    '\" devices; this is a \"" + getprop("ro.product.device") + "\".");'
-        fi
+            if [ -n "$TARGET_ASSERT_MODEL" ]; then
+                IFS=':' read -r -a TARGET_ASSERT_MODEL <<< "$TARGET_ASSERT_MODEL"
+                for i in "${TARGET_ASSERT_MODEL[@]}"; do
+                    echo -n 'getprop("ro.boot.em.model") == "'
+                    echo -n "$i"
+                    echo -n '" || '
+                done
+                echo -n 'abort("E3004: This package is for \"'
+                echo -n "$TARGET"
+                echo    '\" devices; this is a \"" + getprop("ro.product.device") + "\".");'
+            else
+                echo -n 'getprop("ro.product.device") == "'
+                echo -n "$TARGET"
+                echo -n '" || abort("E3004: This package is for \"'
+                echo -n "$TARGET"
+                echo    '\" devices; this is a \"" + getprop("ro.product.device") + "\".");'
+            fi
 
-        if [ -f "$dir_work/target/$TARGET/installer/assertions.edify" ]; then
-            cat "$dir_work/target/$TARGET/installer/assertions.edify"
+            if [ -f "$dir_work/target/$TARGET/installer/assertions.edify" ]; then
+                cat "$dir_work/target/$TARGET/installer/assertions.edify"
+            fi
         fi
 
         PRINT_HEADER

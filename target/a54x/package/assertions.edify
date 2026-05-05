@@ -1,0 +1,2 @@
+is_substring(getprop("ro.boot.em.model"), "SM-A546E") && verify_no_downgrade(getprop("ro.boot.bootloader"), "A546EXXSFDYI1") && abort("E3003: This package requires firmware (A546EXXUFEYI4), bootloader patch (A546EXXSFDYI1).");
+is_substring(getprop("ro.boot.em.model"), "SM-A546B") && verify_no_downgrade(getprop("ro.boot.bootloader"), "A546BXXSFDYI1") && abort("E3003: This package requires firmware (A546BXXUFEYI4), bootloader patch (A546BXXSFDYI1).");
