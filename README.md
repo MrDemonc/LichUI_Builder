@@ -24,7 +24,7 @@ export PATH="/usr/lib/llvm18/bin:$PATH"
 source ~/.zshrc
 ```
 
-### font for terminal aesthetics
+### Font for terminal aesthetics
 
 ```bash
 https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
