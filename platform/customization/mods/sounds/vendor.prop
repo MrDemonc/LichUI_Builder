@@ -1,0 +1,7 @@
+# Change
+ro.config.ringtone=Galaxy_Bells.ogg
+ro.config.notification_sound=Brightline.ogg
+ro.config.alarm_alert=Morning_Xylophone.ogg
+ro.config.media_sound=Media_preview_Over_the_horizon.ogg
+ro.config.ringtone_2=Atomic_Bell.ogg
+ro.config.notification_sound_2=Three_Star.ogg

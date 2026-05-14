@@ -143,16 +143,29 @@ add_metadata() {
 }
 
 # ---------------------------------------------------------
-# add <partition> <src_file_or_dir> <dest_path_in_partition> [pattern]
+# add [model] <partition> <src_file_or_dir> <dest_path_in_partition> [pattern]
 # ---------------------------------------------------------
 add() {
-    local partition="$1"
-    local src="$2"
-    local dest="$3"
-    local pattern="$4"
+    local partition=""
+    local src=""
+    local dest=""
+    local pattern=""
+
+    # Check if first argument is a model in prebuilt/samsung/devices
+    if [ -n "$1" ] && [ -n "$dir_work" ] && [ -d "$dir_work/prebuilt/samsung/devices/$1" ]; then
+        partition="$2"
+        src="$dir_work/prebuilt/samsung/devices/$1/$3"
+        dest="$4"
+        pattern="$5"
+    else
+        partition="$1"
+        src="$2"
+        dest="$3"
+        pattern="$4"
+    fi
 
     if [ -z "$partition" ] || [ -z "$src" ] || [ -z "$dest" ]; then
-        log_error "Usage: add <partition> <src> <dest> [pattern]"
+        log_error "Usage: add [model] <partition> <src> <dest> [pattern]"
         return 1
     fi
 
@@ -189,12 +202,11 @@ add() {
 
     # Auto-Join Logic for split files (e.g. large APKs)
     if [ -d "$target_full_path" ]; then
-        find "$target_full_path" -type f \( -name "*.aa" -o -name "*.001" \) | while read -r first_part; do
-            local base_file="${first_part%.*}"
+        find "$target_full_path" -type f \( -name "*.aa" -o -name "*.001" -o -name "*.00" -o -name "*.000" \) | sed 's/\.[^.]*$//' | sort -u | while read -r base_file; do
             log_info "Auto-joining split files for: $(basename "$base_file")"
-            cat "${base_file}."* > "${base_file}.joined"
+            cat "${base_file}."* > "${base_file}_joined"
             rm -f "${base_file}."*
-            mv -f "${base_file}.joined" "$base_file"
+            mv -f "${base_file}_joined" "$base_file"
         done
     fi
 

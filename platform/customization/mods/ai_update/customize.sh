@@ -12,7 +12,12 @@ local sb_check="$FW_DIR/$SOURCE_DIR/system/system/app/SketchBook"
 [ ! -d "$sb_check" ] && sb_check="$FW_DIR/$SOURCE_DIR/system/app/SketchBook"
 
 if [ -d "$sb_check" ]; then
-    log_info "SketchBook already present in system. Skipping."
+    log_info "SketchBook already present in system"
 else
     add system "system/app/SketchBook" "app/SketchBook"
 fi
+
+# VisionModel-Stub
+local sb_check="$FW_DIR/$SOURCE_DIR/system/system/app/VisionModel-Stub"
+[ ! -d "$sb_check" ] && sb_check="$FW_DIR/$SOURCE_DIR/system/app/VisionModel-Stub"
+
