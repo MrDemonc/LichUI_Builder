@@ -51,12 +51,14 @@ cat > "$MANIFEST_FILE" << EOF
 {
   "response": [
     {
+      "device": "$TARGET"
       "builddate": $(date +%Y%m%d),
       "md5": "$ZIP_MD5",
       "patch": $SECURITY_PATCH,
       "size": $ZIP_SIZE,
       "bl": "${BOOTLOADER:-unknown}",
       "url": "https://pixeldrain.com/api/file/[id]?download",
+      "changelog": "https://raw.githubusercontent.com/MrDemonc/PROJECT-LichUI/refs/heads/Updates/changelog.txt",
       "version": "$ROM_VERSION"
     }
   ]
