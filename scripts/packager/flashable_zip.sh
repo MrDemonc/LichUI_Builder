@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Copyright (c) 2023 Salvo Giangreco
 # SPDX-License-Identifier: GPL-3.0-or-later
+# Credit Salvogiangri
 
 # [
 export PATH="$dir_work/tools/bin:$dir_work/tools:$PATH"

@@ -1,22 +1,18 @@
-# a54xnaxx (eur_open)
-on early-fs && property:ro.boot.em.model=SM-A546B
-    # Firmware blobs
-    mount none /vendor/firmware/eur/AIE.bin /vendor/firmware/AIE.bin bind
-    mount none /vendor/firmware/eur/calliope_sram.bin /vendor/firmware/calliope_sram.bin bind
-    mount none /vendor/firmware/eur/mfc_fw.bin /vendor/firmware/mfc_fw.bin bind
-    mount none /vendor/firmware/eur/os.checked.bin /vendor/firmware/os.checked.bin bind
-    mount none /vendor/firmware/eur/pablo_icpufw.bin /vendor/firmware/pablo_icpufw.bin bind
-    mount none /vendor/firmware/eur/vts.bin /vendor/firmware/vts.bin bind
-    # TEEgris
-    mount none /vendor/tee_eur /vendor/tee bind
-# a54xnsxx (sea_open)
-on early-fs && property:ro.boot.em.model=SM-A546E
-    # Firmware blobs
-    mount none /vendor/firmware/sea/AIE.bin /vendor/firmware/AIE.bin bind
-    mount none /vendor/firmware/sea/calliope_sram.bin /vendor/firmware/calliope_sram.bin bind
-    mount none /vendor/firmware/sea/mfc_fw.bin /vendor/firmware/mfc_fw.bin bind
-    mount none /vendor/firmware/sea/os.checked.bin /vendor/firmware/os.checked.bin bind
-    mount none /vendor/firmware/sea/pablo_icpufw.bin /vendor/firmware/pablo_icpufw.bin bind
-    mount none /vendor/firmware/sea/vts.bin /vendor/firmware/vts.bin bind
-    # TEEgris
-    mount none /vendor/tee_sea /vendor/tee bind
+on early-fs
+    mount none /vendor/firmware/${ro.boot.em.model}/AIE.bin /vendor/firmware/AIE.bin bind
+    mount none /vendor/firmware/${ro.boot.em.model}/calliope_sram.bin /vendor/firmware/calliope_sram.bin bind
+    mount none /vendor/firmware/${ro.boot.em.model}/mfc_fw.bin /vendor/firmware/mfc_fw.bin bind
+    mount none /vendor/firmware/${ro.boot.em.model}/os.checked.bin /vendor/firmware/os.checked.bin bind
+    mount none /vendor/firmware/${ro.boot.em.model}/pablo_icpufw.bin /vendor/firmware/pablo_icpufw.bin bind
+    mount none /vendor/firmware/${ro.boot.em.model}/vts.bin /vendor/firmware/vts.bin bind
+    mount none /vendor/tee_${ro.boot.em.model} /vendor/tee bind
+
+on post-fs-data && property:ro.boot.em.model=SM-A546E
+    mount none /dev/null /system/priv-app/EsimKeyString/EsimKeyString.apk bind
+    mount none /dev/null /system/priv-app/EuiccService/EuiccService.apk bind
+	mount none /dev/null /system/etc/permissions/privapp-permissions-com.samsung.android.app.esimkeystring.xml bind
+	mount none /dev/null /system/etc/permissions/privapp-permissions-com.samsung.euicc.xml bind
+	mount none /dev/null /system/etc/sysconfig/preinstalled-packages-com.samsung.android.app.esimkeystring.xml bind
+	mount none /dev/null /system/etc/sysconfig/preinstalled-packages-com.samsung.euicc.xml bind
+
+

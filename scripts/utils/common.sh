@@ -1,4 +1,3 @@
-# Load logs (Depends on dir_scr exported by build.sh)
 source "$dir_scr/utils/log.sh"
 
 

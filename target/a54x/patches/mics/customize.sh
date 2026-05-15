@@ -31,6 +31,3 @@ delete system "system_ext/etc/selinux/mapping" "*"
 add system "system/system_ext/etc/selinux/system_ext_seapp_contexts" "system_ext/etc/selinux/system_ext_seapp_contexts"
 add system "$FW_DIR/$TARGET_DIR/system/system/system_ext/etc/selinux/mapping" "system_ext/etc/selinux/mapping" "*"
 add vendor "vendor/etc/selinux/vendor_sepolicy.cil" "etc/selinux/vendor_sepolicy.cil"
-
-# Remove esim
-delete system "etc/permissions/privapp-permissions-com.samsung.euicc.xml"

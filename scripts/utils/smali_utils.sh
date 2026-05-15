@@ -1,6 +1,7 @@
 #!/bin/bash
 # Copyright (c) 2025 Salvo Giangreco
 # SPDX-License-Identifier: GPL-3.0-or-later
+# Credit Salvogiangri
 
 source "$dir_work/scripts/utils/utils.sh"
 

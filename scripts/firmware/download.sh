@@ -5,8 +5,6 @@ source "$dir_work/tools/venv/bin/activate" || exit 1
 
 FORCE=false
 
-
-
 FIRMWARES=()
 MODEL=""
 CSC=""

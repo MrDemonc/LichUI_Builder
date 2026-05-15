@@ -1,9 +1,5 @@
 #!/bin/bash
-# ---------------------------------------------------------
-# Floating Feature XML Patching Script
-# ---------------------------------------------------------
 
-# Load utilities
 source "$dir_scr/utils/utils.sh"
 
 log_info "Starting Floating Feature update process..."

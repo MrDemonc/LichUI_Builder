@@ -53,9 +53,6 @@ SYSTEM_DEBLOAT=(
     "priv-app/SPPPushClient"
     "priv-app/SamsungPass"
     "priv-app/SCameraSDKService"
-    "priv-app/EsimClient"
-    "priv-app/EsimKeyString"
-    "priv-app/EuiccService"
     "priv-app/CIDManager"
 )
 

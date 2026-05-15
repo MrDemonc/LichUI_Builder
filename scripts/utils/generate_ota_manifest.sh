@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Copyright (c) 2025 Salvo Giangreco
 # SPDX-License-Identifier: GPL-3.0-or-later
+# Credit Salvogiangri
 
 shopt -s nullglob
 

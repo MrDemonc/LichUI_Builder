@@ -1,9 +1,5 @@
 #!/bin/bash
-# ---------------------------------------------------------
-# LichUI Core Utilities
-# ---------------------------------------------------------
 
-# Source Logging System
 if [ -f "$(dirname "$BASH_SOURCE")/log.sh" ]; then
     source "$(dirname "$BASH_SOURCE")/log.sh"
 else

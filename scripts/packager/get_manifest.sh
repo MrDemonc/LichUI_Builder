@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Copyright (c) 2024 Salvo Giangreco
-# SPDX-License-Identifier: GPL-3.0-or-later
 
 # Source utilities
 source "$dir_scr/utils/build_utils.sh" || exit 1
