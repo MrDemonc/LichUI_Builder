@@ -51,7 +51,7 @@ cat > "$MANIFEST_FILE" << EOF
 {
   "response": [
     {
-      "device": "$TARGET"
+      "device": "$TARGET",
       "builddate": $(date +%Y%m%d),
       "md5": "$ZIP_MD5",
       "patch": $SECURITY_PATCH,
