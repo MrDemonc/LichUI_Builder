@@ -15,8 +15,10 @@ ro.on.core.build=${CURRENT_DATE}
 debug.codec2.stop_hal_before_surface=1
 debug.hwui.renderer=skiagl
 ro.factory.model=SM-A546E
+enable_detecting_gnss_assert=false
 
 # Change
 ro.security.fips.ux=Disabled
 ro.netflix.bsp_rev=EXYNOS1380-36589-1
 ro.oem_unlock_supported=0
+persist.audio.deepbuffer_delay=33

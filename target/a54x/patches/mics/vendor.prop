@@ -1,5 +1,6 @@
 # Add
 dalvik.vm.dex2oat64.enabled=true
+persist.sys.fuse.passthrough.enable=true
 
 # Change
 ro.security.keystore.keytype=gak
