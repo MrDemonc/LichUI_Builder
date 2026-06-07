@@ -5,3 +5,6 @@ persist.sys.fuse.passthrough.enable=true
 # Change
 ro.security.keystore.keytype=gak
 ro.vendor.nfc.info.antpos=1
+
+# Delete
+ro.control_privapp_permissions

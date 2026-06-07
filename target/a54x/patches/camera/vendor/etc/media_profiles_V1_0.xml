@@ -27,7 +27,7 @@
 <!ATTLIST EncoderProfile duration (30|60) #REQUIRED>
 <!ATTLIST EncoderProfile cameraId (0|1|2|3) #REQUIRED>
 <!ELEMENT Video EMPTY>
-<!ATTLIST Video codec (hevc|h264|h263|m4v) #REQUIRED>
+<!ATTLIST Video codec (h264|h263|m4v) #REQUIRED>
 <!ATTLIST Video bitRate CDATA #REQUIRED>
 <!ATTLIST Video width CDATA #REQUIRED>
 <!ATTLIST Video height CDATA #REQUIRED>
@@ -1001,21 +1001,15 @@
     -->
     <VideoEncoderCap name="h264" enabled="true"
         minBitRate="64000" maxBitRate="80000000"
-        minFrameWidth="176" maxFrameWidth="3840"
-        minFrameHeight="144" maxFrameHeight="2160"
-        minFrameRate="1" maxFrameRate="60" />
-
-    <VideoEncoderCap name="m4v" enabled="true"
-        minBitRate="1" maxBitRate="64000"
-        minFrameWidth="16" maxFrameWidth="176"
-        minFrameHeight="16" maxFrameHeight="144"
-        minFrameRate="12" maxFrameRate="60"/>
+        minFrameWidth="176" maxFrameWidth="8192"
+        minFrameHeight="144" maxFrameHeight="8192"
+        minFrameRate="1" maxFrameRate="30" />
 
     <VideoEncoderCap name="hevc" enabled="true"
         minBitRate="64000" maxBitRate="80000000"
-        minFrameWidth="176" maxFrameWidth="3840"
-        minFrameHeight="144" maxFrameHeight="2160"
-        minFrameRate="1" maxFrameRate="60" />
+        minFrameWidth="176" maxFrameWidth="8192"
+        minFrameHeight="144" maxFrameHeight="8192"
+        minFrameRate="1" maxFrameRate="30" />
 
     <!-- c2.android.h263.encoder-->
     <VideoEncoderCap name="h263" enabled="true"

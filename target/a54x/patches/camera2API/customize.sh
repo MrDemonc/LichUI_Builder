@@ -1,7 +1,5 @@
 #!/bin/bash
 
-delete vendor "lib64/hw/camera.s5e8835.so"
-add vendor "vendor/lib64/hw/camera.s5e8835.so" "lib64/hw/camera.s5e8835.so"
 add vendor "vendor/etc/permissions/android.hardware.camera.full.xml" "etc/permissions/android.hardware.camera.full.xml"
 add vendor "vendor/etc/permissions/android.hardware.camera.manual_postprocessing.xml" "etc/permissions/android.hardware.camera.manual_postprocessing.xml"
 add vendor "vendor/etc/permissions/android.hardware.camera.manual_sensor.xml" "etc/permissions/android.hardware.camera.manual_sensor.xml"

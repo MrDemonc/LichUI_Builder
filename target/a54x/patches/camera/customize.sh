@@ -2,18 +2,16 @@
 
 camera_patch(){
     local cam_port="$FW_DIR/$SOURCE_DIR/system/system/cameradata"
-    local cam_stock="$FW_DIR/$TARGET_DIR/system/system/cameradata"
-    local filter="system/cameradata/myfilter"
+    local cam_patch="system/cameradata"
 
-    for dir in "${cam_port}" "${cam_stock}" "${filter}"; do
+    for dir in "${cam_port}" "${cam_patch}"; do
         if [ ! -d "${dir}" ]; then
             log_error "Directory not found: ${dir}" >&2
             return 1
         fi
     done
 
-    add system "${cam_stock}" "cameradata"
-    add system "${filter}" "cameradata/myfilter"
+    add system "${cam_patch}" "cameradata"
 
 }
 
@@ -79,14 +77,15 @@ patch_midas(){
 delete system "lib64/libDeepDocRectify.camera.samsung.so"
 delete system "lib64/liblow_light_hdr.arcsoft.so"
 delete system "lib64/libhigh_dynamic_range.arcsoft.so"
-add system "$FW_DIR/$TARGET_DIR/system/system/lib64/liblow_light_hdr.arcsoft.so" "lib64/liblow_light_hdr.arcsoft.so"
-add system "$FW_DIR/$TARGET_DIR/system/system/lib64/libhigh_dynamic_range.arcsoft.so" "lib64/libhigh_dynamic_range.arcsoft.so"
-add system "$FW_DIR/$TARGET_DIR/system/system/lib64/libImageTagger.camera.samsung.so" "lib64/libImageTagger.camera.samsung.so"
+add system "system/lib64/liblow_light_hdr.arcsoft.so" "lib64/liblow_light_hdr.arcsoft.so"
+add system "system/lib64/libhigh_dynamic_range.arcsoft.so" "lib64/libhigh_dynamic_range.arcsoft.so"
+add system "system/lib64/libImageTagger.camera.samsung.so" "lib64/libImageTagger.camera.samsung.so"
 
 #vendor
 delete vendor "etc/media_codecs_c2.xml"
 delete vendor "etc/media_codecs_performance_c2.xml"
 delete vendor "etc/media_profiles_V1_0.xml"
+add vendor "vendor/lib64/hw/camera.s5e8835.so" "lib64/hw/camera.s5e8835.so"
 add vendor "vendor/etc/media_codecs_c2.xml" "etc/media_codecs_c2.xml"
 add vendor "vendor/etc/media_codecs_performance_c2.xml" "etc/media_codecs_performance_c2.xml"
 add vendor "vendor/etc/media_profiles_V1_0.xml" "etc/media_profiles_V1_0.xml"
