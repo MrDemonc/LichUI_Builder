@@ -30,7 +30,6 @@ SMALI_PATCH()
     local SMALI="$2"
     local OPERATION="$3"
     
-    local DECOMPILE_DIR="${dir_work}/out/apktool/working"
     local FILE_PATH="$DECOMPILE_DIR/$BASE_NAME"
 
     if [[ "$OPERATION" != "null" ]] && [[ "$OPERATION" != "remove" ]] && \
@@ -336,7 +335,9 @@ SMALI_PATCH()
     # Replace a string with another string inside the method
     # or Replace a line with another line inside the method
     elif [[ "$OPERATION" == "replace" ]]; then
-        log_warning "- Replacing value \"$VALUE\" of method \"$METHOD\" in $BASE_NAME/$SMALI with \"$REPLACEMENT\""
+        local REPLACEMENT_DISPLAY="${REPLACEMENT:0:40}"
+        [ "${#REPLACEMENT}" -gt 40 ] && REPLACEMENT_DISPLAY+="..."
+        log_warning "- Replacing value \"$VALUE\" of method \"$METHOD\" in $BASE_NAME/$SMALI with \"$REPLACEMENT_DISPLAY\""
 
         awk -v FN="$METHOD" -v STR="$VALUE" -v REP="$REPLACEMENT" '
             BEGIN { inside = 0; isline = (index(REP, "\n") > 0) }

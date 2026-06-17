@@ -15,8 +15,10 @@ setup_framework
 
 # services.jar
 decompile "services.jar"
+smali_patch "services.jar" "0001-Allow-custom-platform-signature.patch"
 smali_patch "services.jar" "0005-Disable-SAK-in-DarManagerService.patch"
-#source "$dir_work/platform/customization/patches/aosp_signature/signature.sh"
+# Appli sign key
+source "$dir_work/platform/customization/patches/aosp_signature/signature.sh"
 compile "services.jar"
 
 # framework.jar
