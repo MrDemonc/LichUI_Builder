@@ -16,15 +16,17 @@ setup_framework
 # services.jar
 decompile "services.jar"
 smali_patch "services.jar" "0001-Allow-custom-platform-signature.patch"
+smali_patch "services.jar" "0004-Auto-Confirm-Pin.patch"
 smali_patch "services.jar" "0005-Disable-SAK-in-DarManagerService.patch"
 # Appli sign key
 source "$dir_work/platform/customization/patches/aosp_signature/signature.sh"
 compile "services.jar"
 
 # framework.jar
-#decompile "framework.jar"
+decompile "framework.jar"
+smali_patch "framework.jar" "0005-Introduce-CsFeatureHooks.patch"
 #smali_patch "framework.jar"
-#compile "framework.jar"
+compile "framework.jar"
 
 # knoxsdk.jar
 #decompile "knoxsdk.jar"
@@ -39,15 +41,20 @@ compile "services.jar"
 # Apks to patch
 
 # Systemui.apk
-#decompile "SystemUI.apk"
+decompile "SystemUI.apk"
+smali_patch "SystemUI.apk" "0001-Enable-real-time-network-speed-in-status-bar.patch"
 #smali_patch "SystemUI.apk"
-#compile "SystemUI.apk"
+compile "SystemUI.apk"
 
 # SecSettings.apk
-#decompile "SecSettings.apk"
+decompile "SecSettings.apk"
+smali_patch "SecSettings.apk" "0002-Real-Model-Version.patch"
+smali_patch "SecSettings.apk" "0003-Auto-Confirm-Pin.patch"
+smali_patch "SecSettings.apk" "0004-OneUI-minor-version.patch"
+smali_patch "SecSettings.apk" "0006-Enable-real-time-network-speed-in-status-bar.patch"
 #smali_patch "SecSettings.apk"
 #cp "$dir_work/platform/customization/patches/common/Apk/SecSettings/res/drawable/lich_logo.png" "$dir_work/out/apktool/working/SecSettings/res/drawable/lich_logo.png"
-#compile "SecSettings.apk"
+compile "SecSettings.apk"
 
 # DAAgent.apk
 #decompile "DAAgent.apk"
@@ -55,9 +62,9 @@ compile "services.jar"
 #compile "DAAgent.apk"
 
 # BiometricSetting.apk
-#decompile "BiometricSetting.apk"
-#smali_patch "BiometricSetting.apk"
-#compile "BiometricSetting.apk"
+decompile "BiometricSetting.apk"
+smali_patch "BiometricSetting.apk"
+compile "BiometricSetting.apk"
 
 # framework-res__r11sxxx__auto_generated_rro_product.apk
 decompile "framework-res__r11sxxx__auto_generated_rro_product.apk"

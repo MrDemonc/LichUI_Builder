@@ -1,0 +1,12 @@
+diff --color -ruN g/smali/com/android/systemui/BasicRune.smali h/smali/com/android/systemui/BasicRune.smali
+--- g/smali/com/android/systemui/BasicRune.smali	2026-06-18 08:05:12.398849830 -0500
++++ h/smali/com/android/systemui/BasicRune.smali	2026-06-18 08:09:18.243553320 -0500
+@@ -672,7 +672,7 @@
+     :goto_10
+     sput-boolean v0, Lcom/android/systemui/BasicRune;->STATUS_POP_OVER_PANEL_BAR:Z
+ 
+-    sget-boolean v0, Lcom/android/systemui/Rune;->SYSUI_CHINA_FEATURE:Z
++    const/4 v0, 0x1
+ 
+     if-nez v0, :cond_15
+ 

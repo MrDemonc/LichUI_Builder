@@ -1,0 +1,24 @@
+diff --color -ruN e/smali/com/android/server/locksettings/LockSettingsService.smali f/smali/com/android/server/locksettings/LockSettingsService.smali
+--- e/smali/com/android/server/locksettings/LockSettingsService.smali	2026-06-17 15:44:57.440890813 -0500
++++ f/smali/com/android/server/locksettings/LockSettingsService.smali	2026-06-17 15:47:08.739826854 -0500
+@@ -14086,7 +14086,7 @@
+ 
+     if-eqz v0, :cond_1
+ 
+-    const/4 v0, 0x6
++    const/4 v0, 0x4
+ 
+     if-ge v2, v0, :cond_2
+ 
+diff --color -ruN e/smali/com/android/server/locksettings/SyntheticPasswordManager.smali f/smali/com/android/server/locksettings/SyntheticPasswordManager.smali
+--- e/smali/com/android/server/locksettings/SyntheticPasswordManager.smali	2026-06-17 15:44:57.431698685 -0500
++++ f/smali/com/android/server/locksettings/SyntheticPasswordManager.smali	2026-06-17 15:47:49.057545502 -0500
+@@ -694,7 +694,7 @@
+ 
+     if-eqz v12, :cond_1
+ 
+-    const/4 v12, 0x6
++    const/4 v12, 0x4
+ 
+     if-ge v11, v12, :cond_2
+ 

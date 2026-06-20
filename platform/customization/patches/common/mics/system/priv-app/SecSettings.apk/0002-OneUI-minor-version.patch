@@ -1,0 +1,12 @@
+diff --color -ruN a/smali_classes5/com/samsung/android/settings/deviceinfo/softwareinfo/OneUIVersionPreferenceController.smali b/smali_classes5/com/samsung/android/settings/deviceinfo/softwareinfo/OneUIVersionPreferenceController.smali
+--- a/smali_classes5/com/samsung/android/settings/deviceinfo/softwareinfo/OneUIVersionPreferenceController.smali	2026-06-17 15:26:12.578580399 -0500
++++ b/smali_classes5/com/samsung/android/settings/deviceinfo/softwareinfo/OneUIVersionPreferenceController.smali	2026-06-17 15:55:43.474706934 -0500
+@@ -301,7 +301,7 @@
+ 
+     invoke-static {}, Lcom/android/settings/Utils;->isTablet()Z
+ 
+-    move-result p0
++    const/4 p0, 0x1
+ 
+     return p0
+ .end method

@@ -1,0 +1,105 @@
+diff --color -ruN a/smali_classes5/com/samsung/android/settings/eternal/provider/items/NotificationsItem.smali b/smali_classes5/com/samsung/android/settings/eternal/provider/items/NotificationsItem.smali
+--- a/smali_classes5/com/samsung/android/settings/eternal/provider/items/NotificationsItem.smali	2026-06-17 15:26:12.936071127 -0500
++++ b/smali_classes5/com/samsung/android/settings/eternal/provider/items/NotificationsItem.smali	2026-06-18 08:00:28.373128431 -0500
+@@ -509,22 +509,14 @@
+ 
+     if-eqz v2, :cond_0
+ 
+-    invoke-static {}, Lcom/samsung/android/feature/SemCscFeature;->getInstance()Lcom/samsung/android/feature/SemCscFeature;
+-
+-    move-result-object v0
+-
+-    const-string v2, "CscFeature_Common_SupportZProjectFunctionInGlobal"
+-
+-    const/4 v3, 0x0
+-
+-    invoke-virtual {v0, v2, v3}, Lcom/samsung/android/feature/SemCscFeature;->getBoolean(Ljava/lang/String;Z)Z
+-
+-    move-result v0
++    const/4 v0, 0x1
+ 
+     if-eqz v0, :cond_1f
+ 
+     const-string v0, "network_speed"
+ 
++    const/4 v3, 0x0
++
+     invoke-static {v15, v0, v3}, Landroid/provider/Settings$System;->getInt(Landroid/content/ContentResolver;Ljava/lang/String;I)I
+ 
+     move-result v0
+@@ -2054,17 +2046,7 @@
+ 
+     if-eqz v0, :cond_d
+ 
+-    invoke-static {}, Lcom/samsung/android/feature/SemCscFeature;->getInstance()Lcom/samsung/android/feature/SemCscFeature;
+-
+-    move-result-object v0
+-
+-    const-string v2, "CscFeature_Common_SupportZProjectFunctionInGlobal"
+-
+-    const/4 v3, 0x0
+-
+-    invoke-virtual {v0, v2, v3}, Lcom/samsung/android/feature/SemCscFeature;->getBoolean(Ljava/lang/String;Z)Z
+-
+-    move-result v0
++    const/4 v0, 0x1
+ 
+     if-eqz v0, :cond_4
+ 
+diff --color -ruN a/smali_classes5/com/samsung/android/settings/notification/ConfigureNotificationMoreSettings$1.smali b/smali_classes5/com/samsung/android/settings/notification/ConfigureNotificationMoreSettings$1.smali
+--- a/smali_classes5/com/samsung/android/settings/notification/ConfigureNotificationMoreSettings$1.smali	2026-06-17 15:26:13.637365109 -0500
++++ b/smali_classes5/com/samsung/android/settings/notification/ConfigureNotificationMoreSettings$1.smali	2026-06-18 07:56:24.020147411 -0500
+@@ -5,7 +5,7 @@
+ 
+ # virtual methods
+ .method public final getNonIndexableKeys(Landroid/content/Context;)Ljava/util/List;
+-    .locals 3
++    .locals 2
+ 
+     invoke-super {p0, p1}, Lcom/android/settings/search/BaseSearchIndexProvider;->getNonIndexableKeys(Landroid/content/Context;)Ljava/util/List;
+ 
+@@ -37,17 +37,8 @@
+     invoke-virtual {v1, v0}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+ 
+     :cond_1
+-    invoke-static {}, Lcom/samsung/android/feature/SemCscFeature;->getInstance()Lcom/samsung/android/feature/SemCscFeature;
+-
+-    move-result-object v0
+-
+-    const-string v1, "CscFeature_Common_SupportZProjectFunctionInGlobal"
+-
+-    const/4 v2, 0x0
+-
+-    invoke-virtual {v0, v1, v2}, Lcom/samsung/android/feature/SemCscFeature;->getBoolean(Ljava/lang/String;Z)Z
+-
+-    move-result v0
++    
++    const/4 v0, 0x1
+ 
+     if-nez v0, :cond_2
+ 
+diff --color -ruN a/smali_classes5/com/samsung/android/settings/notification/StatusBarNetworkSpeedController.smali b/smali_classes5/com/samsung/android/settings/notification/StatusBarNetworkSpeedController.smali
+--- a/smali_classes5/com/samsung/android/settings/notification/StatusBarNetworkSpeedController.smali	2026-06-17 15:26:13.674716365 -0500
++++ b/smali_classes5/com/samsung/android/settings/notification/StatusBarNetworkSpeedController.smali	2026-06-18 07:57:31.423455218 -0500
+@@ -22,19 +22,9 @@
+ 
+ # direct methods
+ .method static constructor <clinit>()V
+-    .locals 3
++    .locals 1
+ 
+-    invoke-static {}, Lcom/samsung/android/feature/SemCscFeature;->getInstance()Lcom/samsung/android/feature/SemCscFeature;
+-
+-    move-result-object v0
+-
+-    const-string v1, "CscFeature_Common_SupportZProjectFunctionInGlobal"
+-
+-    const/4 v2, 0x0
+-
+-    invoke-virtual {v0, v1, v2}, Lcom/samsung/android/feature/SemCscFeature;->getBoolean(Ljava/lang/String;Z)Z
+-
+-    move-result v0
++    const/4 v0, 0x1
+ 
+     sput-boolean v0, Lcom/samsung/android/settings/notification/StatusBarNetworkSpeedController;->SUPPORT_NETWORK_SPEED:Z
+ 

@@ -1,34 +1,49 @@
-diff --color -ruN a/smali_classes3/android/os/SemSystemProperties.smali b/smali_classes3/android/os/SemSystemProperties.smali
---- a/smali_classes3/android/os/SemSystemProperties.smali	2025-11-27 07:43:51.188107272 -0500
-+++ b/smali_classes3/android/os/SemSystemProperties.smali	2025-11-27 07:44:03.444528883 -0500
-@@ -45,6 +45,15 @@
+diff --color -ruN c/smali_classes3/android/os/SemSystemProperties.smali d/smali_classes3/android/os/SemSystemProperties.smali
+--- c/smali_classes3/android/os/SemSystemProperties.smali	2026-06-17 15:28:30.615922901 -0500
++++ d/smali_classes3/android/os/SemSystemProperties.smali	2026-06-18 08:14:08.814630494 -0500
+@@ -45,13 +45,36 @@
  .method public static whitelist getCountryCode()Ljava/lang/String;
-     .locals 2
+-    .locals 2
++    .locals 3
  
-+    invoke-static {}, Lio/lichlabs/lich/CscFeatureHooks;->onGetCountryCode()Ljava/lang/String;
++    invoke-static {}, Landroid/app/ActivityThread;->currentPackageName()Ljava/lang/String;
 +
-+    move-result-object v0
++    move-result-object v2
 +
-+    if-eqz v0, :cond_0
++    invoke-static {v2}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
 +
-+    goto :goto_0
++    move-result v0
 +
-+    :cond_0
++    if-nez v0, :cond_original
++
++    const-string v0, "com.sec.android.app.camera"
++
++    invoke-virtual {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_original
++
++    const-string v0, "USA"
++
++    return-object v0
++
++    :cond_original
      const-string/jumbo v0, "ro.csc.country_code"
  
      const-string v1, ""
-@@ -53,6 +62,7 @@
+ 
+     invoke-static {v0, v1}, Landroid/os/SystemProperties;->get(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
  
      move-result-object v0
  
-+    :goto_0
      return-object v0
  .end method
  
-diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.smali b/smali_classes6/com/samsung/android/feature/SemCscFeature.smali
---- a/smali_classes6/com/samsung/android/feature/SemCscFeature.smali	2025-11-27 07:43:53.471702205 -0500
-+++ b/smali_classes6/com/samsung/android/feature/SemCscFeature.smali	2025-11-27 07:44:03.444814612 -0500
-@@ -1873,6 +1873,19 @@
+diff --color -ruN c/smali_classes6/com/samsung/android/feature/SemCscFeature.smali d/smali_classes6/com/samsung/android/feature/SemCscFeature.smali
+--- c/smali_classes6/com/samsung/android/feature/SemCscFeature.smali	2026-06-17 15:28:29.736719486 -0500
++++ d/smali_classes6/com/samsung/android/feature/SemCscFeature.smali	2026-06-18 08:26:30.279170642 -0500
+@@ -1879,6 +1879,19 @@
  .method public whitelist getBoolean(Ljava/lang/String;)Z
      .locals 4
  
@@ -48,7 +63,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
      const-string v0, "[getBoolean] tag : "
  
      const/4 v1, 0x0
-@@ -1884,7 +1897,7 @@
+@@ -1890,7 +1903,7 @@
  
      sget-boolean v2, Lcom/samsung/android/feature/SemCscFeature;->DEBUG:Z
  
@@ -57,7 +72,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
  
      const-string v2, "SemCscFeature"
  
-@@ -1906,8 +1919,8 @@
+@@ -1912,8 +1925,8 @@
  
      invoke-static {v2, p1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
  
@@ -68,7 +83,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
  
      invoke-static {p0}, Ljava/lang/Boolean;->parseBoolean(Ljava/lang/String;)Z
  
-@@ -1918,13 +1931,26 @@
+@@ -1924,13 +1937,27 @@
      return p0
  
      :catch_0
@@ -93,10 +108,11 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
 +    return p0
 +
 +    :cond_0
++
      const-string v0, "[getBoolean] tag : "
  
      :try_start_0
-@@ -1934,7 +1960,7 @@
+@@ -1940,7 +1967,7 @@
  
      sget-boolean v1, Lcom/samsung/android/feature/SemCscFeature;->DEBUG:Z
  
@@ -105,7 +121,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
  
      const-string v1, "SemCscFeature"
  
-@@ -1962,8 +1988,8 @@
+@@ -1968,8 +1995,8 @@
  
      invoke-static {v1, p1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
  
@@ -116,7 +132,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
  
      invoke-static {p0}, Ljava/lang/Boolean;->parseBoolean(Ljava/lang/String;)Z
  
-@@ -1974,7 +2000,7 @@
+@@ -1980,7 +2007,7 @@
      return p0
  
      :catch_0
@@ -125,7 +141,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
      return p2
  .end method
  
-@@ -2001,6 +2027,19 @@
+@@ -2007,6 +2034,19 @@
  .method public whitelist getInt(Ljava/lang/String;)I
      .locals 4
  
@@ -145,7 +161,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
      const-string v0, "[getInt] tag : "
  
      const/4 v1, -0x1
-@@ -2012,7 +2051,7 @@
+@@ -2018,7 +2058,7 @@
  
      sget-boolean v2, Lcom/samsung/android/feature/SemCscFeature;->DEBUG:Z
  
@@ -154,7 +170,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
  
      const-string v2, "SemCscFeature"
  
-@@ -2034,8 +2073,8 @@
+@@ -2040,8 +2080,8 @@
  
      invoke-static {v2, p1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
  
@@ -165,7 +181,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
  
      invoke-static {p0}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
  
-@@ -2046,13 +2085,26 @@
+@@ -2052,13 +2092,26 @@
      return p0
  
      :catch_0
@@ -193,7 +209,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
      const-string v0, "[getInt] tag : "
  
      :try_start_0
-@@ -2062,7 +2114,7 @@
+@@ -2068,7 +2121,7 @@
  
      sget-boolean v1, Lcom/samsung/android/feature/SemCscFeature;->DEBUG:Z
  
@@ -202,7 +218,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
  
      const-string v1, "SemCscFeature"
  
-@@ -2090,8 +2142,8 @@
+@@ -2096,8 +2149,8 @@
  
      invoke-static {v1, p1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
  
@@ -213,7 +229,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
  
      invoke-static {p0}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
  
-@@ -2102,7 +2154,7 @@
+@@ -2108,7 +2161,7 @@
      return p0
  
      :catch_0
@@ -222,7 +238,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
      return p2
  .end method
  
-@@ -2169,6 +2221,12 @@
+@@ -2175,6 +2228,12 @@
  .method public whitelist getString(Ljava/lang/String;)Ljava/lang/String;
      .locals 4
  
@@ -235,7 +251,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
      const-string v0, ""
  
      const-string v1, "[getString] tag : "
-@@ -2217,6 +2275,15 @@
+@@ -2223,6 +2282,15 @@
  .method public whitelist getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
      .locals 3
  
@@ -251,7 +267,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
      const-string v0, "[getString] tag : "
  
      :try_start_0
-@@ -2226,7 +2293,7 @@
+@@ -2232,7 +2300,7 @@
  
      sget-boolean v1, Lcom/samsung/android/feature/SemCscFeature;->DEBUG:Z
  
@@ -260,7 +276,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
  
      const-string v1, "SemCscFeature"
  
-@@ -2256,13 +2323,13 @@
+@@ -2262,13 +2330,13 @@
      :try_end_0
      .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
  
@@ -277,9 +293,9 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemCscFeature.sma
      return-object p2
  .end method
  
-diff --color -ruN a/smali_classes6/io/lichlabs/lich/CscFeatureHooks.smali b/smali_classes6/io/lichlabs/lich/CscFeatureHooks.smali
---- a/smali_classes6/io/lichlabs/lich/CscFeatureHooks.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/lichlabs/lich/CscFeatureHooks.smali	2025-11-27 07:44:03.446104395 -0500
+diff --color -ruN c/smali_classes6/io/lichlabs/lich/CscFeatureHooks.smali d/smali_classes6/io/lichlabs/lich/CscFeatureHooks.smali
+--- c/smali_classes6/io/lichlabs/lich/CscFeatureHooks.smali	1969-12-31 19:00:00.000000000 -0500
++++ d/smali_classes6/io/lichlabs/lich/CscFeatureHooks.smali	2026-06-18 08:27:35.086518495 -0500
 @@ -0,0 +1,380 @@
 +.class public final Lio/lichlabs/lich/CscFeatureHooks;
 +.super Ljava/lang/Object;
@@ -661,3 +677,4 @@ diff --color -ruN a/smali_classes6/io/lichlabs/lich/CscFeatureHooks.smali b/smal
 +    :cond_1
 +    return-object v0
 +.end method
+\ No hay ningún carácter de nueva línea al final del archivo

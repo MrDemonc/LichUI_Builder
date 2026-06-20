@@ -16,11 +16,11 @@ readonly APKTOOL="${dir_work}/out/apktool"
 readonly DECOMPILE_DIR="${APKTOOL}/working"
 readonly PRIV_APP="${SYSTEM_DIR}/priv-app"
 readonly APP="${SYSTEM_DIR}/app"
-readonly SYSTEM_UI="${PORT_ROM}/system_ext/priv-app"
+readonly SYSTEM_UI="${SYSTEM_DIR}/system_ext/priv-app"
 
 readonly FRAMEWORK_DIR="${dir_work}/tools/framework"
 readonly FRAMEWORK_RES="${FRAMEWORK}/framework-res.apk"
-readonly FRAMEWORK_TAG="$(get_prop "$FW_DIR/$TARGET_DIR/system/system/build.prop" "ro.system.build.version.incremental")"
+readonly FRAMEWORK_TAG="$(get_prop "$FW_DIR/$SOURCE_DIR/system/system/build.prop" "ro.system.build.version.incremental")"
 
 COPY_LIST=(
     "$APP/DAAgent:DAAgent.apk"
