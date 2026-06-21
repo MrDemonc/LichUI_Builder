@@ -12,7 +12,7 @@ FILES_TO_REPLACE=(
     "strings.xml"
 )
 
-log_info "Applying overlay values to framework-res__r11sxxx__auto_generated_rro_product..."
+log_info "- Applying overlay values to framework-res__r11sxxx__auto_generated_rro_product..."
 
 for file in "${FILES_TO_REPLACE[@]}"; do
     if [ -f "$RRO_DIR/$file" ]; then
@@ -24,4 +24,4 @@ for file in "${FILES_TO_REPLACE[@]}"; do
     fi
 done
 
-log_success "Overlay values applied successfully"
+log_success "- Overlay values applied successfully"

@@ -1,6 +1,6 @@
-diff --color -ruN a/smali_classes4/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryHealthPreferenceController.smali b/smali_classes4/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryHealthPreferenceController.smali
---- a/smali_classes4/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryHealthPreferenceController.smali	2025-12-17 10:18:59.163757187 -0500
-+++ b/smali_classes4/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryHealthPreferenceController.smali	2025-12-20 08:53:02.501806095 -0500
+diff --color -ruN a/smali_classes5/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryHealthPreferenceController.smali b/smali_classes5/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryHealthPreferenceController.smali
+--- a/smali_classes5/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryHealthPreferenceController.smali	2026-06-17 15:26:12.517471930 -0500
++++ b/smali_classes5/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryHealthPreferenceController.smali	2026-06-21 12:06:00.912871390 -0500
 @@ -29,37 +29,36 @@
  .end method
  
@@ -55,15 +55,16 @@ diff --color -ruN a/smali_classes4/com/samsung/android/settings/deviceinfo/batte
  .end method
  
  .method private parseHealthValue([JI)Ljava/lang/String;
-diff --color -ruN a/smali_classes4/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryRegulatoryPreferenceController.smali b/smali_classes4/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryRegulatoryPreferenceController.smali
---- a/smali_classes4/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryRegulatoryPreferenceController.smali	2025-12-17 10:18:59.163846504 -0500
-+++ b/smali_classes4/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryRegulatoryPreferenceController.smali	2025-12-20 08:54:58.909269709 -0500
-@@ -146,88 +146,9 @@
+diff --color -ruN a/smali_classes5/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryRegulatoryPreferenceController.smali b/smali_classes5/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryRegulatoryPreferenceController.smali
+--- a/smali_classes5/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryRegulatoryPreferenceController.smali	2026-06-17 15:26:12.519561755 -0500
++++ b/smali_classes5/com/samsung/android/settings/deviceinfo/batteryinfo/BatteryRegulatoryPreferenceController.smali	2026-06-21 12:07:57.452042931 -0500
+@@ -154,88 +154,9 @@
+ .end method
  
- # virtual methods
  .method public getAvailabilityStatus()I
 -    .locals 3
--
++    .locals 0
+ 
 -    sget-object v0, Lcom/samsung/android/settings/Rune;->COMMON_CONFIG_PACKAGE_NAME_SMART_MANAGER:Ljava/lang/String;
 -
 -    const-string/jumbo v0, "ro.product.model"
@@ -144,16 +145,14 @@ diff --color -ruN a/smali_classes4/com/samsung/android/settings/deviceinfo/batte
 -
 -    :cond_4
 -    const/4 p0, 0x3
-+    .locals 0
-+    
 +    const/4 p0, 0x0
  
      return p0
  .end method
-diff --color -ruN a/smali_classes4/com/samsung/android/settings/display/controller/SecOutDoorModePreferenceController.smali b/smali_classes4/com/samsung/android/settings/display/controller/SecOutDoorModePreferenceController.smali
---- a/smali_classes4/com/samsung/android/settings/display/controller/SecOutDoorModePreferenceController.smali	2025-12-17 10:18:59.170283690 -0500
-+++ b/smali_classes4/com/samsung/android/settings/display/controller/SecOutDoorModePreferenceController.smali	2025-12-20 08:56:42.871129584 -0500
-@@ -61,14 +61,8 @@
+diff --color -ruN a/smali_classes5/com/samsung/android/settings/display/controller/SecOutDoorModePreferenceController.smali b/smali_classes5/com/samsung/android/settings/display/controller/SecOutDoorModePreferenceController.smali
+--- a/smali_classes5/com/samsung/android/settings/display/controller/SecOutDoorModePreferenceController.smali	2026-06-17 15:26:12.783077692 -0500
++++ b/smali_classes5/com/samsung/android/settings/display/controller/SecOutDoorModePreferenceController.smali	2026-06-21 12:09:09.926802038 -0500
+@@ -61,13 +61,7 @@
  .method public final isAvailable()Z
      .locals 0
  
@@ -164,9 +163,7 @@ diff --color -ruN a/smali_classes4/com/samsung/android/settings/display/controll
 -    move-result p0
 -
 -    xor-int/lit8 p0, p0, 0x1
--
 +    const/4 p0, 0x1
-+    
+ 
      return p0
  .end method
- 

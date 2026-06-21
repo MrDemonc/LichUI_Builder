@@ -1,6 +1,6 @@
-diff --color -ruN a/AndroidManifest.xml b/AndroidManifest.xml
---- a/AndroidManifest.xml	2025-11-27 15:05:17.617906408 -0500
-+++ b/AndroidManifest.xml	2025-11-27 15:06:16.917629303 -0500
+diff --color -ruN i/AndroidManifest.xml j/AndroidManifest.xml
+--- i/AndroidManifest.xml	2026-06-21 08:50:02.972967633 -0500
++++ j/AndroidManifest.xml	2026-06-21 08:52:33.482028999 -0500
 @@ -59,6 +59,11 @@
                  <action android:name="android.intent.action.LOCALE_CHANGED"/>
                  <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
@@ -13,15 +13,15 @@ diff --color -ruN a/AndroidManifest.xml b/AndroidManifest.xml
          </receiver>
          <receiver android:enabled="true" android:exported="true" android:name="com.samsung.android.da.daagent.receiver.DualAppBackupAndRestoreReceiver" android:permission="com.wssnps.permission.COM_WSSNPS">
              <intent-filter android:priority="1000">
-diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/DualAppProvider.smali b/smali/com/samsung/android/da/daagent/provider/DualAppProvider.smali
---- a/smali/com/samsung/android/da/daagent/provider/DualAppProvider.smali	2025-11-27 15:05:17.571654229 -0500
-+++ b/smali/com/samsung/android/da/daagent/provider/DualAppProvider.smali	2025-11-27 15:06:16.918983615 -0500
+diff --color -ruN i/smali/com/samsung/android/da/daagent/provider/DualAppProvider.smali j/smali/com/samsung/android/da/daagent/provider/DualAppProvider.smali
+--- i/smali/com/samsung/android/da/daagent/provider/DualAppProvider.smali	2026-06-21 08:50:01.226948469 -0500
++++ j/smali/com/samsung/android/da/daagent/provider/DualAppProvider.smali	2026-06-21 09:06:27.421261591 -0500
 @@ -512,7 +512,7 @@
  
      const/16 p4, 0x11
  
--    if-ne p2, p3, :cond_f
-+    if-ne p2, p3, :cond_d
+-    if-ne p3, p1, :cond_f
++    if-ne p3, p1, :cond_d
  
      new-instance p0, Landroid/database/MatrixCursor;
  
@@ -37,12 +37,12 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/DualAppProvide
 -
 -    array-length p4, p3
 -
--    move v0, p5
+-    move p5, v0
 -
 -    :goto_8
--    if-ge v0, p4, :cond_d
+-    if-ge p5, p4, :cond_d
 -
--    aget-object v1, p3, v0
+-    aget-object v1, p3, p5
 -
 -    invoke-virtual {v1, p2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 -
@@ -55,7 +55,7 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/DualAppProvide
 -    goto :goto_9
 -
 -    :cond_c
--    add-int/lit8 v0, v0, 0x1
+-    add-int/lit8 p5, p5, 0x1
 -
 -    goto :goto_8
 -
@@ -64,15 +64,15 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/DualAppProvide
      array-length p2, p1
  
 -    :goto_a
--    if-ge p5, p2, :cond_e
+-    if-ge v0, p2, :cond_e
 +    :goto_8
-+    if-ge p5, p2, :cond_c
++    if-ge v0, p2, :cond_c
  
-     aget-object p3, p1, p5
+     aget-object p3, p1, v0
  
 @@ -567,15 +535,15 @@
  
-     add-int/lit8 p5, p5, 0x1
+     add-int/lit8 v0, v0, 0x1
  
 -    goto :goto_a
 +    goto :goto_8
@@ -83,10 +83,10 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/DualAppProvide
  
 -    :cond_f
 +    :cond_d
-     const/4 p3, 0x4
+     const/4 p1, 0x4
  
--    if-ne p2, p3, :cond_10
-+    if-ne p2, p3, :cond_e
+-    if-ne p3, p1, :cond_10
++    if-ne p3, p1, :cond_e
  
      invoke-virtual {p0}, Landroid/content/ContentProvider;->getContext()Landroid/content/Context;
  
@@ -98,27 +98,27 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/DualAppProvide
 +    :cond_e
      const/4 p0, 0x5
  
--    if-ne p2, p0, :cond_12
-+    if-ne p2, p0, :cond_10
+-    if-ne p3, p0, :cond_12
++    if-ne p3, p0, :cond_10
  
      invoke-static {}, Lcom/samsung/android/da/daagent/fwwrapper/UtilsWrapper;->isChinaModel()Z
  
-@@ -626,10 +594,10 @@
+@@ -624,10 +592,10 @@
  
-     sget-object p1, Lcom/samsung/android/da/daagent/DAConstants;->defaultPkgNames:[Ljava/lang/String;
+     invoke-direct {p0, p2, p4}, Landroid/database/MatrixCursor;-><init>([Ljava/lang/String;I)V
  
 -    :goto_b
 +    :goto_9
-     const/16 p2, 0x1b
+     const/16 p1, 0x1b
  
--    if-ge p5, p2, :cond_11
-+    if-ge p5, p2, :cond_f
+-    if-ge v0, p1, :cond_11
++    if-ge v0, p1, :cond_f
  
-     aget-object p2, p1, p5
+     sget-object p1, Lcom/samsung/android/da/daagent/DAConstants;->defaultPkgNames:[Ljava/lang/String;
  
 @@ -641,12 +609,12 @@
  
-     add-int/lit8 p5, p5, 0x1
+     add-int/lit8 v0, v0, 0x1
  
 -    goto :goto_b
 +    goto :goto_9
@@ -129,12 +129,12 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/DualAppProvide
  
 -    :cond_12
 +    :cond_10
-     return-object v3
+     return-object v4
  .end method
  
-diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/WhiteListApps.smali b/smali/com/samsung/android/da/daagent/provider/WhiteListApps.smali
---- a/smali/com/samsung/android/da/daagent/provider/WhiteListApps.smali	2025-11-27 15:05:17.571681676 -0500
-+++ b/smali/com/samsung/android/da/daagent/provider/WhiteListApps.smali	2025-11-27 15:06:16.919983614 -0500
+diff --color -ruN i/smali/com/samsung/android/da/daagent/provider/WhiteListApps.smali j/smali/com/samsung/android/da/daagent/provider/WhiteListApps.smali
+--- i/smali/com/samsung/android/da/daagent/provider/WhiteListApps.smali	2026-06-21 08:50:01.208948272 -0500
++++ j/smali/com/samsung/android/da/daagent/provider/WhiteListApps.smali	2026-06-21 09:22:24.063162215 -0500
 @@ -4,178 +4,135 @@
  
  
@@ -326,10 +326,10 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/WhiteListApps.
 +    :goto_1
 +    iget-object v5, v1, Landroid/content/pm/ApplicationInfo;->metaData:Landroid/os/Bundle;
  
--    const-string v3, "CBK"
+-    const-string v5, "CHU"
 +    if-eqz v5, :cond_3
  
--    const-string v4, "CTC"
+-    const-string v6, "CHC"
 +    const-string v6, "com.samsung.android.multiuser.install_only_owner"
  
 -    const-string v1, "CHN"
@@ -338,10 +338,10 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/WhiteListApps.
 -    const-string v2, "CHM"
 +    move-result v5
  
--    const-string v5, "CHU"
+-    const-string v3, "CBK"
 +    if-eqz v5, :cond_3
  
--    const-string v6, "CHC"
+-    const-string v4, "CTC"
 +    move v2, v4
  
 -    filled-new-array/range {v1 .. v6}, [Ljava/lang/String;
@@ -382,9 +382,9 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/provider/WhiteListApps.
 -    return-object v0
 +    return-void
  .end method
-diff --color -ruN a/smali/com/samsung/android/da/daagent/receiver/DualAppIntentReceiver.smali b/smali/com/samsung/android/da/daagent/receiver/DualAppIntentReceiver.smali
---- a/smali/com/samsung/android/da/daagent/receiver/DualAppIntentReceiver.smali	2025-11-27 15:05:17.571777040 -0500
-+++ b/smali/com/samsung/android/da/daagent/receiver/DualAppIntentReceiver.smali	2025-11-27 15:06:16.920370438 -0500
+diff --color -ruN i/smali/com/samsung/android/da/daagent/receiver/DualAppIntentReceiver.smali j/smali/com/samsung/android/da/daagent/receiver/DualAppIntentReceiver.smali
+--- i/smali/com/samsung/android/da/daagent/receiver/DualAppIntentReceiver.smali	2026-06-21 08:50:01.242990072 -0500
++++ j/smali/com/samsung/android/da/daagent/receiver/DualAppIntentReceiver.smali	2026-06-21 09:28:20.881505077 -0500
 @@ -33,7 +33,7 @@
  
      const-string v7, "DualAppIntentReceiver"
@@ -403,16 +403,15 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/receiver/DualAppIntentR
      invoke-static {v2}, Lcom/samsung/android/da/daagent/service/SendSaLogService;->schedule(Landroid/content/Context;)V
  
      invoke-static {}, Lcom/samsung/android/da/daagent/utils/DAUtility;->getDualAppProfileId()I
-@@ -694,8 +696,6 @@
+@@ -698,7 +700,6 @@
      goto :goto_e
  
      :cond_12
 -    invoke-static {v2}, Lcom/samsung/android/da/daagent/utils/DAUtility;->updateWhitelistAppsInSystemServer(Landroid/content/Context;)V
--
+ 
      new-instance v1, Landroid/os/Bundle;
  
-     invoke-direct {v1}, Landroid/os/Bundle;-><init>()V
-@@ -847,7 +847,7 @@
+@@ -851,7 +852,7 @@
  
      move-result-object v0
  
@@ -421,7 +420,7 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/receiver/DualAppIntentR
  
      const-string v1, "result_code"
  
-@@ -926,14 +926,14 @@
+@@ -930,14 +931,14 @@
  
      move-result-object v1
  
@@ -431,14 +430,14 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/receiver/DualAppIntentR
      move v5, v8
  
      :goto_12
-     array-length v7, v1
+     array-length v6, v1
  
--    if-ge v5, v7, :cond_23
-+    if-ge v5, v7, :cond_24
+-    if-ge v5, v6, :cond_23
++    if-ge v5, v6, :cond_24
  
-     aget-object v7, v1, v5
+     aget-object v6, v1, v5
  
-@@ -1254,15 +1254,32 @@
+@@ -1256,15 +1257,32 @@
  
      move-result v0
  
@@ -474,35 +473,35 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/receiver/DualAppIntentR
      :goto_19
      const-string v0, "DualAppIntentReceiver onReceive() intent is null"
  
-diff --color -ruN a/smali/com/samsung/android/da/daagent/utils/DAUtility.smali b/smali/com/samsung/android/da/daagent/utils/DAUtility.smali
---- a/smali/com/samsung/android/da/daagent/utils/DAUtility.smali	2025-11-27 15:05:17.572088855 -0500
-+++ b/smali/com/samsung/android/da/daagent/utils/DAUtility.smali	2025-11-27 15:06:16.921191343 -0500
+diff --color -ruN i/smali/com/samsung/android/da/daagent/utils/DAUtility.smali j/smali/com/samsung/android/da/daagent/utils/DAUtility.smali
+--- i/smali/com/samsung/android/da/daagent/utils/DAUtility.smali	2026-06-21 08:50:01.270948952 -0500
++++ j/smali/com/samsung/android/da/daagent/utils/DAUtility.smali	2026-06-21 09:33:39.685727553 -0500
 @@ -1947,50 +1947,20 @@
  
      invoke-direct {v1}, Ljava/util/HashMap;-><init>()V
  
--    sget-object v2, Lcom/samsung/android/da/daagent/provider/WhiteListApps;->DUAL_APP_WHITELIST_PACKAGES:[Ljava/lang/String;
 +    invoke-static {p0}, Lcom/samsung/android/da/daagent/provider/WhiteListApps;->refreshWhiteList(Landroid/content/Context;)V
++
+     sget-object v2, Lcom/samsung/android/da/daagent/provider/WhiteListApps;->DUAL_APP_WHITELIST_PACKAGES:[Ljava/lang/String;
  
--    sget-object v3, Lcom/samsung/android/da/daagent/utils/DAUtility;->mSalesCode:Ljava/lang/String;
-+    sget-object v2, Lcom/samsung/android/da/daagent/provider/WhiteListApps;->DUAL_APP_WHITELIST_PACKAGES:[Ljava/lang/String;
+     const/4 v3, 0x0
  
-     const/4 v4, 0x0
- 
--    if-eqz v3, :cond_1
+-    sget-object v4, Lcom/samsung/android/da/daagent/utils/DAUtility;->mSalesCode:Ljava/lang/String;
+-
+-    if-eqz v4, :cond_1
 -
 -    sget-object v5, Lcom/samsung/android/da/daagent/provider/WhiteListApps;->CHINA_SALES_CODES:[Ljava/lang/String;
 -
 -    array-length v6, v5
 -
--    move v7, v4
+-    move v7, v3
 -
 -    :goto_0
 -    if-ge v7, v6, :cond_1
 -
 -    aget-object v8, v5, v7
 -
--    invoke-virtual {v8, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+-    invoke-virtual {v8, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 -
 -    move-result v8
 -
@@ -519,16 +518,16 @@ diff --color -ruN a/smali/com/samsung/android/da/daagent/utils/DAUtility.smali b
 -
 -    :cond_1
 -    :goto_1
-     array-length v3, v2
+     array-length v4, v2
  
-     move v5, v4
+     move v5, v3
  
 -    :goto_2
 +    :goto_0
      const-string v6, "DA_DAUtility"
  
--    if-ge v5, v3, :cond_2
-+    if-ge v5, v3, :cond_0
+-    if-ge v5, v4, :cond_2
++    if-ge v5, v4, :cond_0
  
      aget-object v7, v2, v5
  

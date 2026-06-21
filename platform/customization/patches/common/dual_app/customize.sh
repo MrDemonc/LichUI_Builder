@@ -1,0 +1,1 @@
+smali_patch "DAAgent.apk" "0001-Allow-all-apps-in-Dual-Messenger.patch"

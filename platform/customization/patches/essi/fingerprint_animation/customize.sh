@@ -1,0 +1,1 @@
+smali_patch "BiometricSetting.apk" "0001-Change-fingerprint-animation.patch"

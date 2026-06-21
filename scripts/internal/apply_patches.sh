@@ -13,7 +13,7 @@ touch "$STATE_FILE"
 # Target and Platform patch locations
 PATCH_DIRS=(
     "$dir_work/target/$TARGET/patches"
-    "$dir_work/platform/customization"
+    "$dir_work/platform/customization/mods"
 )
 
 log_info "Initializing Patching Engine..."
@@ -116,6 +116,5 @@ if [ ${#DISABLED_PATCHES[@]} -gt 0 ]; then
     done
 fi
 
-
-echo -e "\n"
+echo " "
 log_success "Patching process completed."

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-log_warning "   Applying certificate signature to ScanPackageUtils.smali..."
+log_warning "- Applying certificate signature to ScanPackageUtils.smali..."
 
 if [ "$OFFICIAL_ROM" = "true" ]; then
     PEM_FILE="$dir_work/platform/security/lich-ota.x509.pem"
@@ -16,8 +16,8 @@ if [ -f "$APKTOOL/working/services/smali_classes2/com/android/server/pm/ScanPack
         'signedWithCustomSignature([Landroid/content/pm/Signature;)Z' \
         'CONFIG_CUSTOM_PLATFORM_SIGNATURE' \
         "$CERT_SIGNATURE"
-    log_success "   Certificate signature applied successfully"
+    log_success "- Certificate signature applied successfully"
 else
-    log_warning "   ScanPackageUtils.smali not found, skipping signature application"
+    log_warning "- ScanPackageUtils.smali not found, skipping signature application"
     exit 1
 fi
