@@ -40,7 +40,6 @@ COPY_LIST=(
 
 _ensure_apktool_dir() {
     if [ ! -d "$APKTOOL" ]; then
-        log_warning "Creating APKTOOL directory..."
         mkdir -p "$APKTOOL"
     fi
 }
@@ -55,7 +54,6 @@ check_and_copy_file() {
         return 0
     fi
 
-    log_warning "Searching for $target_filename in copy list..."
     for item in "${COPY_LIST[@]}"; do
         if [[ "$item" =~ ^[[:space:]]*# ]]; then
             continue
@@ -72,8 +70,7 @@ check_and_copy_file() {
                 log_error "File/directory not found: $src_path/$entry_filename"
                 return 1
             fi
-            
-            log_success "Copying $entry_filename from $src_path..."
+
             if [ -f "$src_path/$entry_filename" ]; then
                 cp "$src_path/$entry_filename" "$APKTOOL/"
             elif [ -d "$src_path/$entry_filename" ]; then
@@ -93,9 +90,7 @@ check_and_copy_file() {
 
 setup_framework() {
     if [ -f "$FRAMEWORK_RES" ]; then
-        log_warning "Setting up apktool framework..."
         "$dir_work/tools/bin/apktool" if --quiet -p "$FRAMEWORK_DIR" -t "$FRAMEWORK_TAG" "$FRAMEWORK_RES" || return 1
-        log_success "Framework installed successfully"
         return 0
     else
         log_error "Not found framework-res.apk at $FRAMEWORK_RES."
@@ -123,13 +118,12 @@ decompile() {
         rm -rf "$output_dir"
     fi
 
-    log_warning "Decompiling $input_name..."
-    if [[ "$input_file" == *rro_*.apk ]]; then
-        "$dir_work/tools/bin/apktool" d --quiet --no-debug-info -j "$(( $(nproc) - 1 ))" -o "$output_dir" -p "$FRAMEWORK_DIR" -t "$FRAMEWORK_TAG" "$input_file" || exit 1
-    else
-        "$dir_work/tools/bin/apktool" d --quiet --no-debug-info -j "$(( $(nproc) - 1 ))" -o "$output_dir" -p "$FRAMEWORK_DIR" -t "$FRAMEWORK_TAG" "$input_file" || exit 1
+    log_warning "Decompiling $input_name"
+
+    if ! "$dir_work/tools/bin/apktool" d --quiet --no-debug-info -j "$(( $(nproc) - 1 ))" -o "$output_dir" -p "$FRAMEWORK_DIR" -t "$FRAMEWORK_TAG" "$input_file"; then
+        log_error "Failed to decompile $input_name"
+        return 1
     fi
-    log_success "Decompiled into $output_dir"
 }
 
 smali_patch() {
@@ -151,63 +145,95 @@ smali_patch() {
         return 1
     fi
 
-    local variant="${PATCH_SMALI:-essi}"
     local patches_root="$dir_work/platform/customization/patches"
-    
-    local patch_type="Jar"
-    [[ "$input_name" == *.apk ]] && patch_type="Apk"
-
-    local candidate_dirs=(
-        "$patches_root/common/$patch_type"
-        "$patches_root/$variant/$patch_type"
-    )
 
     local applied_any=false
-    for variant_dir in "${candidate_dirs[@]}"; do
-        [ ! -d "$variant_dir" ] && continue
 
-        local patch_dir="$variant_dir/$base_name"
-        [ ! -d "$patch_dir" ] && continue
-        
-        # If a specific patch is requested, only proceed if it exists in this directory
-        if [ -n "$specific_patch" ] && [ ! -f "$patch_dir/$specific_patch" ]; then
-            continue
-        fi
-
-        applied_any=true
-        local current_label
-        [[ "$variant_dir" == *"/common/"* ]] && current_label="common" || current_label="$variant"
-
-        log_warning "   Applying $patch_type patches ($current_label) for $base_name..."
-
-        (
-            cd "$target_dir" || exit 1
-            local patch_list=()
+    # If CURRENT_PATCH_DIR is set (called from a customize.sh), look for patch files there
+    if [ -n "$CURRENT_PATCH_DIR" ]; then
+        local search_dir="$CURRENT_PATCH_DIR/system"
+        if [ -d "$search_dir" ]; then
+            local patch_files=()
             if [ -n "$specific_patch" ]; then
-                patch_list=("$patch_dir/$specific_patch")
+                local pf=$(find "$search_dir" -path "*/$input_name/$specific_patch" -type f 2>/dev/null | head -1)
+                [ -n "$pf" ] && patch_files+=("$pf")
             else
-                patch_list=("$patch_dir"/*.patch)
+                while IFS= read -r -d '' pf; do
+                    patch_files+=("$pf")
+                done < <(find "$search_dir" -name "*.patch" -type f -print0 2>/dev/null)
             fi
 
-            for patch_file in "${patch_list[@]}"; do
-                [ ! -f "$patch_file" ] && continue
-                [[ "$(basename "$patch_file")" == "#"* ]] && continue
-                
-                log_warning "   Applying patch: $(basename "$patch_file")"
-                if patch -p1 --dry-run < "$patch_file" >/dev/null 2>&1; then
-                    if ! patch -p1 --no-backup-if-mismatch < "$patch_file" >/dev/null 2>&1; then
-                        log_error "Error applying patch $(basename "$patch_file")"
+            if [ ${#patch_files[@]} -gt 0 ]; then
+                applied_any=true
+                (
+                    cd "$target_dir" || exit 1
+                    for patch_file in "${patch_files[@]}"; do
+                        [ ! -f "$patch_file" ] && continue
+                        [[ "$(basename "$patch_file")" == "#"* ]] && continue
+                        log_warning "- Applying patch: $(basename "$patch_file") -> $input_name"
+                        if patch -p1 --dry-run < "$patch_file" >/dev/null 2>&1; then
+                            if ! patch -p1 --no-backup-if-mismatch < "$patch_file" >/dev/null 2>&1; then
+                                log_error "Error applying patch $(basename "$patch_file")"
+                                exit 1
+                            fi
+                        else
+                            log_error "Patch $(basename "$patch_file") is not compatible"
+                            exit 1
+                        fi
+                    done
+                ) || return 1
+            fi
+        fi
+    else
+        # Fallback: search across all patch folders for backward compatibility
+        local variant="${PATCH_SMALI:-essi}"
+        local patch_type="Jar"
+        [[ "$input_name" == *.apk ]] && patch_type="Apk"
+
+        local candidate_dirs=(
+            "$patches_root/common/$patch_type"
+            "$patches_root/$variant/$patch_type"
+        )
+
+        for variant_dir in "${candidate_dirs[@]}"; do
+            [ ! -d "$variant_dir" ] && continue
+
+            local patch_dir="$variant_dir/$base_name"
+            [ ! -d "$patch_dir" ] && continue
+
+            if [ -n "$specific_patch" ] && [ ! -f "$patch_dir/$specific_patch" ]; then
+                continue
+            fi
+
+            applied_any=true
+
+            (
+                cd "$target_dir" || exit 1
+                local patch_list=()
+                if [ -n "$specific_patch" ]; then
+                    patch_list=("$patch_dir/$specific_patch")
+                else
+                    patch_list=("$patch_dir"/*.patch)
+                fi
+
+                for patch_file in "${patch_list[@]}"; do
+                    [ ! -f "$patch_file" ] && continue
+                    [[ "$(basename "$patch_file")" == "#"* ]] && continue
+                    log_warning "- Applying patch: $(basename "$patch_file") -> $input_name"
+                    if patch -p1 --dry-run < "$patch_file" >/dev/null 2>&1; then
+                        if ! patch -p1 --no-backup-if-mismatch < "$patch_file" >/dev/null 2>&1; then
+                            log_error "Error applying patch $(basename "$patch_file")"
+                            exit 1
+                        fi
+                    else
+                        log_error "Patch $(basename "$patch_file") is not compatible"
                         exit 1
                     fi
-                else
-                    log_error "Patch $(basename "$patch_file") is not compatible"
-                    exit 1
-                fi
-            done
-        ) || return 1
-    done
+                done
+            ) || return 1
+        done
+    fi
 
-    [ "$applied_any" = true ] && log_success "   Smali patches applied successfully for $input_name"
     return 0
 }
 
@@ -234,9 +260,8 @@ compile() {
     mkdir -p "$BUILD_OUTPUT_DIR"
     mkdir -p "$BUILD_SIGNED_DIR"
 
-    log_warning "   Building $input_name..."
+    log_warning "Building $input_name"
 
-    # Ensure metadata is preserved for APKs
     mkdir -p "$module_dir/build/apk"
     if [ -d "$module_dir/original/META-INF" ]; then
         cp -a "$module_dir/original/META-INF" "$module_dir/build/apk/META-INF"
@@ -263,7 +288,7 @@ compile() {
         local cert_prefix="aosp_platform"
         [ "$OFFICIAL_ROM" = "true" ] && cert_prefix="lich-ota"
 
-        log_warning "   Signing $input_name..."
+        log_warning "Signing $input_name"
         local temp_signed="${signed_file%.apk}-tmp.apk"
         "$dir_work/tools/bin/signapk" \
             "$dir_work/platform/security/${cert_prefix}.x509.pem" \
@@ -273,18 +298,16 @@ compile() {
 
         mv -f "$temp_signed" "$signed_file"
     else
-        log_warning "   Zipaligning $input_name..."
+        log_warning "Zipaligning $input_name"
         local temp_aligned="${signed_file}-tmp"
         "$dir_work/tools/bin/zipalign" -p 4 "$built_file" "$temp_aligned" || return 1
         mv -f "$temp_aligned" "$signed_file"
     fi
 
-    # Cleanup build remains
     local dest_dir_out="$(dirname "$signed_file")"
     rm -rf "$dest_dir_out/oat"
     rm -f "$dest_dir_out/$input_name.prof" "$dest_dir_out/$input_name.bprof"
 
-    # Restore to original firmware location
     for item in "${COPY_LIST[@]}"; do
         [[ "$item" =~ ^[[:space:]]*# ]] && continue
         
@@ -292,11 +315,9 @@ compile() {
         local original_filename="${item#*:}"
         
         if [ "$original_filename" = "$input_name" ]; then
-            log_success "Restoring $input_name to $src_dir..."
+            log_success "Restored $input_name"
             cp "$signed_file" "$src_dir/$original_filename" || return 1
             break
         fi
     done
-
-    log_success "Compile and restore completed for $input_name"
 }
