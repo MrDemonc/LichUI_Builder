@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 source "$dir_work/scripts/utils/apktool_utils.sh"
 source "$dir_work/scripts/utils/smali_utils.sh"
@@ -8,69 +9,101 @@ if [ -f "${dir_work}/out/flags/.apktool" ]; then
     exit 0
 fi
 
+PATCHES_ROOT="$dir_work/platform/customization/patches"
+
 # Framework configuration
 setup_framework
 
-## Jar files to patch
+# ========================================================
+# 1. Discover all unique APKs and JARs from patch folders
+# ========================================================
+declare -A UNIQUE_INPUTS
 
-# services.jar
-decompile "services.jar"
-smali_patch "services.jar" "0001-Allow-custom-platform-signature.patch"
-smali_patch "services.jar" "0004-Auto-Confirm-Pin.patch"
-smali_patch "services.jar" "0005-Disable-SAK-in-DarManagerService.patch"
-# Appli sign key
-source "$dir_work/platform/customization/patches/aosp_signature/signature.sh"
-compile "services.jar"
+for variant in "essi" "common"; do
+    variant_path="$PATCHES_ROOT/$variant"
+    [ ! -d "$variant_path" ] && continue
 
-# framework.jar
-decompile "framework.jar"
-smali_patch "framework.jar" "0005-Introduce-CsFeatureHooks.patch"
-#smali_patch "framework.jar"
-compile "framework.jar"
+    while IFS= read -r -d '' patch_dir; do
+        patch_name=$(basename "$patch_dir")
+        [[ "$patch_name" == "#"* ]] && continue
 
-# knoxsdk.jar
-#decompile "knoxsdk.jar"
-#smali_patch "knoxsdk.jar"
-#compile "knoxsdk.jar"
+        system_dir="$patch_dir/system"
+        [ ! -d "$system_dir" ] && continue
 
-# samsungkeystoreutils.jar
-#decompile "samsungkeystoreutils.jar"
-#smali_patch "samsungkeystoreutils.jar"
-#compile "samsungkeystoreutils.jar"
+        while IFS= read -r -d '' apk_dir; do
+            input_name=$(basename "$apk_dir")
+            UNIQUE_INPUTS["$input_name"]=1
+        done < <(find "$system_dir" -type d \( -name "*.apk" -o -name "*.jar" \) -print0 2>/dev/null)
+    done < <(find "$variant_path" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+done
 
-# Apks to patch
+# Add framework-res overlay APK (not referenced in patch folders but needed)
+UNIQUE_INPUTS["framework-res__r11sxxx__auto_generated_rro_product.apk"]=1
 
-# Systemui.apk
-decompile "SystemUI.apk"
-smali_patch "SystemUI.apk" "0001-Enable-real-time-network-speed-in-status-bar.patch"
-#smali_patch "SystemUI.apk"
-compile "SystemUI.apk"
+if [ ${#UNIQUE_INPUTS[@]} -eq 0 ]; then
+    log_warning "No APKs or JARs found to patch"
+    exit 0
+fi
 
-# SecSettings.apk
-decompile "SecSettings.apk"
-smali_patch "SecSettings.apk" "0002-Real-Model-Version.patch"
-smali_patch "SecSettings.apk" "0003-Auto-Confirm-Pin.patch"
-smali_patch "SecSettings.apk" "0004-OneUI-minor-version.patch"
-smali_patch "SecSettings.apk" "0006-Enable-real-time-network-speed-in-status-bar.patch"
-#smali_patch "SecSettings.apk"
-#cp "$dir_work/platform/customization/patches/common/Apk/SecSettings/res/drawable/lich_logo.png" "$dir_work/out/apktool/working/SecSettings/res/drawable/lich_logo.png"
-compile "SecSettings.apk"
+echo ""
+log_info "━━━ Decompiling ━━━"
+echo ""
 
-# DAAgent.apk
-#decompile "DAAgent.apk"
-#smali_patch "DAAgent.apk"
-#compile "DAAgent.apk"
+# ========================================================
+# 2. Decompile all unique inputs
+# ========================================================
+for input_name in "${!UNIQUE_INPUTS[@]}"; do
+    decompile "$input_name"
+done
 
-# BiometricSetting.apk
-decompile "BiometricSetting.apk"
-smali_patch "BiometricSetting.apk"
-compile "BiometricSetting.apk"
+echo ""
+log_info "━━━ Applying patches ━━━"
+echo ""
 
-# framework-res__r11sxxx__auto_generated_rro_product.apk
-decompile "framework-res__r11sxxx__auto_generated_rro_product.apk"
-smali_patch "framework-res__r11sxxx__auto_generated_rro_product.apk"
-source "$dir_work/target/$TARGET/product/overlay.sh" > /dev/null
-compile "framework-res__r11sxxx__auto_generated_rro_product.apk"
+# ========================================================
+# 3. Execute each patch folder's customize.sh
+# ========================================================
+for variant in "essi" "common"; do
+    variant_path="$PATCHES_ROOT/$variant"
+    [ ! -d "$variant_path" ] && continue
 
+    while IFS= read -r -d '' patch_dir; do
+        patch_name=$(basename "$patch_dir")
+        [[ "$patch_name" == "#"* ]] && continue
+
+        customize_script="$patch_dir/customize.sh"
+        disabled_script="$patch_dir/#customize.sh"
+
+        if [ -f "$disabled_script" ]; then
+            log_warning "Skipping disabled patch: $patch_name ($variant)"
+        elif [ -f "$customize_script" ]; then
+            echo -e "${GREEN}[W] $patch_name -> $variant${NC}"
+            export CURRENT_PATCH_DIR="$patch_dir"
+            source "$customize_script"
+        fi
+    done < <(find "$variant_path" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+done
+
+# ========================================================
+# 4. Special: target-specific overlay for framework-res
+# ========================================================
+target_overlay="$dir_work/target/$TARGET/product/overlay.sh"
+if [ -f "$target_overlay" ]; then
+    echo -e "${GREEN}[W] Stock overlays -> overlay${NC}"
+    source "$target_overlay" > /dev/null
+fi
+
+echo ""
+log_info "━━━ Compiling ━━━"
+echo ""
+
+# ========================================================
+# 5. Compile all
+# ========================================================
+for input_name in "${!UNIQUE_INPUTS[@]}"; do
+    compile "$input_name"
+done
+
+echo ""
 log_success "Process completed successfully"
 touch "${dir_work}/out/flags/.apktool"
