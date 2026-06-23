@@ -26,6 +26,7 @@ COPY_LIST=(
     "$APP/DAAgent:DAAgent.apk"
     "$PRIV_APP/BiometricSetting:BiometricSetting.apk"
     "$PRIV_APP/SecSettings:SecSettings.apk"
+    "$PRIV_APP/SecSettingsIntelligence:SecSettingsIntelligence.apk"
     "$PRODUCT_OVERLAY:framework-res__r11sxxx__auto_generated_rro_product.apk"
     "$SYSTEM_UI/SystemUI:SystemUI.apk"
     "$FRAMEWORK:services.jar"
