@@ -1,22 +1,24 @@
-diff --color -ruN a/smali/com/android/systemui/QpRune.smali b/smali/com/android/systemui/QpRune.smali
---- a/smali/com/android/systemui/QpRune.smali	2025-11-26 16:14:28.323869497 -0500
-+++ b/smali/com/android/systemui/QpRune.smali	2025-11-26 16:19:28.406323959 -0500
-@@ -308,17 +308,7 @@
+diff --color -ruN g/smali/com/android/systemui/QpRune.smali h/smali/com/android/systemui/QpRune.smali
+--- g/smali/com/android/systemui/QpRune.smali	2026-06-18 08:05:13.078191300 -0500
++++ h/smali/com/android/systemui/QpRune.smali	2026-06-22 09:20:41.882996838 -0500
+@@ -422,18 +422,8 @@
  
-     sput-boolean v3, Lcom/android/systemui/QpRune;->QUICK_TILE_FLASHLIGHT_INTENSITY:Z
+     sput-boolean v5, Lcom/android/systemui/QpRune;->QUICK_TILE_FLASHLIGHT_INTENSITY:Z
  
 -    invoke-static {}, Lcom/samsung/android/feature/SemCscFeature;->getInstance()Lcom/samsung/android/feature/SemCscFeature;
 -
--    move-result-object v3
+-    move-result-object v5
 -
--    const-string v4, "CscFeature_Common_SupportZProjectFunctionInGlobal"
+-    const-string v6, "CscFeature_Common_SupportZProjectFunctionInGlobal"
 -
--    invoke-virtual {v3, v4, v2}, Lcom/samsung/android/feature/SemCscFeature;->getBoolean(Ljava/lang/String;Z)Z
+-    invoke-virtual {v5, v6, v3}, Lcom/samsung/android/feature/SemCscFeature;->getBoolean(Ljava/lang/String;Z)Z
 -
--    move-result v3
+-    move-result v5
 -
--    sput-boolean v3, Lcom/android/systemui/QpRune;->QUICK_TILE_HIDE_FROM_BAR:Z
-+    sput-boolean v1, Lcom/android/systemui/QpRune;->QUICK_TILE_HIDE_FROM_BAR:Z
+-    sput-boolean v5, Lcom/android/systemui/QpRune;->QUICK_TILE_HIDE_FROM_BAR:Z
+-
++    sput-boolean v3, Lcom/android/systemui/QpRune;->QUICK_TILE_HIDE_FROM_BAR:Z
++    
+     sput-boolean v0, Lcom/android/systemui/QpRune;->QUICK_TILE_NO_ANIMATION:Z
  
      invoke-static {}, Lcom/samsung/android/feature/SemFloatingFeature;->getInstance()Lcom/samsung/android/feature/SemFloatingFeature;
- 

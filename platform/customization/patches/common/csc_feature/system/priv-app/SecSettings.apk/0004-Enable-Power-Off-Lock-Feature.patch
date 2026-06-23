@@ -1,7 +1,7 @@
-diff --color -ruN a/smali_classes3/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali b/smali_classes3/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali
---- a/smali_classes3/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali	2025-11-26 14:53:33.415870550 -0500
-+++ b/smali_classes3/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali	2025-11-26 15:09:59.526740826 -0500
-@@ -41,29 +41,13 @@
+diff --color -ruN a/smali_classes5/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali b/smali_classes5/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali
+--- a/smali_classes5/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali	2026-06-17 15:26:13.886012740 -0500
++++ b/smali_classes5/com/samsung/android/settings/security/PowerOffLockPreferenceController.smali	2026-06-22 08:48:30.627348383 -0500
+@@ -49,29 +49,13 @@
  
      move-result p0
  

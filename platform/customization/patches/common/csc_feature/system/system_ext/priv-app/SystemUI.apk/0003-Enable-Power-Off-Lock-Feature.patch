@@ -1,17 +1,17 @@
-diff --color -ruN a/smali/com/android/systemui/bixby2/controller/DeviceController.smali b/smali/com/android/systemui/bixby2/controller/DeviceController.smali
---- a/smali/com/android/systemui/bixby2/controller/DeviceController.smali	2025-11-26 16:14:28.362266570 -0500
-+++ b/smali/com/android/systemui/bixby2/controller/DeviceController.smali	2025-11-26 16:26:53.146122225 -0500
+diff --color -ruN g/smali_classes2/com/android/systemui/bixby2/controller/DeviceController.smali h/smali_classes2/com/android/systemui/bixby2/controller/DeviceController.smali
+--- g/smali_classes2/com/android/systemui/bixby2/controller/DeviceController.smali	2026-06-18 08:04:49.560754431 -0500
++++ h/smali_classes2/com/android/systemui/bixby2/controller/DeviceController.smali	2026-06-22 09:29:45.540969755 -0500
 @@ -139,17 +139,9 @@
  .method private isSupportPowerOffLock()Z
      .locals 1
  
--    invoke-static {}, Lcom/samsung/android/feature/SemCscFeature;->getInstance()Lcom/samsung/android/feature/SemCscFeature;
+-    const-string p0, "BR"
 -
--    move-result-object p0
+-    invoke-static {}, Landroid/os/SemSystemProperties;->getCountryIso()Ljava/lang/String;
 -
--    const-string v0, "CscFeature_SystemUI_SupportPowerOffLock"
+-    move-result-object v0
 -
--    invoke-virtual {p0, v0}, Lcom/samsung/android/feature/SemCscFeature;->getBoolean(Ljava/lang/String;)Z
+-    invoke-virtual {p0, v0}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
 -
 -    move-result p0
 -

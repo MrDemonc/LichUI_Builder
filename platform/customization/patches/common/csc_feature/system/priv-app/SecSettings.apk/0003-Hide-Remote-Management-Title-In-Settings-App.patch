@@ -1,9 +1,9 @@
-diff --color -ruN a/smali_classes4/com/samsung/android/settings/homepage/TopLevelRemoteSupportPreferenceController.smali b/smali_classes4/com/samsung/android/settings/homepage/TopLevelRemoteSupportPreferenceController.smali
---- a/smali_classes4/com/samsung/android/settings/homepage/TopLevelRemoteSupportPreferenceController.smali	2025-11-26 15:46:03.337838434 -0500
-+++ b/smali_classes4/com/samsung/android/settings/homepage/TopLevelRemoteSupportPreferenceController.smali	2025-11-26 15:49:21.060481319 -0500
-@@ -459,157 +459,11 @@
+diff --color -ruN a/smali_classes5/com/samsung/android/settings/homepage/TopLevelRemoteSupportPreferenceController.smali b/smali_classes5/com/samsung/android/settings/homepage/TopLevelRemoteSupportPreferenceController.smali
+--- a/smali_classes5/com/samsung/android/settings/homepage/TopLevelRemoteSupportPreferenceController.smali	2026-06-17 15:26:13.160891047 -0500
++++ b/smali_classes5/com/samsung/android/settings/homepage/TopLevelRemoteSupportPreferenceController.smali	2026-06-22 09:11:05.650829802 -0500
+@@ -467,157 +467,11 @@
+ .end method
  
- # virtual methods
  .method public getAvailabilityStatus()I
 -    .locals 2
 +    .locals 1
@@ -56,7 +56,7 @@ diff --color -ruN a/smali_classes4/com/samsung/android/settings/homepage/TopLeve
 -    :cond_1
 -    iget-object v0, p0, Lcom/android/settingslib/core/AbstractPreferenceController;->mContext:Landroid/content/Context;
 -
--    const v1, 0x7f140a95
+-    const v1, 0x7f150af0
 -
 -    invoke-virtual {v0, v1}, Landroid/content/Context;->getString(I)Ljava/lang/String;
 -
