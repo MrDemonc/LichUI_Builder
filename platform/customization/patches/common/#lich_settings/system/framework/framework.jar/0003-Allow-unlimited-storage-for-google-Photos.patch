@@ -1,7 +1,7 @@
-diff --color -ruN c/smali/android/app/ApplicationPackageManager.smali d/smali/android/app/ApplicationPackageManager.smali
---- c/smali/android/app/ApplicationPackageManager.smali	2025-12-18 08:18:24.452930764 -0500
-+++ d/smali/android/app/ApplicationPackageManager.smali	2025-12-18 14:43:15.818575037 -0500
-@@ -30,6 +30,8 @@
+diff --color -ruN a/smali/android/app/ApplicationPackageManager.smali b/smali/android/app/ApplicationPackageManager.smali
+--- a/smali/android/app/ApplicationPackageManager.smali	2026-06-29 08:05:46.035823138 -0500
++++ b/smali/android/app/ApplicationPackageManager.smali	2026-06-29 08:52:22.942872807 -0500
+@@ -33,6 +33,8 @@
  
  .field private static final greylist-max-o DEFAULT_EPHEMERAL_COOKIE_MAX_SIZE_BYTES:I = 0x4000
  
@@ -10,16 +10,7 @@ diff --color -ruN c/smali/android/app/ApplicationPackageManager.smali d/smali/an
  .field private static final blacklist HAS_SYSTEM_FEATURE_API:Ljava/lang/String; = "has_system_feature"
  
  .field private static final blacklist LIVE_ICON_SUFFIX:Ljava/lang/String; = ".LiveIconLoader"
-@@ -209,7 +211,7 @@
- .end method
- 
- .method static constructor blacklist <clinit>()V
--    .locals 5
-+    .locals 7
- 
-     new-instance v0, Landroid/util/ArrayMap;
- 
-@@ -255,6 +257,22 @@
+@@ -270,6 +272,22 @@
  
      sput-object v0, Landroid/app/ApplicationPackageManager;->mHasSystemFeatureCache:Landroid/app/PropertyInvalidatedCache;
  
@@ -42,7 +33,7 @@ diff --color -ruN c/smali/android/app/ApplicationPackageManager.smali d/smali/an
      new-instance v0, Landroid/app/ApplicationPackageManager$3;
  
      new-instance v1, Landroid/app/PropertyInvalidatedCache$Args;
-@@ -10449,26 +10467,65 @@
+@@ -10564,26 +10582,65 @@
  .end method
  
  .method public whitelist hasSystemFeature(Ljava/lang/String;I)Z
@@ -112,7 +103,7 @@ diff --color -ruN c/smali/android/app/ApplicationPackageManager.smali d/smali/an
  
      invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z
  
-@@ -10476,10 +10533,10 @@
+@@ -10591,10 +10648,10 @@
  
      return p0
  
@@ -125,7 +116,7 @@ diff --color -ruN c/smali/android/app/ApplicationPackageManager.smali d/smali/an
  
      invoke-static {}, Landroid/content/pm/SystemFeaturesCache;->getInstance()Landroid/content/pm/SystemFeaturesCache;
  
-@@ -10489,7 +10546,7 @@
+@@ -10604,7 +10661,7 @@
  
      move-result-object p0
  
@@ -134,7 +125,7 @@ diff --color -ruN c/smali/android/app/ApplicationPackageManager.smali d/smali/an
  
      invoke-virtual {p0}, Ljava/lang/Boolean;->booleanValue()Z
  
-@@ -10497,7 +10554,7 @@
+@@ -10612,7 +10669,7 @@
  
      return p0
  

@@ -1,35 +1,62 @@
 diff --color -ruN a/smali/com/samsung/android/knox/EnterpriseDeviceManager.smali b/smali/com/samsung/android/knox/EnterpriseDeviceManager.smali
---- a/smali/com/samsung/android/knox/EnterpriseDeviceManager.smali	2025-11-24 11:45:34.184632846 -0500
-+++ b/smali/com/samsung/android/knox/EnterpriseDeviceManager.smali	2025-11-24 11:48:25.898154965 -0500
-@@ -600,29 +600,11 @@
+--- a/smali/com/samsung/android/knox/EnterpriseDeviceManager.smali	2026-06-29 15:56:04.749427669 -0500
++++ b/smali/com/samsung/android/knox/EnterpriseDeviceManager.smali	2026-06-29 17:13:03.153766331 -0500
+@@ -576,27 +576,47 @@
  .end method
  
  .method public static greylist getAPILevel()I
 -    .locals 2
-+    .locals 1
++    .locals 5
  
--    :try_start_0
+     :try_start_0
 -    invoke-static {}, Lcom/samsung/android/knox/EdmUtils;->getAPILevelForInternal()I
-+    invoke-static {}, Lio/lichlabs/lich/SamsungPropsHooks;->onEDMGetAPILevelHook()I
++    const-string v0, "io.lichlabs.lich.SamsungPropsHooks"
  
-     move-result v0
+-    move-result v0
 -    :try_end_0
 -    .catch Ljava/lang/UnsupportedOperationException; {:try_start_0 .. :try_end_0} :catch_0
--
++    invoke-static {v0}, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
+ 
 -    return v0
--
++    move-result-object v0
+ 
 -    :catch_0
 -    move-exception v0
--
--    sget-object v1, Lcom/samsung/android/knox/EnterpriseDeviceManager;->TAG:Ljava/lang/String;
--
--    invoke-virtual {v0}, Ljava/lang/UnsupportedOperationException;->getMessage()Ljava/lang/String;
--
--    move-result-object v0
--
--    invoke-static {v1, v0}, Landroid/util/Log;->e(Ljava/lang/String;Ljava/lang/String;)I
--
--    const/4 v0, 0x0
++    const-string v1, "onEDMGetAPILevelHook"
++
++    const/4 v2, 0x0
++
++    new-array v3, v2, [Ljava/lang/Class;
++
++    invoke-virtual {v0, v1, v3}, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
++
++    move-result-object v0
  
-     return v0
- .end method
+-    sget-object v1, Lcom/samsung/android/knox/EnterpriseDeviceManager;->TAG:Ljava/lang/String;
++    new-array v1, v2, [Ljava/lang/Object;
+ 
+-    invoke-virtual {v0}, Ljava/lang/UnsupportedOperationException;->getMessage()Ljava/lang/String;
++    const/4 v3, 0x0
++
++    invoke-virtual {v0, v3, v1}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+ 
+     move-result-object v0
+ 
+-    invoke-static {v1, v0}, Landroid/util/Log;->e(Ljava/lang/String;Ljava/lang/String;)I
++    check-cast v0, Ljava/lang/Integer;
++
++    invoke-virtual {v0}, Ljava/lang/Integer;->intValue()I
++
++    move-result v0
++
++    return v0
++    :try_end_0
++    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
++
++    :catch_0
++    move-exception v0
++
++    :goto_0
+ 
+     const/4 v0, 0x0
+ 

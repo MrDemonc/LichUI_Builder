@@ -1,0 +1,132 @@
+diff --color -ruN e/smali_classes13/com/samsung/android/smartsuggestions/featureconfig/rune/Rune.smali f/smali_classes13/com/samsung/android/smartsuggestions/featureconfig/rune/Rune.smali
+--- e/smali_classes13/com/samsung/android/smartsuggestions/featureconfig/rune/Rune.smali	2026-06-30 09:17:42.802565032 -0500
++++ f/smali_classes13/com/samsung/android/smartsuggestions/featureconfig/rune/Rune.smali	2026-07-01 17:02:20.603484062 -0500
+@@ -8534,21 +8534,11 @@
+ .end method
+ 
+ .method public final getSUPPORT_NOW_NUDGE()Z
+-    .locals 0
++    .locals 1
+ 
+-    sget-object p0, Lcom/samsung/android/smartsuggestions/featureconfig/rune/Rune;->SUPPORT_NOW_NUDGE$delegate:Lkotlin/f;
++    const/4 v0, 0x1
+ 
+-    invoke-interface {p0}, Lkotlin/f;->getValue()Ljava/lang/Object;
+-
+-    move-result-object p0
+-
+-    check-cast p0, Ljava/lang/Boolean;
+-
+-    invoke-virtual {p0}, Ljava/lang/Boolean;->booleanValue()Z
+-
+-    move-result p0
+-
+-    return p0
++    return v0
+ .end method
+ 
+ .method public final getSUPPORT_NUDGE_EXPAND()Z
+diff --color -ruN e/smali_classes13/com/samsung/android/smartsuggestions/service/screenintelligence/setting/NowNudgesSettingHelper.smali f/smali_classes13/com/samsung/android/smartsuggestions/service/screenintelligence/setting/NowNudgesSettingHelper.smali
+--- e/smali_classes13/com/samsung/android/smartsuggestions/service/screenintelligence/setting/NowNudgesSettingHelper.smali	2026-06-30 09:17:46.917080528 -0500
++++ f/smali_classes13/com/samsung/android/smartsuggestions/service/screenintelligence/setting/NowNudgesSettingHelper.smali	2026-07-01 17:04:14.301865030 -0500
+@@ -235,97 +235,11 @@
+ .end method
+ 
+ .method private final internalNowNudgesSwitchOn(Landroid/content/Context;)Z
+-    .locals 9
++    .locals 1
+ 
+-    sget-object v0, Lcom/samsung/android/smartsuggestions/featureconfig/rune/Rune;->INSTANCE:Lcom/samsung/android/smartsuggestions/featureconfig/rune/Rune;
++    const/4 v0, 0x1
+ 
+-    invoke-virtual {v0}, Lcom/samsung/android/smartsuggestions/featureconfig/rune/Rune;->getSUPPORT_NOW_NUDGE()Z
+-
+-    move-result v0
+-
+-    const-string v1, "NowNudgesSettingHelper[recall]"
+-
+-    const/4 v2, 0x0
+-
+-    if-nez v0, :cond_0
+-
+-    const-string/jumbo p0, "internalNowNudgesSwitchOn, SUPPORT_NOW_NUDGE: false"
+-
+-    invoke-static {v1, p0}, Lrd/e;->h(Ljava/lang/String;Ljava/lang/String;)V
+-
+-    return v2
+-
+-    :cond_0
+-    invoke-direct {p0, p1}, Lcom/samsung/android/smartsuggestions/service/screenintelligence/setting/NowNudgesSettingHelper;->getNowNudgeSetting(Landroid/content/Context;)I
+-
+-    move-result v0
+-
+-    const/4 v3, 0x1
+-
+-    if-eqz v0, :cond_1
+-
+-    move v0, v3
+-
+-    goto :goto_0
+-
+-    :cond_1
+-    move v0, v2
+-
+-    :goto_0
+-    invoke-direct {p0, p1}, Lcom/samsung/android/smartsuggestions/service/screenintelligence/setting/NowNudgesSettingHelper;->isOnNowNudgesInApp(Landroid/content/Context;)Z
+-
+-    move-result v4
+-
+-    invoke-static {p1}, Lcom/samsung/android/app/deepsky/data/suggestion/SuggestionPreference;->isSmartSuggestionsEnabled(Landroid/content/Context;)Z
+-
+-    move-result v5
+-
+-    invoke-direct {p0, p1}, Lcom/samsung/android/smartsuggestions/service/screenintelligence/setting/NowNudgesSettingHelper;->isAvailableAccount(Landroid/content/Context;)Z
+-
+-    move-result p0
+-
+-    invoke-static {p1}, Lsd/a;->b(Landroid/content/Context;)Z
+-
+-    move-result p1
+-
+-    const-string v6, ", nudge global: "
+-
+-    const-string v7, ", inApp: "
+-
+-    const-string/jumbo v8, "internalNowNudgesSwitchOn, pid main: "
+-
+-    invoke-static {v8, v6, v7, v5, v0}, Landroidx/glance/appwidget/util/b;->p(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZ)Ljava/lang/StringBuilder;
+-
+-    move-result-object v6
+-
+-    const-string v7, ", account: "
+-
+-    const-string v8, ", page: "
+-
+-    invoke-static {v6, v4, v7, p0, v8}, Landroidx/credentials/playservices/controllers/GetRestoreCredential/b;->w(Ljava/lang/StringBuilder;ZLjava/lang/String;ZLjava/lang/String;)V
+-
+-    invoke-virtual {v6, p1}, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;
+-
+-    invoke-virtual {v6}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+-
+-    move-result-object v6
+-
+-    invoke-static {v1, v6}, Lrd/e;->h(Ljava/lang/String;Ljava/lang/String;)V
+-
+-    if-eqz v0, :cond_2
+-
+-    if-eqz v4, :cond_2
+-
+-    if-eqz v5, :cond_2
+-
+-    if-eqz p0, :cond_2
+-
+-    if-eqz p1, :cond_2
+-
+-    return v3
+-
+-    :cond_2
+-    return v2
++    return v0
+ .end method
+ 
+ .method private final isAvailableAccount(Landroid/content/Context;)Z

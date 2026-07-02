@@ -118,6 +118,8 @@
     <local name="SUPPORT_RECORDING_LENS_CHANGE" value="true" />
     <local name="LIMITATION_FHD_60FPS_RECORDING_DURING_SMARTVIEW" value="true" />
     <local name="LIMITATION_UHD_RECORDING_DURING_SMARTVIEW" value="true" />
+    <local name="SUPPORT_DEFAULT_HEVC" value="true"/>
+    <local name="SUPPORT_HEVC_VIDEO_ENCODER" value="true"/>
     <!-- Auto Framing -->
     <local name="SUPPORT_VIDEO_AUTO_FRAMING" value="true" />
     <local name="SUPPORT_BACK_VIDEO_AUTO_FRAMING" value="true" />
@@ -222,5 +224,8 @@
     <local name="SUPPORT_CAMERA_ASSISTANT_OPTICAL_IMAGE_STABILIZATION" value="true"/>
     <local name="SUPPORT_CAMERA_ASSISTANT_PRO_MODE_PRESETS" value="true"/>
     <local name="SUPPORT_CAMERA_ASSISTANT_TOUCH_AF_AE_IN_PRO_VIDEO_MODE" value="true"/>
+    <local name="SUPPORT_CAMERA_ASSISTANT_ADAPTIVE_PIXEL" value="true"/>
+    <local name="SUPPORT_CAMERA_ASSISTANT_DIGITAL_ZOOM_UPSCALE" value="true"/>
+    <local name="DEFAULT_DIGITAL_ZOOM_UPSCALE" value="true"/>
 
 </resources>

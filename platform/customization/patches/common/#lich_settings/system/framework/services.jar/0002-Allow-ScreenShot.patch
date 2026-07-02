@@ -1,19 +1,19 @@
-diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService$SettingsObserver.smali b/smali_classes2/com/android/server/wm/WindowManagerService$SettingsObserver.smali
---- a/smali_classes2/com/android/server/wm/WindowManagerService$SettingsObserver.smali	2025-11-26 07:45:29.204819728 -0500
-+++ b/smali_classes2/com/android/server/wm/WindowManagerService$SettingsObserver.smali	2025-11-26 12:26:18.929440246 -0500
-@@ -93,9 +93,9 @@
- 
-     move-result-object v6
- 
--    const-string/jumbo v7, "disable_secure_windows"
-+    const-string/jumbo v7, "lich_secure_ss"
- 
--    invoke-static {v7}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
-+    invoke-static {v7}, Landroid/provider/Settings$System;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+diff --color -ruN c-services/smali_classes2/com/android/server/wm/WindowManagerService$SettingsObserver.smali d-services/smali_classes2/com/android/server/wm/WindowManagerService$SettingsObserver.smali
+--- c-services/smali_classes2/com/android/server/wm/WindowManagerService$SettingsObserver.smali	2026-06-28 16:16:49.429301066 -0500
++++ d-services/smali_classes2/com/android/server/wm/WindowManagerService$SettingsObserver.smali	2026-06-28 17:10:45.901555605 -0500
+@@ -95,9 +95,9 @@
  
      move-result-object v7
  
-@@ -847,20 +847,6 @@
+-    const-string/jumbo v8, "disable_secure_windows"
++    const-string/jumbo v8, "lich_secure_ss"
+ 
+-    invoke-static {v8}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
++    invoke-static {v8}, Landroid/provider/Settings$System;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+ 
+     move-result-object v8
+ 
+@@ -1396,20 +1396,6 @@
  .method public final updateDisableSecureWindows()V
      .locals 3
  
@@ -34,7 +34,7 @@ diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService$Se
      iget-object v0, p0, Lcom/android/server/wm/WindowManagerService$SettingsObserver;->this$0:Lcom/android/server/wm/WindowManagerService;
  
      iget-object v0, v0, Lcom/android/server/wm/WindowManagerService;->mContext:Landroid/content/Context;
-@@ -869,29 +855,28 @@
+@@ -1418,30 +1404,29 @@
  
      move-result-object v0
  
@@ -65,14 +65,15 @@ diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService$Se
 -    if-ne v0, v1, :cond_2
 +    if-ne v0, v1, :cond_1
  
-     goto :goto_0
+     :goto_0
+     return-void
  
 -    :cond_2
 +    :cond_1
      iget-object v0, p0, Lcom/android/server/wm/WindowManagerService$SettingsObserver;->this$0:Lcom/android/server/wm/WindowManagerService;
  
      iget-object v0, v0, Lcom/android/server/wm/WindowManagerService;->mGlobalLock:Lcom/android/server/wm/WindowManagerGlobalLock;
-@@ -900,7 +885,7 @@
+@@ -1450,7 +1435,7 @@
  
      monitor-enter v0
  
@@ -81,7 +82,7 @@ diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService$Se
      iget-object v2, p0, Lcom/android/server/wm/WindowManagerService$SettingsObserver;->this$0:Lcom/android/server/wm/WindowManagerService;
  
      iput-boolean v1, v2, Lcom/android/server/wm/WindowManagerService;->mDisableSecureWindows:Z
-@@ -912,8 +897,8 @@
+@@ -1462,8 +1447,8 @@
      invoke-virtual {p0}, Lcom/android/server/wm/RootWindowContainer;->refreshSecureSurfaceState()V
  
      monitor-exit v0
@@ -92,7 +93,7 @@ diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService$Se
  
      invoke-static {}, Lcom/android/server/wm/WindowManagerService;->resetPriorityAfterLockedSection()V
  
-@@ -923,10 +908,10 @@
+@@ -1472,10 +1457,10 @@
      :catchall_0
      move-exception p0
  

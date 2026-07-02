@@ -1,20 +1,52 @@
-diff --color -ruN c/smali_classes3/android/security/keystore2/AndroidKeyStoreSpi.smali d/smali_classes3/android/security/keystore2/AndroidKeyStoreSpi.smali
---- c/smali_classes3/android/security/keystore2/AndroidKeyStoreSpi.smali	2025-12-18 08:18:25.040753960 -0500
-+++ d/smali_classes3/android/security/keystore2/AndroidKeyStoreSpi.smali	2025-12-21 08:16:14.918012276 -0500
-@@ -3223,6 +3223,8 @@
+diff --color -ruN a/smali_classes3/android/security/keystore2/AndroidKeyStoreSpi.smali b/smali_classes3/android/security/keystore2/AndroidKeyStoreSpi.smali
+--- a/smali_classes3/android/security/keystore2/AndroidKeyStoreSpi.smali	2026-06-29 08:05:50.746419289 -0500
++++ b/smali_classes3/android/security/keystore2/AndroidKeyStoreSpi.smali	2026-06-29 12:37:55.418699979 -0500
+@@ -3223,6 +3223,40 @@
  .method public whitelist test-api engineGetCertificateChain(Ljava/lang/String;)[Ljava/security/cert/Certificate;
      .locals 4
  
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->onEngineGetCertificateChain()V
++    :try_start_ecc
++    const-string v0, "io.lichlabs.lich.PlayIntegrityHooks"
++
++    invoke-static {v0}, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
++
++    move-result-object v0
++
++    const-string v1, "onEngineGetCertificateChain"
++
++    const/4 v2, 0x0
++
++    new-array v2, v2, [Ljava/lang/Class;
++
++    invoke-virtual {v0, v1, v2}, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
++
++    move-result-object v0
++
++    const/4 v1, 0x0
++
++    new-array v1, v1, [Ljava/lang/Object;
++
++    const/4 v2, 0x0
++
++    invoke-virtual {v0, v2, v1}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
++    :try_end_ecc
++    .catch Ljava/lang/Exception; {:try_start_ecc .. :try_end_ecc} :catch_ecc
++
++    goto :goto_ecc
++
++    :catch_ecc
++    move-exception v0
++
++    :goto_ecc
 +
      invoke-direct {p0, p1}, Landroid/security/keystore2/AndroidKeyStoreSpi;->getKeyMetadata(Ljava/lang/String;)Landroid/system/keystore2/KeyEntryResponse;
  
      move-result-object p0
-diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0.smali d/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0.smali
---- c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0.smali	1969-12-31 19:00:00.000000000 -0500
-+++ d/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0.smali	2025-12-21 08:16:14.918584469 -0500
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0.smali b/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0.smali
+--- a/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0.smali	2026-06-29 12:27:13.375071686 -0500
 @@ -0,0 +1,30 @@
-+.class public final synthetic Lio/mesalabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0;
++.class public final synthetic Lio/lichlabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0;
 +.super Ljava/lang/Object;
 +.source "D8$$SyntheticClass"
 +
@@ -38,24 +70,25 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$$External
 +
 +    check-cast p1, Ljava/lang/StackTraceElement;
 +
-+    invoke-static {p1}, Lio/mesalabs/lich/PlayIntegrityHooks;->lambda$isCallerSafetyNet$0(Ljava/lang/StackTraceElement;)Z
++    invoke-static {p1}, Lio/lichlabs/lich/PlayIntegrityHooks;->lambda$isCallerSafetyNet$0(Ljava/lang/StackTraceElement;)Z
 +
 +    move-result p0
 +
 +    return p0
 +.end method
-diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$1.smali d/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$1.smali
---- c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$1.smali	1969-12-31 19:00:00.000000000 -0500
-+++ d/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$1.smali	2025-12-21 08:16:14.918619176 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks$1.smali b/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks$1.smali
+--- a/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks$1.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks$1.smali	2026-06-29 12:27:13.375169657 -0500
 @@ -0,0 +1,79 @@
-+.class Lio/mesalabs/lich/PlayIntegrityHooks$1;
++.class Lio/lichlabs/lich/PlayIntegrityHooks$1;
 +.super Landroid/app/TaskStackListener;
 +.source "PlayIntegrityHooks.java"
 +
 +
 +# annotations
 +.annotation system Ldalvik/annotation/EnclosingMethod;
-+    value = Lio/mesalabs/lich/PlayIntegrityHooks;->shouldTryToCertifyDevice()Z
++    value = Lio/lichlabs/lich/PlayIntegrityHooks;->shouldTryToCertifyDevice()Z
 +.end annotation
 +
 +.annotation system Ldalvik/annotation/InnerClass;
@@ -72,7 +105,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$1.smali d
 +.method constructor blacklist <init>(Z)V
 +    .locals 0
 +
-+    iput-boolean p1, p0, Lio/mesalabs/lich/PlayIntegrityHooks$1;->val$was:Z
++    iput-boolean p1, p0, Lio/lichlabs/lich/PlayIntegrityHooks$1;->val$was:Z
 +
 +    invoke-direct {p0}, Landroid/app/TaskStackListener;-><init>()V
 +
@@ -84,11 +117,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$1.smali d
 +.method public blacklist onTaskStackChanged()V
 +    .locals 2
 +
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->-$$Nest$smisGmsAddAccountActivityOnTop()Z
++    invoke-static {}, Lio/lichlabs/lich/PlayIntegrityHooks;->-$$Nest$smisGmsAddAccountActivityOnTop()Z
 +
 +    move-result v0
 +
-+    iget-boolean v1, p0, Lio/mesalabs/lich/PlayIntegrityHooks$1;->val$was:Z
++    iget-boolean v1, p0, Lio/lichlabs/lich/PlayIntegrityHooks$1;->val$was:Z
 +
 +    xor-int/2addr v1, v0
 +
@@ -98,7 +131,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$1.smali d
 +
 +    move-result-object v0
 +
-+    iget-boolean p0, p0, Lio/mesalabs/lich/PlayIntegrityHooks$1;->val$was:Z
++    iget-boolean p0, p0, Lio/lichlabs/lich/PlayIntegrityHooks$1;->val$was:Z
 +
 +    invoke-static {p0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
 +
@@ -116,7 +149,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$1.smali d
 +
 +    move-result-object p0
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/PlayIntegrityHooks;->-$$Nest$smdlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/PlayIntegrityHooks;->-$$Nest$smdlog(Ljava/lang/String;)V
 +
 +    invoke-static {}, Landroid/os/Process;->myPid()I
 +
@@ -127,11 +160,12 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks$1.smali d
 +    :cond_0
 +    return-void
 +.end method
-diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali
---- c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali	1969-12-31 19:00:00.000000000 -0500
-+++ d/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali	2025-12-21 08:16:14.918652216 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks.smali b/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks.smali
+--- a/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/PlayIntegrityHooks.smali	2026-06-29 12:27:13.375331715 -0500
 @@ -0,0 +1,1045 @@
-+.class public final Lio/mesalabs/lich/PlayIntegrityHooks;
++.class public final Lio/lichlabs/lich/PlayIntegrityHooks;
 +.super Ljava/lang/Object;
 +.source "PlayIntegrityHooks.java"
 +
@@ -178,7 +212,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +.method static bridge synthetic blacklist -$$Nest$smdlog(Ljava/lang/String;)V
 +    .locals 0
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    return-void
 +.end method
@@ -186,7 +220,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +.method static bridge synthetic blacklist -$$Nest$smisGmsAddAccountActivityOnTop()Z
 +    .locals 1
 +
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->isGmsAddAccountActivityOnTop()Z
++    invoke-static {}, Lio/lichlabs/lich/PlayIntegrityHooks;->isGmsAddAccountActivityOnTop()Z
 +
 +    move-result v0
 +
@@ -202,7 +236,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v0
 +
-+    sput-object v0, Lio/mesalabs/lich/PlayIntegrityHooks;->GMS_ADD_ACCOUNT_ACTIVITY:Landroid/content/ComponentName;
++    sput-object v0, Lio/lichlabs/lich/PlayIntegrityHooks;->GMS_ADD_ACCOUNT_ACTIVITY:Landroid/content/ComponentName;
 +
 +    return-void
 +.end method
@@ -236,9 +270,9 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v0
 +
-+    new-instance v1, Lio/mesalabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0;
++    new-instance v1, Lio/lichlabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0;
 +
-+    invoke-direct {v1}, Lio/mesalabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0;-><init>()V
++    invoke-direct {v1}, Lio/lichlabs/lich/PlayIntegrityHooks$$ExternalSyntheticLambda0;-><init>()V
 +
 +    invoke-interface {v0, v1}, Ljava/util/stream/Stream;->anyMatch(Ljava/util/function/Predicate;)Z
 +
@@ -269,7 +303,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    iget-object v1, v1, Landroid/app/ActivityTaskManager$RootTaskInfo;->topActivity:Landroid/content/ComponentName;
 +
-+    sget-object v2, Lio/mesalabs/lich/PlayIntegrityHooks;->GMS_ADD_ACCOUNT_ACTIVITY:Landroid/content/ComponentName;
++    sget-object v2, Lio/lichlabs/lich/PlayIntegrityHooks;->GMS_ADD_ACCOUNT_ACTIVITY:Landroid/content/ComponentName;
 +
 +    invoke-virtual {v1, v2}, Landroid/content/ComponentName;->equals(Ljava/lang/Object;)Z
 +
@@ -333,7 +367,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +.method public static blacklist onEngineGetCertificateChain()V
 +    .locals 1
 +
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->isPIFEnabled()Z
++    invoke-static {}, Lio/lichlabs/lich/PlayIntegrityHooks;->isPIFEnabled()Z
 +
 +    move-result v0
 +
@@ -342,7 +376,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +    goto :goto_0
 +
 +    :cond_0
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->shouldBlockKeyAttestation()Z
++    invoke-static {}, Lio/lichlabs/lich/PlayIntegrityHooks;->shouldBlockKeyAttestation()Z
 +
 +    move-result v0
 +
@@ -350,12 +384,12 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    const-string v0, "Key attestation blocking is disabled because a keybox is defined to spoof"
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    return-void
 +
 +    :cond_1
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->isCallerSafetyNet()Z
++    invoke-static {}, Lio/lichlabs/lich/PlayIntegrityHooks;->isCallerSafetyNet()Z
 +
 +    move-result v0
 +
@@ -367,7 +401,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +    :cond_2
 +    const-string v0, "Blocked key attestation"
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    new-instance v0, Ljava/lang/UnsupportedOperationException;
 +
@@ -408,7 +442,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v0
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-class v0, Landroid/os/Build;
 +
@@ -481,9 +515,9 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +    goto :goto_0
 +
 +    :cond_0
-+    sput-object v0, Lio/mesalabs/lich/PlayIntegrityHooks;->sProcessName:Ljava/lang/String;
++    sput-object v0, Lio/lichlabs/lich/PlayIntegrityHooks;->sProcessName:Ljava/lang/String;
 +
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->isPIFEnabled()Z
++    invoke-static {}, Lio/lichlabs/lich/PlayIntegrityHooks;->isPIFEnabled()Z
 +
 +    move-result v0
 +
@@ -500,7 +534,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    if-eqz v0, :cond_2
 +
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->shouldTryToCertifyDevice()Z
++    invoke-static {}, Lio/lichlabs/lich/PlayIntegrityHooks;->shouldTryToCertifyDevice()Z
 +
 +    move-result p0
 +
@@ -508,9 +542,9 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    const-string p0, "Spoofing build for GMS to pass CTS/Play Integrity API"
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->spoofBuildGms()V
++    invoke-static {}, Lio/lichlabs/lich/PlayIntegrityHooks;->spoofBuildGms()V
 +
 +    return-void
 +
@@ -523,7 +557,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    if-eqz p0, :cond_3
 +
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->spoofBuildGms()V
++    invoke-static {}, Lio/lichlabs/lich/PlayIntegrityHooks;->spoofBuildGms()V
 +
 +    :cond_3
 +    :goto_0
@@ -649,7 +683,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    if-nez v0, :cond_0
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
 +
 +    move-result v0
 +
@@ -709,7 +743,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v0
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +    :try_end_0
 +    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
 +
@@ -758,7 +792,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +    return v1
 +
 +    :cond_0
-+    invoke-static {}, Lio/mesalabs/lich/PlayIntegrityHooks;->isGmsAddAccountActivityOnTop()Z
++    invoke-static {}, Lio/lichlabs/lich/PlayIntegrityHooks;->isGmsAddAccountActivityOnTop()Z
 +
 +    move-result v0
 +
@@ -771,11 +805,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +    :cond_1
 +    const-string v3, "Skip spoofing build for GMS, because GmsAddAccountActivityOnTop!"
 +
-+    invoke-static {v3}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v3}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
-+    new-instance v3, Lio/mesalabs/lich/PlayIntegrityHooks$1;
++    new-instance v3, Lio/lichlabs/lich/PlayIntegrityHooks$1;
 +
-+    invoke-direct {v3, v0}, Lio/mesalabs/lich/PlayIntegrityHooks$1;-><init>(Z)V
++    invoke-direct {v3, v0}, Lio/lichlabs/lich/PlayIntegrityHooks$1;-><init>(Z)V
 +
 +    :try_start_0
 +    invoke-static {}, Landroid/app/ActivityTaskManager;->getService()Landroid/app/IActivityTaskManager;
@@ -831,11 +865,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v2}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v2, "PRODUCT"
 +
-+    invoke-static {v2, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
++    invoke-static {v2, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
 +
 +    :cond_0
 +    const-string v0, "persist.sys.pif.device"
@@ -864,11 +898,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v2}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v2, "DEVICE"
 +
-+    invoke-static {v2, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
++    invoke-static {v2, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
 +
 +    :cond_1
 +    const-string v0, "persist.sys.pif.manufacturer"
@@ -897,11 +931,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v2}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v2, "MANUFACTURER"
 +
-+    invoke-static {v2, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
++    invoke-static {v2, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
 +
 +    :cond_2
 +    const-string v0, "persist.sys.pif.brand"
@@ -930,11 +964,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v2}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v2, "BRAND"
 +
-+    invoke-static {v2, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
++    invoke-static {v2, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
 +
 +    :cond_3
 +    const-string v0, "persist.sys.pif.model"
@@ -963,11 +997,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v2}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v2, "MODEL"
 +
-+    invoke-static {v2, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
++    invoke-static {v2, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
 +
 +    :cond_4
 +    const-string v0, "persist.sys.pif.release"
@@ -996,11 +1030,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v2}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v2, "RELEASE"
 +
-+    invoke-static {v2, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setVersionFieldString(Ljava/lang/String;Ljava/lang/String;)V
++    invoke-static {v2, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setVersionFieldString(Ljava/lang/String;Ljava/lang/String;)V
 +
 +    :cond_5
 +    const-string v0, "persist.sys.pif.incremental"
@@ -1029,11 +1063,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v2}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v2, "INCREMENTAL"
 +
-+    invoke-static {v2, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setVersionFieldString(Ljava/lang/String;Ljava/lang/String;)V
++    invoke-static {v2, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setVersionFieldString(Ljava/lang/String;Ljava/lang/String;)V
 +
 +    :cond_6
 +    const-string v0, "persist.sys.pif.id"
@@ -1062,11 +1096,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v2}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v2, "ID"
 +
-+    invoke-static {v2, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
++    invoke-static {v2, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
 +
 +    :cond_7
 +    const-string v0, "persist.sys.pif.fingerprint"
@@ -1097,11 +1131,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v2}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v2, "FINGERPRINT"
 +
-+    invoke-static {v2, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
++    invoke-static {v2, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setPropValue(Ljava/lang/String;Ljava/lang/Object;)V
 +
 +    :cond_8
 +    const-string v0, "persist.sys.pif.security_patch"
@@ -1130,11 +1164,11 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v2}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v2, "SECURITY_PATCH"
 +
-+    invoke-static {v2, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setVersionFieldString(Ljava/lang/String;Ljava/lang/String;)V
++    invoke-static {v2, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setVersionFieldString(Ljava/lang/String;Ljava/lang/String;)V
 +
 +    :cond_9
 +    const-string v0, "persist.sys.pif.first_api_level"
@@ -1163,7 +1197,7 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result-object v1
 +
-+    invoke-static {v1}, Lio/mesalabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v1}, Lio/lichlabs/lich/PlayIntegrityHooks;->dlog(Ljava/lang/String;)V
 +
 +    const-string v1, "DEVICE_INITIAL_SDK_INT"
 +
@@ -1171,8 +1205,9 @@ diff --color -ruN c/smali_classes6/io/mesalabs/lich/PlayIntegrityHooks.smali d/s
 +
 +    move-result v0
 +
-+    invoke-static {v1, v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->setVersionFieldInt(Ljava/lang/String;I)V
++    invoke-static {v1, v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->setVersionFieldInt(Ljava/lang/String;I)V
 +
 +    :cond_a
 +    return-void
 +.end method
+\ No hay ningún carácter de nueva línea al final del archivo

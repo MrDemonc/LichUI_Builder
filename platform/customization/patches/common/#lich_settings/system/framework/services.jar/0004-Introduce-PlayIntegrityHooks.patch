@@ -1,13 +1,13 @@
-diff --color -ruN e/smali_classes2/com/android/server/wm/ActivityTaskManagerService.smali f/smali_classes2/com/android/server/wm/ActivityTaskManagerService.smali
---- e/smali_classes2/com/android/server/wm/ActivityTaskManagerService.smali	2025-12-20 09:05:24.610434023 -0500
-+++ f/smali_classes2/com/android/server/wm/ActivityTaskManagerService.smali	2025-12-21 08:17:42.389016222 -0500
-@@ -6766,10 +6766,19 @@
+diff --color -ruN c-services/smali_classes2/com/android/server/wm/ActivityTaskManagerService.smali d-services/smali_classes2/com/android/server/wm/ActivityTaskManagerService.smali
+--- c-services/smali_classes2/com/android/server/wm/ActivityTaskManagerService.smali	2026-06-28 16:16:48.843203836 -0500
++++ d-services/smali_classes2/com/android/server/wm/ActivityTaskManagerService.smali	2026-06-29 08:00:37.061315669 -0500
+@@ -8345,10 +8345,19 @@
  .method public final getFocusedRootTaskInfo()Landroid/app/ActivityTaskManager$RootTaskInfo;
      .locals 5
  
 +    iget-object v0, p0, Lcom/android/server/wm/ActivityTaskManagerService;->mContext:Landroid/content/Context;
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->shouldBypassTaskPermission(Landroid/content/Context;)Z
++    invoke-static {v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->shouldBypassTaskPermission(Landroid/content/Context;)Z
 +
 +    move-result v0
 +
@@ -21,7 +21,7 @@ diff --color -ruN e/smali_classes2/com/android/server/wm/ActivityTaskManagerServ
      invoke-static {}, Landroid/os/Binder;->clearCallingIdentity()J
  
      move-result-wide v0
-@@ -6792,7 +6801,7 @@
+@@ -8371,7 +8380,7 @@
  
      const/4 v4, 0x0
  
@@ -30,7 +30,7 @@ diff --color -ruN e/smali_classes2/com/android/server/wm/ActivityTaskManagerServ
  
      iget-object p0, p0, Lcom/android/server/wm/ActivityTaskManagerService;->mRootWindowContainer:Lcom/android/server/wm/RootWindowContainer;
  
-@@ -6802,13 +6811,13 @@
+@@ -8381,13 +8390,13 @@
  
      move-result-object p0
  
@@ -46,7 +46,7 @@ diff --color -ruN e/smali_classes2/com/android/server/wm/ActivityTaskManagerServ
      monitor-exit v2
      :try_end_1
      .catchall {:try_start_1 .. :try_end_1} :catchall_0
-@@ -6825,7 +6834,7 @@
+@@ -8404,7 +8413,7 @@
  
      goto :goto_1
  
@@ -55,13 +55,13 @@ diff --color -ruN e/smali_classes2/com/android/server/wm/ActivityTaskManagerServ
      :try_start_2
      monitor-exit v2
  
-@@ -12872,17 +12881,26 @@
+@@ -16757,17 +16766,26 @@
  .method public final registerTaskStackListener(Landroid/app/ITaskStackListener;)V
      .locals 2
  
 +    iget-object v0, p0, Lcom/android/server/wm/ActivityTaskManagerService;->mContext:Landroid/content/Context;
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/PlayIntegrityHooks;->shouldBypassTaskPermission(Landroid/content/Context;)Z
++    invoke-static {v0}, Lio/lichlabs/lich/PlayIntegrityHooks;->shouldBypassTaskPermission(Landroid/content/Context;)Z
 +
 +    move-result v0
 +
@@ -83,7 +83,7 @@ diff --color -ruN e/smali_classes2/com/android/server/wm/ActivityTaskManagerServ
  
      iget-object v0, p0, Lcom/android/server/wm/TaskChangeNotificationController;->mLocalTaskStackListeners:Ljava/util/ArrayList;
  
-@@ -12895,11 +12913,11 @@
+@@ -16780,11 +16798,11 @@
  
      move-result v1
  
@@ -97,7 +97,7 @@ diff --color -ruN e/smali_classes2/com/android/server/wm/ActivityTaskManagerServ
  
      move-object v1, p1
  
-@@ -12914,13 +12932,13 @@
+@@ -16799,13 +16817,13 @@
  
      goto :goto_1
  
@@ -113,7 +113,7 @@ diff --color -ruN e/smali_classes2/com/android/server/wm/ActivityTaskManagerServ
      monitor-exit v0
  
      return-void
-@@ -12932,14 +12950,14 @@
+@@ -16817,14 +16835,14 @@
  
      throw p0
  

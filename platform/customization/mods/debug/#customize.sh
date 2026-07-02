@@ -1,0 +1,1 @@
+add vendor "vendor/etc/init/init.debug.rc" "etc/init/init.debug.rc"

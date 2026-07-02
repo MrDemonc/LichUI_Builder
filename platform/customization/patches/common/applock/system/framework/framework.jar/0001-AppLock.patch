@@ -1,0 +1,12 @@
+diff --color -ruN i/smali_classes6/com/samsung/android/rune/CoreRune.smali j/smali_classes6/com/samsung/android/rune/CoreRune.smali
+--- i/smali_classes6/com/samsung/android/rune/CoreRune.smali	2026-07-01 14:56:24.584208424 -0500
++++ j/smali_classes6/com/samsung/android/rune/CoreRune.smali	2026-07-01 15:00:35.962256199 -0500
+@@ -3514,6 +3514,8 @@
+ 
+     move-result v2
+ 
++    const/4 v2, 0x1
++
+     sput-boolean v2, Lcom/samsung/android/rune/CoreRune;->FW_SUPPORT_APPLOCK:Z
+ 
+     sput-boolean v2, Lcom/samsung/android/rune/CoreRune;->FW_APPLOCK:Z

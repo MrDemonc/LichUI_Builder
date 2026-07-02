@@ -1,87 +1,149 @@
-diff --color -ruN c/smali/android/app/Instrumentation.smali d/smali/android/app/Instrumentation.smali
---- c/smali/android/app/Instrumentation.smali	2025-12-18 08:18:24.468301058 -0500
-+++ d/smali/android/app/Instrumentation.smali	2025-12-23 15:13:26.878629028 -0500
-@@ -746,6 +746,10 @@
- 
-     invoke-virtual {p0, p1}, Landroid/app/Application;->attach(Landroid/content/Context;)V
- 
-+    invoke-static {p1}, Lio/lichlabs/lich/SamsungPropsHooks;->init(Landroid/content/Context;)V
-+
-+    invoke-static {p1}, Lio/mesalabs/lich/PlayIntegrityHooks;->setProps(Landroid/content/Context;)V
-+
-     return-object p0
- .end method
- 
-@@ -4336,6 +4340,10 @@
- 
-     invoke-virtual {p0, p3}, Landroid/app/Application;->attach(Landroid/content/Context;)V
- 
-+    invoke-static {p3}, Lio/lichlabs/lich/SamsungPropsHooks;->init(Landroid/content/Context;)V
-+
-+    invoke-static {p3}, Lio/mesalabs/lich/PlayIntegrityHooks;->setProps(Landroid/content/Context;)V
-+
-     return-object p0
- .end method
- 
-diff --color -ruN c/smali_classes3/android/os/SystemProperties.smali d/smali_classes3/android/os/SystemProperties.smali
---- c/smali_classes3/android/os/SystemProperties.smali	2025-12-18 08:18:24.967450427 -0500
-+++ d/smali_classes3/android/os/SystemProperties.smali	2025-12-23 15:10:31.236424684 -0500
-@@ -373,15 +373,22 @@
+diff --color -ruN a/smali_classes3/android/os/SystemProperties.smali b/smali_classes3/android/os/SystemProperties.smali
+--- a/smali_classes3/android/os/SystemProperties.smali	2026-06-29 08:05:49.479084598 -0500
++++ b/smali_classes3/android/os/SystemProperties.smali	2026-06-29 11:50:35.780064818 -0500
+@@ -373,10 +373,59 @@
  .end method
  
  .method public static whitelist get(Ljava/lang/String;)Ljava/lang/String;
 -    .locals 0
-+    .locals 1
++    .locals 5
      .annotation runtime Landroid/annotation/SystemApi;
      .end annotation
  
-+    invoke-static {p0}, Lio/lichlabs/lich/SamsungPropsHooks;->onSPGetHook(Ljava/lang/String;)Ljava/lang/String;
++    :try_start_0
++    const-string v0, "io.lichlabs.lich.SamsungPropsHooks"
++
++    invoke-static {v0}, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
 +
 +    move-result-object v0
 +
-+    if-nez v0, :cond_0
++    const-string v1, "onSPGetHook"
++
++    const/4 v2, 0x1
++
++    new-array v2, v2, [Ljava/lang/Class;
++
++    const-class v3, Ljava/lang/String;
++
++    const/4 v4, 0x0
++
++    aput-object v3, v2, v4
++
++    invoke-virtual {v0, v1, v2}, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
++
++    move-result-object v0
++
++    const/4 v1, 0x0
++
++    new-array v2, v2, [Ljava/lang/Object;
++
++    aput-object p0, v2, v4
++
++    invoke-virtual {v0, v1, v2}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, Ljava/lang/String;
++
++    if-eqz v0, :cond_0
++
++    return-object v0
++    :try_end_0
++    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
++
++    :cond_0
++    goto :goto_0
++
++    :catch_0
++    move-exception v0
++
++    :goto_0
 +
      invoke-static {p0}, Landroid/os/SystemProperties;->native_get(Ljava/lang/String;)Ljava/lang/String;
  
--    move-result-object p0
-+    move-result-object v0
- 
--    return-object p0
-+    :cond_0
-+    return-object v0
- .end method
- 
- .method public static whitelist get(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-diff --color -ruN c/smali_classes3/android/provider/Settings$Global.smali d/smali_classes3/android/provider/Settings$Global.smali
---- c/smali_classes3/android/provider/Settings$Global.smali	2025-12-18 08:18:25.007890944 -0500
-+++ d/smali_classes3/android/provider/Settings$Global.smali	2025-12-23 15:10:31.236722746 -0500
-@@ -4457,12 +4457,22 @@
+     move-result-object p0
+diff --color -ruN a/smali_classes3/android/provider/Settings$Global.smali b/smali_classes3/android/provider/Settings$Global.smali
+--- a/smali_classes3/android/provider/Settings$Global.smali	2026-06-29 08:05:50.170735651 -0500
++++ b/smali_classes3/android/provider/Settings$Global.smali	2026-06-29 11:52:29.717944952 -0500
+@@ -4420,7 +4420,74 @@
  .end method
  
  .method public static whitelist getString(Landroid/content/ContentResolver;Ljava/lang/String;)Ljava/lang/String;
 -    .locals 1
-+    .locals 2
++    .locals 4
++
++    :try_start_0
++    const-string v0, "io.lichlabs.lich.SamsungPropsHooks"
++
++    invoke-static {v0}, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
++
++    move-result-object v0
++
++    const-string v1, "onSGGetStringHook"
++
++    const/4 v2, 0x2
++
++    new-array v2, v2, [Ljava/lang/Class;
++
++    const-class v3, Landroid/content/ContentResolver;
++
++    const/4 v1, 0x0
++
++    aput-object v3, v2, v1
++
++    const-class v3, Ljava/lang/String;
++
++    const/4 v1, 0x1
++
++    aput-object v3, v2, v1
++
++    const-string v1, "onSGGetStringHook"
++
++    invoke-virtual {v0, v1, v2}, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
++
++    move-result-object v0
++
++    const/4 v1, 0x0
++
++    const/4 v2, 0x2
++
++    new-array v2, v2, [Ljava/lang/Object;
++
++    const/4 v1, 0x0
++
++    aput-object p0, v2, v1
++
++    const/4 v1, 0x1
++
++    aput-object p1, v2, v1
++
++    const/4 v1, 0x0
++
++    invoke-virtual {v0, v1, v2}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, Ljava/lang/String;
++
++    if-eqz v0, :cond_0
++
++    return-object v0
++    :try_end_0
++    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
++
++    :cond_0
++    goto :goto_0
++
++    :catch_0
++    move-exception v0
++
++    :goto_0
  
      invoke-virtual {p0}, Landroid/content/ContentResolver;->getUserId()I
  
-     move-result v0
- 
-+    invoke-static {p0, p1}, Lio/lichlabs/lich/SamsungPropsHooks;->onSGGetStringHook(Landroid/content/ContentResolver;Ljava/lang/String;)Ljava/lang/String;
-+
-+    move-result-object v1
-+
-+    if-eqz v1, :cond_passthrough
-+
-+    return-object v1
-+
-+    :cond_passthrough
-+
-     invoke-static {p0, p1, v0}, Landroid/provider/Settings$Global;->getStringForUser(Landroid/content/ContentResolver;Ljava/lang/String;I)Ljava/lang/String;
- 
-     move-result-object p0
-diff --color -ruN c/smali_classes6/io/lichlabs/lich/SamsungPropsHooks.smali d/smali_classes6/io/lichlabs/lich/SamsungPropsHooks.smali
---- c/smali_classes6/io/lichlabs/lich/SamsungPropsHooks.smali	1969-12-31 19:00:00.000000000 -0500
-+++ d/smali_classes6/io/lichlabs/lich/SamsungPropsHooks.smali	2025-12-23 15:10:31.237638934 -0500
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/SamsungPropsHooks.smali b/smali_classes7/io/lichlabs/lich/SamsungPropsHooks.smali
+--- a/smali_classes7/io/lichlabs/lich/SamsungPropsHooks.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/SamsungPropsHooks.smali	2026-06-29 11:53:52.986198284 -0500
 @@ -0,0 +1,606 @@
 +.class public final Lio/lichlabs/lich/SamsungPropsHooks;
 +.super Ljava/lang/Object;
@@ -676,17 +738,17 @@ diff --color -ruN c/smali_classes6/io/lichlabs/lich/SamsungPropsHooks.smali d/sm
 +
 +    invoke-virtual {v1, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 +
-+    move-result-object v1
++    move-result-object p0
 +
-+    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
++    invoke-virtual {p0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 +
-+    move-result-object v1
++    move-result-object p0
 +
-+    const-string v2, "SamsungPropsHooks"
++    const-string v1, "SamsungPropsHooks"
 +
-+    invoke-static {v2, v1, v0}, Landroid/util/Log;->e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++    invoke-static {v1, p0, v0}, Landroid/util/Log;->e(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
 +
 +    :goto_0
 +    return-void
 +.end method
-\ No newline at end of file
+\ No hay ningún carácter de nueva línea al final del archivo

@@ -1,6 +1,6 @@
-diff --color -ruN a/smali_classes2/com/android/server/wm/ScreenRecordingCallbackController.smali b/smali_classes2/com/android/server/wm/ScreenRecordingCallbackController.smali
---- a/smali_classes2/com/android/server/wm/ScreenRecordingCallbackController.smali	2025-11-26 07:45:29.197051649 -0500
-+++ b/smali_classes2/com/android/server/wm/ScreenRecordingCallbackController.smali	2025-11-26 11:56:32.956624045 -0500
+diff --color -ruN c-services/smali_classes2/com/android/server/wm/ScreenRecordingCallbackController.smali d-services/smali_classes2/com/android/server/wm/ScreenRecordingCallbackController.smali
+--- c-services/smali_classes2/com/android/server/wm/ScreenRecordingCallbackController.smali	2026-06-28 16:16:49.229571465 -0500
++++ d-services/smali_classes2/com/android/server/wm/ScreenRecordingCallbackController.smali	2026-06-28 16:23:39.581130836 -0500
 @@ -47,15 +47,36 @@
  .method public final dispatchCallbacks(Landroid/util/ArraySet;Z)V
      .locals 5
@@ -91,10 +91,10 @@ diff --color -ruN a/smali_classes2/com/android/server/wm/ScreenRecordingCallback
      iget-object p0, p0, Lcom/android/server/wm/ScreenRecordingCallbackController;->mWms:Lcom/android/server/wm/WindowManagerService;
  
      iget-object p0, p0, Lcom/android/server/wm/WindowManagerService;->mH:Lcom/android/server/wm/WindowManagerService$H;
-diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService.smali b/smali_classes2/com/android/server/wm/WindowManagerService.smali
---- a/smali_classes2/com/android/server/wm/WindowManagerService.smali	2025-11-26 07:45:29.204989124 -0500
-+++ b/smali_classes2/com/android/server/wm/WindowManagerService.smali	2025-11-26 11:50:45.913181234 -0500
-@@ -22663,7 +22663,31 @@
+diff --color -ruN c-services/smali_classes2/com/android/server/wm/WindowManagerService.smali d-services/smali_classes2/com/android/server/wm/WindowManagerService.smali
+--- c-services/smali_classes2/com/android/server/wm/WindowManagerService.smali	2026-06-28 16:16:49.573855462 -0500
++++ d-services/smali_classes2/com/android/server/wm/WindowManagerService.smali	2026-06-28 16:57:47.722294197 -0500
+@@ -8007,7 +8007,31 @@
  
      move-result v0
  
@@ -127,7 +127,43 @@ diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService.sm
  
      iget-object v0, p0, Lcom/android/server/wm/WindowManagerService;->mGlobalLock:Lcom/android/server/wm/WindowManagerGlobalLock;
  
-@@ -22678,7 +22702,7 @@
+@@ -8020,13 +8044,13 @@
+ 
+     move-result-object p0
+ 
+-    if-eqz p0, :cond_0
++    if-eqz p0, :cond_1
+ 
+-    invoke-virtual {p0}, Lcom/android/server/wm/DisplayContent;->getOneHandOpPolicy()Lcom/android/server/wm/OneHandOpPolicy;
++     invoke-virtual {p0}, Lcom/android/server/wm/DisplayContent;->getOneHandOpPolicy()Lcom/android/server/wm/OneHandOpPolicy;
+ 
+-    move-result-object v1
++     move-result-object v1
+ 
+-    if-eqz v1, :cond_0
++     if-eqz v1, :cond_1
+ 
+     invoke-virtual {p0}, Lcom/android/server/wm/DisplayContent;->getOneHandOpPolicy()Lcom/android/server/wm/OneHandOpPolicy;
+ 
+@@ -8041,7 +8065,7 @@
+ 
+     goto :goto_1
+ 
+-    :cond_0
++    :cond_1
+     :goto_0
+     monitor-exit v0
+     :try_end_0
+@@ -8061,7 +8085,7 @@
+ 
+     throw p0
+ 
+-    :cond_1
++    :cond_2
+     new-instance p0, Ljava/lang/SecurityException;
+ 
+     const-string/jumbo p1, "Requires WRITE SECURE SYSTEM SETTING permission."
+@@ -22841,7 +22865,7 @@
  
      move-result-object p0
  
@@ -136,7 +172,7 @@ diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService.sm
  
      new-instance p0, Ljava/util/ArrayList;
  
-@@ -22697,7 +22721,7 @@
+@@ -22860,7 +22884,7 @@
  
      goto :goto_0
  
@@ -145,7 +181,7 @@ diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService.sm
      :try_start_1
      new-instance p1, Landroid/util/ArraySet;
  
-@@ -22733,7 +22757,7 @@
+@@ -22900,7 +22924,7 @@
  
      throw p0
  
@@ -154,7 +190,7 @@ diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService.sm
      new-instance p0, Ljava/lang/SecurityException;
  
      const-string/jumbo p1, "Requires STATUS_BAR_SERVICE permission"
-@@ -25614,6 +25638,24 @@
+@@ -26073,6 +26097,24 @@
  
      invoke-virtual {p0}, Landroid/view/IWindowManager$Stub;->registerScreenRecordingCallback_enforcePermission()V
  
@@ -178,36 +214,60 @@ diff --color -ruN a/smali_classes2/com/android/server/wm/WindowManagerService.sm
 +
      iget-object p0, p0, Lcom/android/server/wm/WindowManagerService;->mKnoxRemoteScreenCallbackController:Lcom/android/server/wm/KnoxRemoteScreenCallbackController;
  
-     iget-object v2, p0, Lcom/android/server/wm/KnoxRemoteScreenCallbackController;->mWms:Lcom/android/server/wm/WindowManagerService;
-@@ -26289,7 +26331,7 @@
+     iget-object v0, p0, Lcom/android/server/wm/KnoxRemoteScreenCallbackController;->mWms:Lcom/android/server/wm/WindowManagerService;
+@@ -26762,7 +26804,7 @@
  
-     move-result v5
+     move-result v3
  
--    if-eqz v5, :cond_0
-+    if-eqz v5, :cond_1
+-    if-eqz v3, :cond_0
++    if-eqz v3, :cond_1
  
      iget-object p0, p0, Lcom/android/server/wm/ScreenRecordingCallbackController;->mLastInvokedStateByUid:Landroid/util/ArrayMap;
  
-@@ -26320,7 +26362,7 @@
+@@ -26793,7 +26835,7 @@
  
      goto :goto_1
  
 -    :cond_0
 +    :cond_1
      :try_start_1
-     new-instance v5, Lcom/android/server/wm/ScreenRecordingCallbackController$Callback;
+     new-instance v3, Lcom/android/server/wm/ScreenRecordingCallbackController$Callback;
  
-@@ -26337,11 +26379,11 @@
+@@ -26820,11 +26862,11 @@
      :try_start_3
-     iget-object p1, p0, Lcom/android/server/wm/ScreenRecordingCallbackController;->mRecordedWC:Lcom/android/server/wm/WindowContainer;
+     iget-object v4, p0, Lcom/android/server/wm/ScreenRecordingCallbackController;->mRecordedWC:Lcom/android/server/wm/WindowContainer;
  
--    if-nez p1, :cond_1
-+    if-nez p1, :cond_2
+-    if-nez v4, :cond_1
++    if-nez v4, :cond_2
  
      goto :goto_0
  
 -    :cond_1
 +    :cond_2
-     new-array v6, v0, [Z
+     const/4 v5, 0x1
  
-     aput-boolean v1, v6, v1
+     new-array v6, v5, [Z
+@@ -34998,6 +35040,7 @@
+     goto :goto_1
+ 
+     :cond_0
++    :cond_1
+     :goto_0
+     monitor-exit v0
+     :try_end_0
+@@ -35011,13 +35054,13 @@
+     :try_start_1
+     monitor-exit v0
+     :try_end_1
+-    .catchall {:try_start_1 .. :try_end_1} :catchall_0
++    .catchall {:try_start_0 .. :try_end_0} :catchall_0
+ 
+     invoke-static {}, Lcom/android/server/wm/WindowManagerService;->resetPriorityAfterLockedSection()V
+ 
+     throw p0
+ 
+-    :cond_1
++    :cond_2
+     new-instance p0, Ljava/lang/SecurityException;
+ 
+     const-string/jumbo p1, "Requires MANAGE_APP_TOKENS permission"

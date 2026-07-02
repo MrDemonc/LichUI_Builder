@@ -1,16 +1,16 @@
 diff --color -ruN a/smali_classes3/android/security/KeyStore2.smali b/smali_classes3/android/security/KeyStore2.smali
---- a/smali_classes3/android/security/KeyStore2.smali	2026-02-13 21:37:55.355170458 -0500
-+++ b/smali_classes3/android/security/KeyStore2.smali	2026-02-13 21:44:08.024156684 -0500
+--- a/smali_classes3/android/security/KeyStore2.smali	2026-06-29 08:05:50.488166075 -0500
++++ b/smali_classes3/android/security/KeyStore2.smali	2026-06-29 14:59:05.097785462 -0500
 @@ -558,7 +558,7 @@
  .end method
  
  .method static synthetic blacklist lambda$getSecurityLevel$6(ILandroid/system/keystore2/IKeystoreService;)Landroid/security/KeyStoreSecurityLevel;
 -    .locals 1
-+    .locals 2
++    .locals 7
      .annotation system Ldalvik/annotation/Throws;
          value = {
              Landroid/os/RemoteException;
-@@ -569,9 +569,11 @@
+@@ -569,10 +569,67 @@
  
      invoke-interface {p1, p0}, Landroid/system/keystore2/IKeystoreService;->getSecurityLevel(I)Landroid/system/keystore2/IKeystoreSecurityLevel;
  
@@ -19,19 +19,75 @@ diff --color -ruN a/smali_classes3/android/security/KeyStore2.smali b/smali_clas
  
 -    invoke-direct {v0, p0}, Landroid/security/KeyStoreSecurityLevel;-><init>(Landroid/system/keystore2/IKeystoreSecurityLevel;)V
 +    invoke-direct {v0, v1}, Landroid/security/KeyStoreSecurityLevel;-><init>(Landroid/system/keystore2/IKeystoreSecurityLevel;)V
-+
-+    invoke-static {v1, p0}, Lio/mesalabs/lich/KeyboxImitationHooks;->setSecurityLevel(Landroid/system/keystore2/IKeystoreSecurityLevel;I)V
  
++    :try_start_kih
++    const-string v2, "io.lichlabs.lich.KeyboxImitationHooks"
++
++    invoke-static {v2}, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
++
++    move-result-object v2
++
++    const-string v3, "setSecurityLevel"
++
++    const/4 v4, 0x2
++
++    new-array v4, v4, [Ljava/lang/Class;
++
++    const-class v5, Landroid/system/keystore2/IKeystoreSecurityLevel;
++
++    const/4 v6, 0x0
++
++    aput-object v5, v4, v6
++
++    sget-object v5, Ljava/lang/Integer;->TYPE:Ljava/lang/Class;
++
++    const/4 v6, 0x1
++
++    aput-object v5, v4, v6
++
++    invoke-virtual {v2, v3, v4}, Ljava/lang/Class;->getDeclaredMethod(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
++
++    move-result-object v2
++
++    const/4 v3, 0x2
++
++    new-array v3, v3, [Ljava/lang/Object;
++
++    const/4 v4, 0x0
++
++    aput-object v1, v3, v4
++
++    invoke-static {p0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
++
++    move-result-object v4
++
++    const/4 v5, 0x1
++
++    aput-object v4, v3, v5
++
++    const/4 v4, 0x0
++
++    invoke-virtual {v2, v4, v3}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
++    :try_end_kih
++    .catch Ljava/lang/Exception; {:try_start_kih .. :try_end_kih} :catch_kih
++
++    goto :goto_kih
++
++    :catch_kih
++    move-exception v2
++
++    :goto_kih
      return-object v0
  .end method
-diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy.smali b/smali_classes3/android/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy.smali
---- a/smali_classes3/android/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy.smali	2026-02-13 21:37:56.654390878 -0500
-+++ b/smali_classes3/android/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy.smali	2026-02-13 21:44:08.025156806 -0500
-@@ -145,6 +145,15 @@
+ 
+diff --color -ruN a/smali_classes4/android/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy.smali b/smali_classes4/android/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy.smali
+--- a/smali_classes4/android/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy.smali	2026-06-29 08:05:45.106326504 -0500
++++ b/smali_classes4/android/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy.smali	2026-06-29 15:15:40.788480252 -0500
+@@ -145,6 +145,16 @@
          }
      .end annotation
  
-+    invoke-static {p1, p2}, Lio/mesalabs/lich/KeyboxImitationHooks;->onCreateOperation(Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {p1, p2}, Lio/lichlabs/lich/KeyboxImitationHooks;->onCreateOperation(Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object v0
 +
@@ -40,10 +96,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
 +    return-object v0
 +
 +    :cond_0
++
      invoke-virtual {p0}, Landroid/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy;->asBinder()Landroid/os/IBinder;
  
      move-result-object v0
-@@ -182,7 +191,7 @@
+@@ -182,7 +192,7 @@
  
      move-result p0
  
@@ -52,7 +109,7 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
  
      invoke-virtual {v1}, Landroid/os/Parcel;->readException()V
  
-@@ -202,7 +211,7 @@
+@@ -202,7 +212,7 @@
  
      return-object p0
  
@@ -61,11 +118,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
      :try_start_1
      new-instance p0, Landroid/os/RemoteException;
  
-@@ -232,6 +241,15 @@
+@@ -232,6 +242,16 @@
          }
      .end annotation
  
-+    invoke-static {p1}, Lio/mesalabs/lich/KeyboxImitationHooks;->onDeleteKey(Landroid/system/keystore2/KeyDescriptor;)Z
++    invoke-static {p1}, Lio/lichlabs/lich/KeyboxImitationHooks;->onDeleteKey(Landroid/system/keystore2/KeyDescriptor;)Z
 +
 +    move-result v0
 +
@@ -74,10 +131,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
 +    return-void
 +
 +    :cond_0
++
      invoke-virtual {p0}, Landroid/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy;->asBinder()Landroid/os/IBinder;
  
      move-result-object v0
-@@ -265,7 +283,7 @@
+@@ -265,7 +285,7 @@
  
      move-result p0
  
@@ -86,7 +144,7 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
  
      invoke-virtual {v1}, Landroid/os/Parcel;->readException()V
      :try_end_0
-@@ -277,7 +295,7 @@
+@@ -277,7 +297,7 @@
  
      return-void
  
@@ -95,11 +153,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
      :try_start_1
      new-instance p0, Landroid/os/RemoteException;
  
-@@ -307,6 +325,15 @@
+@@ -307,6 +327,16 @@
          }
      .end annotation
  
-+    invoke-static {p1, p2, p3}, Lio/mesalabs/lich/KeyboxImitationHooks;->onGenerateKey(Landroid/system/keystore2/KeyDescriptor;Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;)Landroid/system/keystore2/KeyMetadata;
++    invoke-static {p1, p2, p3}, Lio/lichlabs/lich/KeyboxImitationHooks;->onGenerateKey(Landroid/system/keystore2/KeyDescriptor;Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;)Landroid/system/keystore2/KeyMetadata;
 +
 +    move-result-object v0
 +
@@ -108,10 +166,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
 +    return-object v0
 +
 +    :cond_0
++
      invoke-virtual {p0}, Landroid/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy;->asBinder()Landroid/os/IBinder;
  
      move-result-object v0
-@@ -348,7 +375,7 @@
+@@ -348,7 +378,7 @@
  
      move-result p0
  
@@ -120,7 +179,7 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
  
      invoke-virtual {v1}, Landroid/os/Parcel;->readException()V
  
-@@ -368,7 +395,7 @@
+@@ -368,7 +398,7 @@
  
      return-object p0
  
@@ -129,11 +188,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
      :try_start_1
      new-instance p0, Landroid/os/RemoteException;
  
-@@ -572,6 +599,15 @@
+@@ -572,6 +602,16 @@
          }
      .end annotation
  
-+    invoke-static {p1, p3, p5}, Lio/mesalabs/lich/KeyboxImitationHooks;->onImportKey(Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;[B)Landroid/system/keystore2/KeyMetadata;
++    invoke-static {p1, p3, p5}, Lio/lichlabs/lich/KeyboxImitationHooks;->onImportKey(Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;[B)Landroid/system/keystore2/KeyMetadata;
 +
 +    move-result-object v0
 +
@@ -142,10 +201,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
 +    return-object v0
 +
 +    :cond_0
++
      invoke-virtual {p0}, Landroid/system/keystore2/IKeystoreSecurityLevel$Stub$Proxy;->asBinder()Landroid/os/IBinder;
  
      move-result-object v0
-@@ -613,7 +649,7 @@
+@@ -613,7 +653,7 @@
  
      move-result p0
  
@@ -154,7 +214,7 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
  
      invoke-virtual {v1}, Landroid/os/Parcel;->readException()V
  
-@@ -633,7 +669,7 @@
+@@ -633,7 +673,7 @@
  
      return-object p0
  
@@ -163,14 +223,14 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreSecurityLev
      :try_start_1
      new-instance p0, Landroid/os/RemoteException;
  
-diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stub$Proxy.smali b/smali_classes3/android/system/keystore2/IKeystoreService$Stub$Proxy.smali
---- a/smali_classes3/android/system/keystore2/IKeystoreService$Stub$Proxy.smali	2026-02-13 21:37:56.655468002 -0500
-+++ b/smali_classes3/android/system/keystore2/IKeystoreService$Stub$Proxy.smali	2026-02-13 21:44:08.026656727 -0500
-@@ -62,6 +62,15 @@
+diff --color -ruN a/smali_classes4/android/system/keystore2/IKeystoreService$Stub$Proxy.smali b/smali_classes4/android/system/keystore2/IKeystoreService$Stub$Proxy.smali
+--- a/smali_classes4/android/system/keystore2/IKeystoreService$Stub$Proxy.smali	2026-06-29 08:05:45.115068457 -0500
++++ b/smali_classes4/android/system/keystore2/IKeystoreService$Stub$Proxy.smali	2026-06-29 15:22:33.729837234 -0500
+@@ -62,6 +62,16 @@
          }
      .end annotation
  
-+    invoke-static {p1}, Lio/mesalabs/lich/KeyboxImitationHooks;->onDeleteKey(Landroid/system/keystore2/KeyDescriptor;)Z
++    invoke-static {p1}, Lio/lichlabs/lich/KeyboxImitationHooks;->onDeleteKey(Landroid/system/keystore2/KeyDescriptor;)Z
 +
 +    move-result v0
 +
@@ -179,10 +239,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
 +    return-void
 +
 +    :cond_0
++
      invoke-virtual {p0}, Landroid/system/keystore2/IKeystoreService$Stub$Proxy;->asBinder()Landroid/os/IBinder;
  
      move-result-object v0
-@@ -91,7 +100,7 @@
+@@ -91,7 +101,7 @@
  
      move-result p0
  
@@ -191,7 +252,7 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
  
      invoke-virtual {v1}, Landroid/os/Parcel;->readException()V
      :try_end_0
-@@ -103,7 +112,7 @@
+@@ -103,7 +113,7 @@
  
      return-void
  
@@ -200,11 +261,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
      :try_start_1
      new-instance p0, Landroid/os/RemoteException;
  
-@@ -307,6 +316,15 @@
+@@ -307,6 +317,16 @@
          }
      .end annotation
  
-+    invoke-static {p1}, Lio/mesalabs/lich/KeyboxImitationHooks;->onGetKeyEntry(Landroid/system/keystore2/KeyDescriptor;)Landroid/system/keystore2/KeyEntryResponse;
++    invoke-static {p1}, Lio/lichlabs/lich/KeyboxImitationHooks;->onGetKeyEntry(Landroid/system/keystore2/KeyDescriptor;)Landroid/system/keystore2/KeyEntryResponse;
 +
 +    move-result-object v0
 +
@@ -213,10 +274,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
 +    return-object v0
 +
 +    :cond_0
++
      invoke-virtual {p0}, Landroid/system/keystore2/IKeystoreService$Stub$Proxy;->asBinder()Landroid/os/IBinder;
  
      move-result-object v0
-@@ -336,7 +354,7 @@
+@@ -336,7 +356,7 @@
  
      move-result p0
  
@@ -225,7 +287,7 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
  
      invoke-virtual {v1}, Landroid/os/Parcel;->readException()V
  
-@@ -356,7 +374,7 @@
+@@ -356,7 +376,7 @@
  
      return-object p0
  
@@ -234,11 +296,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
      :try_start_1
      new-instance p0, Landroid/os/RemoteException;
  
-@@ -386,6 +404,19 @@
+@@ -386,6 +406,20 @@
          }
      .end annotation
  
-+    invoke-static {p1}, Lio/mesalabs/lich/KeyboxImitationHooks;->onGetNumberOfEntries(I)Ljava/lang/Integer;
++    invoke-static {p1}, Lio/lichlabs/lich/KeyboxImitationHooks;->onGetNumberOfEntries(I)Ljava/lang/Integer;
 +
 +    move-result-object v0
 +
@@ -251,10 +313,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
 +    return p0
 +
 +    :cond_0
++
      invoke-virtual {p0}, Landroid/system/keystore2/IKeystoreService$Stub$Proxy;->asBinder()Landroid/os/IBinder;
  
      move-result-object v0
-@@ -417,7 +448,7 @@
+@@ -417,7 +451,7 @@
  
      move-result p0
  
@@ -263,7 +326,7 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
  
      invoke-virtual {v1}, Landroid/os/Parcel;->readException()V
  
-@@ -433,7 +464,7 @@
+@@ -433,7 +467,7 @@
  
      return p0
  
@@ -272,11 +335,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
      :try_start_1
      new-instance p0, Landroid/os/RemoteException;
  
-@@ -700,6 +731,15 @@
+@@ -700,6 +734,16 @@
          }
      .end annotation
  
-+    invoke-static {p1}, Lio/mesalabs/lich/KeyboxImitationHooks;->onListEntries(I)[Landroid/system/keystore2/KeyDescriptor;
++    invoke-static {p1}, Lio/lichlabs/lich/KeyboxImitationHooks;->onListEntries(I)[Landroid/system/keystore2/KeyDescriptor;
 +
 +    move-result-object v0
 +
@@ -285,10 +348,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
 +    return-object v0
 +
 +    :cond_0
++
      invoke-virtual {p0}, Landroid/system/keystore2/IKeystoreService$Stub$Proxy;->asBinder()Landroid/os/IBinder;
  
      move-result-object v0
-@@ -731,7 +771,7 @@
+@@ -731,7 +775,7 @@
  
      move-result p0
  
@@ -297,7 +361,7 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
  
      invoke-virtual {v1}, Landroid/os/Parcel;->readException()V
  
-@@ -751,7 +791,7 @@
+@@ -751,7 +795,7 @@
  
      return-object p0
  
@@ -306,11 +370,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
      :try_start_1
      new-instance p0, Landroid/os/RemoteException;
  
-@@ -781,6 +821,15 @@
+@@ -781,6 +825,16 @@
          }
      .end annotation
  
-+    invoke-static {p1, p4}, Lio/mesalabs/lich/KeyboxImitationHooks;->onListEntriesBatched(ILjava/lang/String;)[Landroid/system/keystore2/KeyDescriptor;
++    invoke-static {p1, p4}, Lio/lichlabs/lich/KeyboxImitationHooks;->onListEntriesBatched(ILjava/lang/String;)[Landroid/system/keystore2/KeyDescriptor;
 +
 +    move-result-object v0
 +
@@ -319,10 +383,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
 +    return-object v0
 +
 +    :cond_0
++
      invoke-virtual {p0}, Landroid/system/keystore2/IKeystoreService$Stub$Proxy;->asBinder()Landroid/os/IBinder;
  
      move-result-object v0
-@@ -814,7 +863,7 @@
+@@ -814,7 +868,7 @@
  
      move-result p0
  
@@ -331,7 +396,7 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
  
      invoke-virtual {v1}, Landroid/os/Parcel;->readException()V
  
-@@ -834,7 +883,7 @@
+@@ -834,7 +888,7 @@
  
      return-object p0
  
@@ -340,11 +405,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
      :try_start_1
      new-instance p0, Landroid/os/RemoteException;
  
-@@ -937,6 +986,15 @@
+@@ -937,6 +991,16 @@
          }
      .end annotation
  
-+    invoke-static {p1, p2, p3}, Lio/mesalabs/lich/KeyboxImitationHooks;->onUpdateSubcomponent(Landroid/system/keystore2/KeyDescriptor;[B[B)Z
++    invoke-static {p1, p2, p3}, Lio/lichlabs/lich/KeyboxImitationHooks;->onUpdateSubcomponent(Landroid/system/keystore2/KeyDescriptor;[B[B)Z
 +
 +    move-result v0
 +
@@ -353,10 +418,11 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
 +    return-void
 +
 +    :cond_0
++
      invoke-virtual {p0}, Landroid/system/keystore2/IKeystoreService$Stub$Proxy;->asBinder()Landroid/os/IBinder;
  
      move-result-object v0
-@@ -970,7 +1028,7 @@
+@@ -970,7 +1034,7 @@
  
      move-result p0
  
@@ -365,7 +431,7 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
  
      invoke-virtual {v1}, Landroid/os/Parcel;->readException()V
      :try_end_0
-@@ -982,7 +1040,7 @@
+@@ -982,7 +1046,7 @@
  
      return-void
  
@@ -374,9 +440,9 @@ diff --color -ruN a/smali_classes3/android/system/keystore2/IKeystoreService$Stu
      :try_start_1
      new-instance p0, Landroid/os/RemoteException;
  
-diff --color -ruN a/smali_classes5/com/android/internal/org/bouncycastle/jcajce/provider/asymmetric/EC$Mappings.smali b/smali_classes5/com/android/internal/org/bouncycastle/jcajce/provider/asymmetric/EC$Mappings.smali
---- a/smali_classes5/com/android/internal/org/bouncycastle/jcajce/provider/asymmetric/EC$Mappings.smali	2026-02-13 21:37:56.096884361 -0500
-+++ b/smali_classes5/com/android/internal/org/bouncycastle/jcajce/provider/asymmetric/EC$Mappings.smali	2026-02-13 21:44:08.027300736 -0500
+diff --color -ruN a/smali_classes4/com/android/internal/org/bouncycastle/jcajce/provider/asymmetric/EC$Mappings.smali b/smali_classes4/com/android/internal/org/bouncycastle/jcajce/provider/asymmetric/EC$Mappings.smali
+--- a/smali_classes4/com/android/internal/org/bouncycastle/jcajce/provider/asymmetric/EC$Mappings.smali	2026-06-29 08:05:50.486685334 -0500
++++ b/smali_classes4/com/android/internal/org/bouncycastle/jcajce/provider/asymmetric/EC$Mappings.smali	2026-06-29 15:27:15.277772222 -0500
 @@ -26,7 +26,19 @@
  
  # virtual methods
@@ -398,11 +464,11 @@ diff --color -ruN a/smali_classes5/com/android/internal/org/bouncycastle/jcajce/
  
      return-void
  .end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/IKeyboxProvider.smali b/smali_classes6/io/mesalabs/lich/IKeyboxProvider.smali
---- a/smali_classes6/io/mesalabs/lich/IKeyboxProvider.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/IKeyboxProvider.smali	2026-02-13 21:44:08.027629675 -0500
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/IKeyboxProvider.smali b/smali_classes7/io/lichlabs/lich/IKeyboxProvider.smali
+--- a/smali_classes7/io/lichlabs/lich/IKeyboxProvider.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/IKeyboxProvider.smali	2026-06-29 15:28:14.181846461 -0500
 @@ -0,0 +1,20 @@
-+.class public interface abstract Lio/mesalabs/lich/IKeyboxProvider;
++.class public interface abstract Lio/lichlabs/lich/IKeyboxProvider;
 +.super Ljava/lang/Object;
 +.source "IKeyboxProvider.java"
 +
@@ -422,18 +488,19 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/IKeyboxProvider.smali b/smal
 +
 +.method public abstract blacklist hasKeybox()Z
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.smali b/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.smali	2026-02-13 21:44:08.028732693 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator$Digest.smali b/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator$Digest.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator$Digest.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator$Digest.smali	2026-06-29 15:28:55.545959675 -0500
 @@ -0,0 +1,141 @@
-+.class final Lio/mesalabs/lich/KeyboxChainGenerator$Digest;
++.class final Lio/lichlabs/lich/KeyboxChainGenerator$Digest;
 +.super Ljava/lang/Record;
 +.source "KeyboxChainGenerator.java"
 +
 +
 +# annotations
 +.annotation system Ldalvik/annotation/EnclosingClass;
-+    value = Lio/mesalabs/lich/KeyboxChainGenerator;
++    value = Lio/lichlabs/lich/KeyboxChainGenerator;
 +.end annotation
 +
 +.annotation system Ldalvik/annotation/InnerClass;
@@ -468,7 +535,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.
 +.method private synthetic blacklist $record$getFieldsAsObjects()[Ljava/lang/Object;
 +    .locals 0
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;->digest:[B
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;->digest:[B
 +
 +    filled-new-array {p0}, [Ljava/lang/Object;
 +
@@ -477,10 +544,10 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.
 +    return-object p0
 +.end method
 +
-+.method static bridge synthetic blacklist -$$Nest$fgetdigest(Lio/mesalabs/lich/KeyboxChainGenerator$Digest;)[B
++.method static bridge synthetic blacklist -$$Nest$fgetdigest(Lio/lichlabs/lich/KeyboxChainGenerator$Digest;)[B
 +    .locals 0
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;->digest:[B
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;->digest:[B
 +
 +    return-object p0
 +.end method
@@ -498,7 +565,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.
 +
 +    invoke-direct {p0}, Ljava/lang/Record;-><init>()V
 +
-+    iput-object p1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;->digest:[B
++    iput-object p1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;->digest:[B
 +
 +    return-void
 +.end method
@@ -508,7 +575,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.
 +.method public blacklist digest()[B
 +    .locals 0
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;->digest:[B
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;->digest:[B
 +
 +    return-object p0
 +.end method
@@ -516,15 +583,15 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.
 +.method public whitelist test-api equals(Ljava/lang/Object;)Z
 +    .locals 1
 +
-+    instance-of v0, p1, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;
++    instance-of v0, p1, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;
 +
 +    if-eqz v0, :cond_0
 +
-+    check-cast p1, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;
++    check-cast p1, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;->digest:[B
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;->digest:[B
 +
-+    iget-object p1, p1, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;->digest:[B
++    iget-object p1, p1, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;->digest:[B
 +
 +    invoke-static {p0, p1}, Ljava/util/Arrays;->equals([B[B)Z
 +
@@ -541,7 +608,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.
 +.method public whitelist test-api hashCode()I
 +    .locals 0
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;->digest:[B
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;->digest:[B
 +
 +    invoke-static {p0}, Ljava/util/Arrays;->hashCode([B)I
 +
@@ -553,11 +620,11 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.
 +.method public final whitelist test-api toString()Ljava/lang/String;
 +    .locals 2
 +
-+    invoke-direct {p0}, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;->$record$getFieldsAsObjects()[Ljava/lang/Object;
++    invoke-direct {p0}, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;->$record$getFieldsAsObjects()[Ljava/lang/Object;
 +
 +    move-result-object p0
 +
-+    const-class v0, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;
++    const-class v0, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;
 +
 +    const-string v1, "digest"
 +
@@ -567,18 +634,19 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$Digest.
 +
 +    return-object p0
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters.smali b/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters.smali	2026-02-13 21:44:08.028936669 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters.smali b/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters.smali	2026-06-29 15:29:50.247172593 -0500
 @@ -0,0 +1,642 @@
-+.class final Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;
++.class final Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;
 +.super Ljava/lang/Object;
 +.source "KeyboxChainGenerator.java"
 +
 +
 +# annotations
 +.annotation system Ldalvik/annotation/EnclosingClass;
-+    value = Lio/mesalabs/lich/KeyboxChainGenerator;
++    value = Lio/lichlabs/lich/KeyboxChainGenerator;
 +.end annotation
 +
 +.annotation system Ldalvik/annotation/InnerClass;
@@ -675,69 +743,69 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    const/4 v0, -0x1
 +
-+    iput v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
++    iput v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
 +
-+    iput v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iput v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    const/4 v1, 0x0
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSerial:Ljava/math/BigInteger;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSerial:Ljava/math/BigInteger;
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotBefore:Ljava/util/Date;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotBefore:Ljava/util/Date;
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotAfter:Ljava/util/Date;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotAfter:Ljava/util/Date;
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
 +
-+    iput v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
++    iput v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
 +
-+    iput v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
++    iput v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurveName:Ljava/lang/String;
-+
-+    new-instance v0, Ljava/util/ArrayList;
-+
-+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
-+
-+    iput-object v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurveName:Ljava/lang/String;
 +
 +    new-instance v0, Ljava/util/ArrayList;
 +
 +    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
 +
-+    iput-object v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
++    iput-object v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    new-instance v0, Ljava/util/ArrayList;
 +
 +    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
 +
-+    iput-object v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
++    iput-object v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
 +
 +    new-instance v0, Ljava/util/ArrayList;
 +
 +    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
 +
-+    iput-object v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
++    iput-object v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
++    new-instance v0, Ljava/util/ArrayList;
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->brand:[B
++    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->device:[B
++    iput-object v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->product:[B
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->manufacturer:[B
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->brand:[B
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->model:[B
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->device:[B
++
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->product:[B
++
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->manufacturer:[B
++
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->model:[B
 +
 +    array-length v0, p1
 +
@@ -765,7 +833,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    invoke-direct {v2, v3, v4}, Ljava/util/Date;-><init>(J)V
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotAfter:Ljava/util/Date;
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotAfter:Ljava/util/Date;
 +
 +    goto/16 :goto_1
 +
@@ -778,7 +846,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    invoke-direct {v2, v3, v4}, Ljava/util/Date;-><init>(J)V
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotBefore:Ljava/util/Date;
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotBefore:Ljava/util/Date;
 +
 +    goto/16 :goto_1
 +
@@ -791,7 +859,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    invoke-direct {v2, v3, v4}, Ljava/util/Date;-><init>(J)V
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
 +
 +    goto/16 :goto_1
 +
@@ -804,7 +872,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    invoke-direct {v2, v3, v4}, Ljava/util/Date;-><init>(J)V
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
 +
 +    goto/16 :goto_1
 +
@@ -817,7 +885,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    invoke-direct {v2, v3, v4}, Ljava/util/Date;-><init>(J)V
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
 +
 +    goto/16 :goto_1
 +
@@ -847,7 +915,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +    move-result-object v4
 +
 +    :cond_0
-+    iput-object v4, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
++    iput-object v4, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
 +
 +    goto/16 :goto_1
 +
@@ -856,7 +924,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result v2
 +
-+    iput v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
++    iput v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
 +
 +    goto/16 :goto_1
 +
@@ -865,12 +933,12 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result v2
 +
-+    iput v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
++    iput v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
 +
 +    goto/16 :goto_1
 +
 +    :sswitch_8
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
 +
 +    invoke-virtual {v3}, Landroid/hardware/security/keymint/KeyParameterValue;->getDigest()I
 +
@@ -885,7 +953,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +    goto/16 :goto_1
 +
 +    :sswitch_9
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
 +
 +    invoke-virtual {v3}, Landroid/hardware/security/keymint/KeyParameterValue;->getPaddingMode()I
 +
@@ -900,7 +968,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +    goto/16 :goto_1
 +
 +    :sswitch_a
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
 +
 +    invoke-virtual {v3}, Landroid/hardware/security/keymint/KeyParameterValue;->getDigest()I
 +
@@ -915,7 +983,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +    goto :goto_1
 +
 +    :sswitch_b
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    invoke-virtual {v3}, Landroid/hardware/security/keymint/KeyParameterValue;->getKeyPurpose()I
 +
@@ -934,13 +1002,13 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result v2
 +
-+    iput v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
++    iput v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->getEcCurveName(I)Ljava/lang/String;
++    invoke-static {v2}, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->getEcCurveName(I)Ljava/lang/String;
 +
 +    move-result-object v2
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurveName:Ljava/lang/String;
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurveName:Ljava/lang/String;
 +
 +    goto :goto_1
 +
@@ -949,7 +1017,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result v2
 +
-+    iput v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iput v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    goto :goto_1
 +
@@ -962,11 +1030,11 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result-object v2
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->getCertificateSubject(Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;)Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
++    invoke-static {v2}, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->getCertificateSubject(Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;)Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
 +
 +    move-result-object v2
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
 +
 +    goto :goto_1
 +
@@ -975,7 +1043,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result-object v2
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->model:[B
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->model:[B
 +
 +    goto :goto_1
 +
@@ -984,7 +1052,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result-object v2
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->manufacturer:[B
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->manufacturer:[B
 +
 +    goto :goto_1
 +
@@ -993,7 +1061,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result-object v2
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->product:[B
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->product:[B
 +
 +    goto :goto_1
 +
@@ -1002,7 +1070,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result-object v2
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->device:[B
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->device:[B
 +
 +    goto :goto_1
 +
@@ -1011,7 +1079,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result-object v2
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->brand:[B
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->brand:[B
 +
 +    goto :goto_1
 +
@@ -1020,7 +1088,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    move-result-object v2
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
 +
 +    goto :goto_1
 +
@@ -1033,7 +1101,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    invoke-direct {v2, v3}, Ljava/math/BigInteger;-><init>([B)V
 +
-+    iput-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSerial:Ljava/math/BigInteger;
++    iput-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSerial:Ljava/math/BigInteger;
 +
 +    :goto_1
 +    add-int/lit8 v1, v1, 0x1
@@ -1073,7 +1141,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +.method private static blacklist getCertificateSubject(Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;)Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
 +    .locals 9
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getKeymasterVersion()I
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getKeymasterVersion()I
 +
 +    move-result v0
 +
@@ -1213,11 +1281,12 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator$KeyGenP
 +
 +    return-object p0
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali	2026-02-13 21:44:08.029403634 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator.smali b/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxChainGenerator.smali	2026-06-29 15:31:06.445565250 -0500
 @@ -0,0 +1,1576 @@
-+.class final Lio/mesalabs/lich/KeyboxChainGenerator;
++.class final Lio/lichlabs/lich/KeyboxChainGenerator;
 +.super Ljava/lang/Object;
 +.source "KeyboxChainGenerator.java"
 +
@@ -1225,8 +1294,8 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +# annotations
 +.annotation system Ldalvik/annotation/MemberClasses;
 +    value = {
-+        Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;,
-+        Lio/mesalabs/lich/KeyboxChainGenerator$Digest;
++        Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;,
++        Lio/lichlabs/lich/KeyboxChainGenerator$Digest;
 +    }
 +.end annotation
 +
@@ -1364,7 +1433,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    aget-object v11, v8, v10
 +
-+    new-instance v12, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;
++    new-instance v12, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;
 +
 +    invoke-virtual {v11}, Landroid/content/pm/Signature;->toByteArray()[B
 +
@@ -1374,7 +1443,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    move-result-object v11
 +
-+    invoke-direct {v12, v11}, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;-><init>([B)V
++    invoke-direct {v12, v11}, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;-><init>([B)V
 +
 +    invoke-interface {v4, v12}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
 +
@@ -1398,7 +1467,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    aget-object v11, v8, v10
 +
-+    new-instance v12, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;
++    new-instance v12, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;
 +
 +    invoke-virtual {v11}, Landroid/content/pm/Signature;->toByteArray()[B
 +
@@ -1408,7 +1477,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    move-result-object v11
 +
-+    invoke-direct {v12, v11}, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;-><init>([B)V
++    invoke-direct {v12, v11}, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;-><init>([B)V
 +
 +    invoke-interface {v4, v12}, Ljava/util/Set;->add(Ljava/lang/Object;)Z
 +
@@ -1445,13 +1514,13 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    move-result-object v4
 +
-+    check-cast v4, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;
++    check-cast v4, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;
 +
 +    add-int/lit8 v5, v2, 0x1
 +
 +    new-instance v7, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
-+    invoke-static {v4}, Lio/mesalabs/lich/KeyboxChainGenerator$Digest;->-$$Nest$fgetdigest(Lio/mesalabs/lich/KeyboxChainGenerator$Digest;)[B
++    invoke-static {v4}, Lio/lichlabs/lich/KeyboxChainGenerator$Digest;->-$$Nest$fgetdigest(Lio/lichlabs/lich/KeyboxChainGenerator$Digest;)[B
 +
 +    move-result-object v4
 +
@@ -1532,7 +1601,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    throw v0
 +.end method
 +
-+.method private static blacklist createExtension(Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Lcom/android/internal/org/bouncycastle/asn1/x509/Extension;
++.method private static blacklist createExtension(Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Lcom/android/internal/org/bouncycastle/asn1/x509/Extension;
 +    .locals 12
 +
 +    :try_start_0
@@ -1544,7 +1613,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    invoke-direct {v1}, Ljava/util/ArrayList;-><init>()V
 +
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    invoke-interface {v2}, Ljava/util/List;->isEmpty()Z
 +
@@ -1558,9 +1627,9 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/DERSet;
 +
-+    iget-object v5, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object v5, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
-+    invoke-static {v5}, Lio/mesalabs/lich/KeyboxChainGenerator;->fromIntList(Ljava/util/List;)[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;
++    invoke-static {v5}, Lio/lichlabs/lich/KeyboxChainGenerator;->fromIntList(Ljava/util/List;)[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;
 +
 +    move-result-object v5
 +
@@ -1571,7 +1640,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_0
-+    iget v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    const/4 v4, 0x2
 +
@@ -1583,7 +1652,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v6, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    iget v7, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget v7, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    int-to-long v7, v7
 +
@@ -1594,7 +1663,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_1
-+    iget v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
++    iget v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
 +
 +    const/4 v6, 0x3
 +
@@ -1604,7 +1673,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v7, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    iget v8, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
++    iget v8, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
 +
 +    int-to-long v8, v8
 +
@@ -1615,7 +1684,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_2
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
 +
 +    invoke-interface {v2}, Ljava/util/List;->isEmpty()Z
 +
@@ -1627,9 +1696,9 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v7, Lcom/android/internal/org/bouncycastle/asn1/DERSet;
 +
-+    iget-object v8, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
++    iget-object v8, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
 +
-+    invoke-static {v8}, Lio/mesalabs/lich/KeyboxChainGenerator;->fromIntList(Ljava/util/List;)[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;
++    invoke-static {v8}, Lio/lichlabs/lich/KeyboxChainGenerator;->fromIntList(Ljava/util/List;)[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;
 +
 +    move-result-object v8
 +
@@ -1642,7 +1711,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_3
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
 +
 +    invoke-interface {v2}, Ljava/util/List;->isEmpty()Z
 +
@@ -1654,9 +1723,9 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v7, Lcom/android/internal/org/bouncycastle/asn1/DERSet;
 +
-+    iget-object v8, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
++    iget-object v8, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
 +
-+    invoke-static {v8}, Lio/mesalabs/lich/KeyboxChainGenerator;->fromIntList(Ljava/util/List;)[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;
++    invoke-static {v8}, Lio/lichlabs/lich/KeyboxChainGenerator;->fromIntList(Ljava/util/List;)[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;
 +
 +    move-result-object v8
 +
@@ -1669,7 +1738,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_4
-+    iget v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
++    iget v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
 +
 +    if-eq v2, v5, :cond_5
 +
@@ -1677,7 +1746,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v7, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    iget v8, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
++    iget v8, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
 +
 +    int-to-long v8, v8
 +
@@ -1690,7 +1759,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_5
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
 +
 +    if-eqz v2, :cond_6
 +
@@ -1698,7 +1767,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v7, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    iget-object v8, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
++    iget-object v8, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
 +
 +    invoke-direct {v7, v8}, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;-><init>(Ljava/math/BigInteger;)V
 +
@@ -1709,7 +1778,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_6
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getAttestationVersion()I
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getAttestationVersion()I
 +
 +    move-result v2
 +
@@ -1717,7 +1786,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    if-lt v2, v7, :cond_7
 +
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
 +
 +    invoke-interface {v2}, Ljava/util/List;->isEmpty()Z
 +
@@ -1729,9 +1798,9 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v8, Lcom/android/internal/org/bouncycastle/asn1/DERSet;
 +
-+    iget-object v9, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
++    iget-object v9, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
 +
-+    invoke-static {v9}, Lio/mesalabs/lich/KeyboxChainGenerator;->fromIntList(Ljava/util/List;)[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;
++    invoke-static {v9}, Lio/lichlabs/lich/KeyboxChainGenerator;->fromIntList(Ljava/util/List;)[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;
 +
 +    move-result-object v9
 +
@@ -1744,7 +1813,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_7
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
 +
 +    const/16 v8, 0x190
 +
@@ -1754,7 +1823,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v9, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    iget-object v10, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
++    iget-object v10, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
 +
 +    invoke-virtual {v10}, Ljava/util/Date;->getTime()J
 +
@@ -1767,7 +1836,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_8
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
 +
 +    if-eqz v2, :cond_9
 +
@@ -1775,7 +1844,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v9, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    iget-object v10, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
++    iget-object v10, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
 +
 +    invoke-virtual {v10}, Ljava/util/Date;->getTime()J
 +
@@ -1790,7 +1859,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_9
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
 +
 +    if-eqz v2, :cond_a
 +
@@ -1798,7 +1867,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v9, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    iget-object v10, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
++    iget-object v10, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
 +
 +    invoke-virtual {v10}, Ljava/util/Date;->getTime()J
 +
@@ -1813,13 +1882,13 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_a
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getAttestationVersion()I
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getAttestationVersion()I
 +
 +    move-result v2
 +
 +    if-lt v2, v7, :cond_b
 +
-+    iget v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
++    iget v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
 +
 +    if-eq v2, v5, :cond_b
 +
@@ -1827,7 +1896,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v5, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    iget v7, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
++    iget v7, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
 +
 +    int-to-long v9, v7
 +
@@ -1890,7 +1959,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v9, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getVerifiedBootKey()[B
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getVerifiedBootKey()[B
 +
 +    move-result-object v10
 +
@@ -1912,7 +1981,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getVerifiedBootHash()[B
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getVerifiedBootHash()[B
 +
 +    move-result-object v9
 +
@@ -1932,7 +2001,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getOSVersion()I
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getOSVersion()I
 +
 +    move-result v5
 +
@@ -1950,7 +2019,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    invoke-static {v10}, Lio/mesalabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
++    invoke-static {v10}, Lio/lichlabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
 +
 +    move-result v5
 +
@@ -1966,7 +2035,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v2, Lcom/android/internal/org/bouncycastle/asn1/DERTaggedObject;
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxChainGenerator;->createApplicationId()Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxChainGenerator;->createApplicationId()Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
 +    move-result-object v4
 +
@@ -1976,7 +2045,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    invoke-interface {v1, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->brand:[B
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->brand:[B
 +
 +    if-eqz v2, :cond_c
 +
@@ -1984,7 +2053,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
-+    iget-object v5, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->brand:[B
++    iget-object v5, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->brand:[B
 +
 +    invoke-direct {v4, v5}, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;-><init>([B)V
 +
@@ -1995,7 +2064,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_c
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->device:[B
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->device:[B
 +
 +    if-eqz v2, :cond_d
 +
@@ -2003,7 +2072,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
-+    iget-object v5, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->device:[B
++    iget-object v5, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->device:[B
 +
 +    invoke-direct {v4, v5}, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;-><init>([B)V
 +
@@ -2014,7 +2083,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_d
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->product:[B
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->product:[B
 +
 +    if-eqz v2, :cond_e
 +
@@ -2022,7 +2091,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
-+    iget-object v5, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->product:[B
++    iget-object v5, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->product:[B
 +
 +    invoke-direct {v4, v5}, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;-><init>([B)V
 +
@@ -2033,7 +2102,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_e
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->manufacturer:[B
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->manufacturer:[B
 +
 +    if-eqz v2, :cond_f
 +
@@ -2041,7 +2110,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
-+    iget-object v5, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->manufacturer:[B
++    iget-object v5, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->manufacturer:[B
 +
 +    invoke-direct {v4, v5}, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;-><init>([B)V
 +
@@ -2052,7 +2121,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_f
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->model:[B
++    iget-object v2, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->model:[B
 +
 +    if-eqz v2, :cond_10
 +
@@ -2060,7 +2129,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
-+    iget-object v5, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->model:[B
++    iget-object v5, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->model:[B
 +
 +    invoke-direct {v4, v5}, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;-><init>([B)V
 +
@@ -2075,7 +2144,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    invoke-static {v3}, Lio/mesalabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
++    invoke-static {v3}, Lio/lichlabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
 +
 +    move-result v5
 +
@@ -2093,7 +2162,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    invoke-static {v3}, Lio/mesalabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
++    invoke-static {v3}, Lio/lichlabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
 +
 +    move-result v5
 +
@@ -2107,7 +2176,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getAttestationVersion()I
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getAttestationVersion()I
 +
 +    move-result v2
 +
@@ -2117,7 +2186,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v4, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getModuleHash()[B
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getModuleHash()[B
 +
 +    move-result-object v5
 +
@@ -2154,7 +2223,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    check-cast v1, [Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;
 +
-+    invoke-static {v0, v1, p0, p1}, Lio/mesalabs/lich/KeyboxChainGenerator;->getAsn1OctetString([Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Lcom/android/internal/org/bouncycastle/asn1/ASN1OctetString;
++    invoke-static {v0, v1, p0, p1}, Lio/lichlabs/lich/KeyboxChainGenerator;->getAsn1OctetString([Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Lcom/android/internal/org/bouncycastle/asn1/ASN1OctetString;
 +
 +    move-result-object p0
 +
@@ -2233,14 +2302,14 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    return-object v0
 +.end method
 +
-+.method static blacklist generateCertChain(Ljava/security/KeyPair;Landroid/system/keystore2/KeyDescriptor;Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Ljava/util/List;
++.method static blacklist generateCertChain(Ljava/security/KeyPair;Landroid/system/keystore2/KeyDescriptor;Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Ljava/util/List;
 +    .locals 17
 +    .annotation system Ldalvik/annotation/Signature;
 +        value = {
 +            "(",
 +            "Ljava/security/KeyPair;",
 +            "Landroid/system/keystore2/KeyDescriptor;",
-+            "Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;",
++            "Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;",
 +            "I)",
 +            "Ljava/util/List<",
 +            "Ljava/security/cert/Certificate;",
@@ -2252,7 +2321,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    move/from16 v1, p3
 +
-+    iget-object v2, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
++    iget-object v2, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
 +
 +    const/4 v3, 0x0
 +
@@ -2264,7 +2333,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    if-eqz v2, :cond_0
 +
-+    iget-object v2, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
++    iget-object v2, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
 +
 +    array-length v2, v2
 +
@@ -2287,7 +2356,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    if-eqz v2, :cond_2
 +
-+    iget-object v7, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
++    iget-object v7, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
 +
 +    array-length v7, v7
 +
@@ -2305,7 +2374,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    return-object v6
 +
 +    :cond_3
-+    iget-object v7, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
++    iget-object v7, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
 +
 +    if-nez v7, :cond_4
 +
@@ -2323,19 +2392,19 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    invoke-direct {v7, v8}, Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;-><init>([Lcom/android/internal/org/bouncycastle/asn1/x500/RDN;)V
 +
-+    iput-object v7, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
++    iput-object v7, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
 +
 +    :cond_4
-+    iget-object v7, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSerial:Ljava/math/BigInteger;
++    iget-object v7, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSerial:Ljava/math/BigInteger;
 +
 +    if-nez v7, :cond_5
 +
 +    sget-object v7, Ljava/math/BigInteger;->ONE:Ljava/math/BigInteger;
 +
-+    iput-object v7, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSerial:Ljava/math/BigInteger;
++    iput-object v7, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSerial:Ljava/math/BigInteger;
 +
 +    :cond_5
-+    iget-object v7, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotBefore:Ljava/util/Date;
++    iget-object v7, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotBefore:Ljava/util/Date;
 +
 +    if-nez v7, :cond_7
 +
@@ -2355,10 +2424,10 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    :goto_1
 +    invoke-direct {v7, v8, v9}, Ljava/util/Date;-><init>(J)V
 +
-+    iput-object v7, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotBefore:Ljava/util/Date;
++    iput-object v7, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotBefore:Ljava/util/Date;
 +
 +    :cond_7
-+    iget-object v7, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotAfter:Ljava/util/Date;
++    iget-object v7, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotAfter:Ljava/util/Date;
 +
 +    if-nez v7, :cond_9
 +
@@ -2416,7 +2485,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    move-result-object v7
 +
-+    iput-object v7, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotAfter:Ljava/util/Date;
++    iput-object v7, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotAfter:Ljava/util/Date;
 +
 +    :cond_9
 +    const-string v7, "RSA"
@@ -2430,7 +2499,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    :try_start_0
 +    new-instance v9, Lcom/android/internal/org/bouncycastle/cert/X509CertificateHolder;
 +
-+    invoke-static/range {p1 .. p1}, Lio/mesalabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
++    invoke-static/range {p1 .. p1}, Lio/lichlabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
 +
 +    move-result-object v10
 +
@@ -2449,7 +2518,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    goto :goto_4
 +
 +    :cond_a
-+    iget v9, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget v9, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    invoke-static {v9}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
 +
@@ -2469,7 +2538,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    move-object v9, v8
 +
 +    :goto_3
-+    invoke-static {v9}, Lio/mesalabs/lich/KeyboxUtils;->fetchCertificateHolderFromKeybox(Ljava/lang/String;)Lcom/android/internal/org/bouncycastle/cert/X509CertificateHolder;
++    invoke-static {v9}, Lio/lichlabs/lich/KeyboxUtils;->fetchCertificateHolderFromKeybox(Ljava/lang/String;)Lcom/android/internal/org/bouncycastle/cert/X509CertificateHolder;
 +
 +    move-result-object v9
 +
@@ -2480,28 +2549,28 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    goto :goto_4
 +
 +    :cond_c
-+    iget-object v9, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
++    iget-object v9, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
 +
 +    :goto_4
 +    move-object v11, v9
 +
 +    new-instance v10, Lcom/android/internal/org/bouncycastle/cert/X509v3CertificateBuilder;
 +
-+    iget-object v12, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSerial:Ljava/math/BigInteger;
++    iget-object v12, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSerial:Ljava/math/BigInteger;
 +
 +    new-instance v13, Lcom/android/internal/org/bouncycastle/asn1/x509/Time;
 +
-+    iget-object v9, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotBefore:Ljava/util/Date;
++    iget-object v9, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotBefore:Ljava/util/Date;
 +
 +    invoke-direct {v13, v9}, Lcom/android/internal/org/bouncycastle/asn1/x509/Time;-><init>(Ljava/util/Date;)V
 +
 +    new-instance v14, Lcom/android/internal/org/bouncycastle/asn1/x509/Time;
 +
-+    iget-object v9, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotAfter:Ljava/util/Date;
++    iget-object v9, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateNotAfter:Ljava/util/Date;
 +
 +    invoke-direct {v14, v9}, Lcom/android/internal/org/bouncycastle/asn1/x509/Time;-><init>(Ljava/util/Date;)V
 +
-+    iget-object v15, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
++    iget-object v15, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->certificateSubject:Lcom/android/internal/org/bouncycastle/asn1/x500/X500Name;
 +
 +    invoke-virtual/range {p0 .. p0}, Ljava/security/KeyPair;->getPublic()Ljava/security/PublicKey;
 +
@@ -2519,7 +2588,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    if-eqz v2, :cond_d
 +
-+    invoke-static/range {p2 .. p3}, Lio/mesalabs/lich/KeyboxChainGenerator;->createExtension(Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Lcom/android/internal/org/bouncycastle/asn1/x509/Extension;
++    invoke-static/range {p2 .. p3}, Lio/lichlabs/lich/KeyboxChainGenerator;->createExtension(Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Lcom/android/internal/org/bouncycastle/asn1/x509/Extension;
 +
 +    move-result-object v1
 +
@@ -2530,7 +2599,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v9, Lcom/android/internal/org/bouncycastle/asn1/x509/KeyUsage;
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxUtils;->getKeyUsage(Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;)I
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxUtils;->getKeyUsage(Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;)I
 +
 +    move-result v11
 +
@@ -2538,7 +2607,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    invoke-virtual {v10, v1, v4, v9}, Lcom/android/internal/org/bouncycastle/cert/X509v3CertificateBuilder;->addExtension(Lcom/android/internal/org/bouncycastle/asn1/ASN1ObjectIdentifier;ZLcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;)Lcom/android/internal/org/bouncycastle/cert/X509v3CertificateBuilder;
 +
-+    iget v0, v0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget v0, v0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
 +
@@ -2567,7 +2636,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    :cond_e
 +    if-eqz v3, :cond_f
 +
-+    invoke-static/range {p1 .. p1}, Lio/mesalabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
++    invoke-static/range {p1 .. p1}, Lio/lichlabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
 +
 +    move-result-object v1
 +
@@ -2582,7 +2651,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    goto :goto_5
 +
 +    :cond_f
-+    invoke-static {v7}, Lio/mesalabs/lich/KeyboxUtils;->fetchPrivateKeyFromKeybox(Ljava/lang/String;)Ljava/security/PrivateKey;
++    invoke-static {v7}, Lio/lichlabs/lich/KeyboxUtils;->fetchPrivateKeyFromKeybox(Ljava/lang/String;)Ljava/security/PrivateKey;
 +
 +    move-result-object v1
 +
@@ -2611,7 +2680,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    :cond_11
 +    if-eqz v3, :cond_12
 +
-+    invoke-static/range {p1 .. p1}, Lio/mesalabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
++    invoke-static/range {p1 .. p1}, Lio/lichlabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
 +
 +    move-result-object v1
 +
@@ -2626,7 +2695,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    goto :goto_6
 +
 +    :cond_12
-+    invoke-static {v8}, Lio/mesalabs/lich/KeyboxUtils;->fetchPrivateKeyFromKeybox(Ljava/lang/String;)Ljava/security/PrivateKey;
++    invoke-static {v8}, Lio/lichlabs/lich/KeyboxUtils;->fetchPrivateKeyFromKeybox(Ljava/lang/String;)Ljava/security/PrivateKey;
 +
 +    move-result-object v1
 +
@@ -2640,7 +2709,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    move-result-object v0
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxUtils;->getCertificateFromHolder(Lcom/android/internal/org/bouncycastle/cert/X509CertificateHolder;)Ljava/security/cert/X509Certificate;
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxUtils;->getCertificateFromHolder(Lcom/android/internal/org/bouncycastle/cert/X509CertificateHolder;)Ljava/security/cert/X509Certificate;
 +
 +    move-result-object v0
 +
@@ -2662,7 +2731,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    move-result-object v0
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxUtils;->fetchCertificateChainFromKeybox(Ljava/lang/String;)Ljava/util/List;
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxUtils;->fetchCertificateChainFromKeybox(Ljava/lang/String;)Ljava/util/List;
 +
 +    move-result-object v0
 +
@@ -2687,7 +2756,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +    return-object v6
 +.end method
 +
-+.method private static blacklist getAsn1OctetString([Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Lcom/android/internal/org/bouncycastle/asn1/ASN1OctetString;
++.method private static blacklist getAsn1OctetString([Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;[Lcom/android/internal/org/bouncycastle/asn1/ASN1Encodable;Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Lcom/android/internal/org/bouncycastle/asn1/ASN1OctetString;
 +    .locals 8
 +    .annotation system Ldalvik/annotation/Throws;
 +        value = {
@@ -2697,7 +2766,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v0, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getAttestationVersion()I
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getAttestationVersion()I
 +
 +    move-result v1
 +
@@ -2711,7 +2780,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance v2, Lcom/android/internal/org/bouncycastle/asn1/ASN1Integer;
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getKeymasterVersion()I
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getKeymasterVersion()I
 +
 +    move-result v3
 +
@@ -2725,7 +2794,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    new-instance p3, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;
 +
-+    iget-object p2, p2, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
++    iget-object p2, p2, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->attestationChallenge:[B
 +
 +    invoke-direct {p3, p2}, Lcom/android/internal/org/bouncycastle/asn1/DEROctetString;-><init>([B)V
 +
@@ -2793,11 +2862,12 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxChainGenerator.smali b
 +
 +    return-object p0
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali	2026-02-13 21:44:08.030470390 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxDbHelper.smali b/smali_classes7/io/lichlabs/lich/KeyboxDbHelper.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxDbHelper.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxDbHelper.smali	2026-06-29 15:31:55.314863619 -0500
 @@ -0,0 +1,546 @@
-+.class final Lio/mesalabs/lich/KeyboxDbHelper;
++.class final Lio/lichlabs/lich/KeyboxDbHelper;
 +.super Landroid/database/sqlite/SQLiteOpenHelper;
 +.source "KeyboxDbHelper.java"
 +
@@ -2823,7 +2893,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +
 +.field private static final blacklist TAG:Ljava/lang/String; = "KeyboxDbHelper"
 +
-+.field private static blacklist sInstance:Lio/mesalabs/lich/KeyboxDbHelper;
++.field private static blacklist sInstance:Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +
 +# direct methods
@@ -2841,14 +2911,14 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +    return-void
 +.end method
 +
-+.method static blacklist getInstance()Lio/mesalabs/lich/KeyboxDbHelper;
++.method static blacklist getInstance()Lio/lichlabs/lich/KeyboxDbHelper;
 +    .locals 2
 +
-+    sget-object v0, Lio/mesalabs/lich/KeyboxDbHelper;->sInstance:Lio/mesalabs/lich/KeyboxDbHelper;
++    sget-object v0, Lio/lichlabs/lich/KeyboxDbHelper;->sInstance:Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    if-nez v0, :cond_1
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getApplicationContext()Landroid/content/Context;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getApplicationContext()Landroid/content/Context;
 +
 +    move-result-object v0
 +
@@ -2865,14 +2935,14 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +    return-object v0
 +
 +    :cond_0
-+    new-instance v1, Lio/mesalabs/lich/KeyboxDbHelper;
++    new-instance v1, Lio/lichlabs/lich/KeyboxDbHelper;
 +
-+    invoke-direct {v1, v0}, Lio/mesalabs/lich/KeyboxDbHelper;-><init>(Landroid/content/Context;)V
++    invoke-direct {v1, v0}, Lio/lichlabs/lich/KeyboxDbHelper;-><init>(Landroid/content/Context;)V
 +
-+    sput-object v1, Lio/mesalabs/lich/KeyboxDbHelper;->sInstance:Lio/mesalabs/lich/KeyboxDbHelper;
++    sput-object v1, Lio/lichlabs/lich/KeyboxDbHelper;->sInstance:Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    :cond_1
-+    sget-object v0, Lio/mesalabs/lich/KeyboxDbHelper;->sInstance:Lio/mesalabs/lich/KeyboxDbHelper;
++    sget-object v0, Lio/lichlabs/lich/KeyboxDbHelper;->sInstance:Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    return-object v0
 +.end method
@@ -2930,7 +3000,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +.method blacklist deleteKeyData(J)Z
 +    .locals 3
 +
-+    invoke-virtual {p0}, Lio/mesalabs/lich/KeyboxDbHelper;->getWritableDatabase()Landroid/database/sqlite/SQLiteDatabase;
++    invoke-virtual {p0}, Lio/lichlabs/lich/KeyboxDbHelper;->getWritableDatabase()Landroid/database/sqlite/SQLiteDatabase;
 +
 +    move-result-object p0
 +
@@ -2974,7 +3044,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +        }
 +    .end annotation
 +
-+    invoke-virtual {p0}, Lio/mesalabs/lich/KeyboxDbHelper;->getReadableDatabase()Landroid/database/sqlite/SQLiteDatabase;
++    invoke-virtual {p0}, Lio/lichlabs/lich/KeyboxDbHelper;->getReadableDatabase()Landroid/database/sqlite/SQLiteDatabase;
 +
 +    move-result-object v0
 +
@@ -3027,7 +3097,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +
 +    move-result-object v0
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxUtils;->generateKeyPairFromKeyData([B)Ljava/security/KeyPair;
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxUtils;->generateKeyPairFromKeyData([B)Ljava/security/KeyPair;
 +
 +    move-result-object v0
 +
@@ -3041,7 +3111,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +
 +    move-result-object v1
 +
-+    invoke-direct {p0, v1}, Lio/mesalabs/lich/KeyboxDbHelper;->unmarshallKeyMetadata([B)Landroid/system/keystore2/KeyMetadata;
++    invoke-direct {p0, v1}, Lio/lichlabs/lich/KeyboxDbHelper;->unmarshallKeyMetadata([B)Landroid/system/keystore2/KeyMetadata;
 +
 +    move-result-object p0
 +
@@ -3094,7 +3164,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +.method blacklist fetchKeyEntries(Ljava/lang/String;)[Landroid/system/keystore2/KeyDescriptor;
 +    .locals 10
 +
-+    invoke-virtual {p0}, Lio/mesalabs/lich/KeyboxDbHelper;->getReadableDatabase()Landroid/database/sqlite/SQLiteDatabase;
++    invoke-virtual {p0}, Lio/lichlabs/lich/KeyboxDbHelper;->getReadableDatabase()Landroid/database/sqlite/SQLiteDatabase;
 +
 +    move-result-object v0
 +
@@ -3219,7 +3289,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +.method public blacklist onDowngrade(Landroid/database/sqlite/SQLiteDatabase;II)V
 +    .locals 0
 +
-+    invoke-virtual {p0, p1, p2, p3}, Lio/mesalabs/lich/KeyboxDbHelper;->onUpgrade(Landroid/database/sqlite/SQLiteDatabase;II)V
++    invoke-virtual {p0, p1, p2, p3}, Lio/lichlabs/lich/KeyboxDbHelper;->onUpgrade(Landroid/database/sqlite/SQLiteDatabase;II)V
 +
 +    return-void
 +.end method
@@ -3231,7 +3301,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +
 +    invoke-virtual {p1, p2}, Landroid/database/sqlite/SQLiteDatabase;->execSQL(Ljava/lang/String;)V
 +
-+    invoke-virtual {p0, p1}, Lio/mesalabs/lich/KeyboxDbHelper;->onCreate(Landroid/database/sqlite/SQLiteDatabase;)V
++    invoke-virtual {p0, p1}, Lio/lichlabs/lich/KeyboxDbHelper;->onCreate(Landroid/database/sqlite/SQLiteDatabase;)V
 +
 +    return-void
 +.end method
@@ -3239,7 +3309,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +.method blacklist storeKeyData(Ljava/lang/String;Ljava/security/KeyPair;Landroid/system/keystore2/KeyMetadata;)V
 +    .locals 4
 +
-+    invoke-virtual {p0}, Lio/mesalabs/lich/KeyboxDbHelper;->getWritableDatabase()Landroid/database/sqlite/SQLiteDatabase;
++    invoke-virtual {p0}, Lio/lichlabs/lich/KeyboxDbHelper;->getWritableDatabase()Landroid/database/sqlite/SQLiteDatabase;
 +
 +    move-result-object v0
 +
@@ -3277,7 +3347,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +
 +    const-string p1, "key_metadata"
 +
-+    invoke-direct {p0, p3}, Lio/mesalabs/lich/KeyboxDbHelper;->marshallKeyMetadata(Landroid/system/keystore2/KeyMetadata;)[B
++    invoke-direct {p0, p3}, Lio/lichlabs/lich/KeyboxDbHelper;->marshallKeyMetadata(Landroid/system/keystore2/KeyMetadata;)[B
 +
 +    move-result-object p0
 +
@@ -3295,7 +3365,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +.method blacklist updateKeyData(JLjava/security/KeyPair;Landroid/system/keystore2/KeyMetadata;)V
 +    .locals 3
 +
-+    invoke-virtual {p0}, Lio/mesalabs/lich/KeyboxDbHelper;->getWritableDatabase()Landroid/database/sqlite/SQLiteDatabase;
++    invoke-virtual {p0}, Lio/lichlabs/lich/KeyboxDbHelper;->getWritableDatabase()Landroid/database/sqlite/SQLiteDatabase;
 +
 +    move-result-object v0
 +
@@ -3317,7 +3387,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +
 +    const-string p3, "key_metadata"
 +
-+    invoke-direct {p0, p4}, Lio/mesalabs/lich/KeyboxDbHelper;->marshallKeyMetadata(Landroid/system/keystore2/KeyMetadata;)[B
++    invoke-direct {p0, p4}, Lio/lichlabs/lich/KeyboxDbHelper;->marshallKeyMetadata(Landroid/system/keystore2/KeyMetadata;)[B
 +
 +    move-result-object p0
 +
@@ -3343,18 +3413,19 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxDbHelper.smali b/smali
 +
 +    return-void
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks$1.smali b/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks$1.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks$1.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks$1.smali	2026-02-13 21:44:08.031051011 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxImitationHooks$1.smali b/smali_classes7/io/lichlabs/lich/KeyboxImitationHooks$1.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxImitationHooks$1.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxImitationHooks$1.smali	2026-06-29 15:32:23.796051192 -0500
 @@ -0,0 +1,80 @@
-+.class Lio/mesalabs/lich/KeyboxImitationHooks$1;
++.class Lio/lichlabs/lich/KeyboxImitationHooks$1;
 +.super Landroid/system/keystore2/IKeystoreSecurityLevel$Default;
 +.source "KeyboxImitationHooks.java"
 +
 +
 +# annotations
 +.annotation system Ldalvik/annotation/EnclosingClass;
-+    value = Lio/mesalabs/lich/KeyboxImitationHooks;
++    value = Lio/lichlabs/lich/KeyboxImitationHooks;
 +.end annotation
 +
 +.annotation system Ldalvik/annotation/InnerClass;
@@ -3377,7 +3448,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks$1.smali
 +.method public blacklist createOperation(Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;Z)Landroid/system/keystore2/CreateOperationResponse;
 +    .locals 0
 +
-+    invoke-static {p1, p2}, Lio/mesalabs/lich/KeyboxImitationHooks;->onCreateOperation(Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {p1, p2}, Lio/lichlabs/lich/KeyboxImitationHooks;->onCreateOperation(Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object p0
 +
@@ -3387,7 +3458,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks$1.smali
 +.method public blacklist deleteKey(Landroid/system/keystore2/KeyDescriptor;)V
 +    .locals 0
 +
-+    invoke-static {p1}, Lio/mesalabs/lich/KeyboxImitationHooks;->onDeleteKey(Landroid/system/keystore2/KeyDescriptor;)Z
++    invoke-static {p1}, Lio/lichlabs/lich/KeyboxImitationHooks;->onDeleteKey(Landroid/system/keystore2/KeyDescriptor;)Z
 +
 +    return-void
 +.end method
@@ -3395,7 +3466,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks$1.smali
 +.method public blacklist generateKey(Landroid/system/keystore2/KeyDescriptor;Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;I[B)Landroid/system/keystore2/KeyMetadata;
 +    .locals 0
 +
-+    invoke-static {p1, p2, p3}, Lio/mesalabs/lich/KeyboxImitationHooks;->onGenerateKey(Landroid/system/keystore2/KeyDescriptor;Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;)Landroid/system/keystore2/KeyMetadata;
++    invoke-static {p1, p2, p3}, Lio/lichlabs/lich/KeyboxImitationHooks;->onGenerateKey(Landroid/system/keystore2/KeyDescriptor;Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;)Landroid/system/keystore2/KeyMetadata;
 +
 +    move-result-object p0
 +
@@ -3421,17 +3492,18 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks$1.smali
 +.method public blacklist importKey(Landroid/system/keystore2/KeyDescriptor;Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;I[B)Landroid/system/keystore2/KeyMetadata;
 +    .locals 0
 +
-+    invoke-static {p1, p3, p5}, Lio/mesalabs/lich/KeyboxImitationHooks;->onImportKey(Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;[B)Landroid/system/keystore2/KeyMetadata;
++    invoke-static {p1, p3, p5}, Lio/lichlabs/lich/KeyboxImitationHooks;->onImportKey(Landroid/system/keystore2/KeyDescriptor;[Landroid/hardware/security/keymint/KeyParameter;[B)Landroid/system/keystore2/KeyMetadata;
 +
 +    move-result-object p0
 +
 +    return-object p0
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali	2026-02-13 21:44:08.031205694 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxImitationHooks.smali b/smali_classes7/io/lichlabs/lich/KeyboxImitationHooks.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxImitationHooks.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxImitationHooks.smali	2026-06-29 15:34:08.004087638 -0500
 @@ -0,0 +1,2844 @@
-+.class public final Lio/mesalabs/lich/KeyboxImitationHooks;
++.class public final Lio/lichlabs/lich/KeyboxImitationHooks;
 +.super Ljava/lang/Object;
 +.source "KeyboxImitationHooks.java"
 +
@@ -3450,15 +3522,15 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +.method static constructor blacklist <clinit>()V
 +    .locals 1
 +
-+    new-instance v0, Lio/mesalabs/lich/KeyboxImitationHooks$1;
++    new-instance v0, Lio/lichlabs/lich/KeyboxImitationHooks$1;
 +
-+    invoke-direct {v0}, Lio/mesalabs/lich/KeyboxImitationHooks$1;-><init>()V
++    invoke-direct {v0}, Lio/lichlabs/lich/KeyboxImitationHooks$1;-><init>()V
 +
-+    sput-object v0, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevel:Landroid/system/keystore2/IKeystoreSecurityLevel;
++    sput-object v0, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevel:Landroid/system/keystore2/IKeystoreSecurityLevel;
 +
 +    const/4 v0, 0x1
 +
-+    sput v0, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
++    sput v0, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
 +
 +    return-void
 +.end method
@@ -3471,7 +3543,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-void
 +.end method
 +
-+.method private static blacklist buildMetadata(Ljava/util/List;Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;Landroid/system/keystore2/KeyDescriptor;II)Landroid/system/keystore2/KeyMetadata;
++.method private static blacklist buildMetadata(Ljava/util/List;Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;Landroid/system/keystore2/KeyDescriptor;II)Landroid/system/keystore2/KeyMetadata;
 +    .locals 7
 +    .annotation system Ldalvik/annotation/Signature;
 +        value = {
@@ -3479,7 +3551,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +            "Ljava/util/List<",
 +            "Ljava/security/cert/Certificate;",
 +            ">;",
-+            "Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;",
++            "Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;",
 +            "Landroid/system/keystore2/KeyDescriptor;",
 +            "II)",
 +            "Landroid/system/keystore2/KeyMetadata;"
@@ -3509,7 +3581,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    check-cast p0, [Ljava/security/cert/Certificate;
 +
-+    invoke-static {v0, p0}, Lio/mesalabs/lich/KeyboxUtils;->putCertificateChain(Landroid/system/keystore2/KeyMetadata;[Ljava/security/cert/Certificate;)V
++    invoke-static {v0, p0}, Lio/lichlabs/lich/KeyboxUtils;->putCertificateChain(Landroid/system/keystore2/KeyMetadata;[Ljava/security/cert/Certificate;)V
 +
 +    :cond_0
 +    invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
@@ -3544,7 +3616,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    invoke-direct {p0}, Ljava/util/ArrayList;-><init>()V
 +
-+    iget-object p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    invoke-interface {p2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
 +
@@ -3598,7 +3670,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    goto :goto_0
 +
 +    :cond_1
-+    iget p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    const/4 v2, -0x1
 +
@@ -3622,7 +3694,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v3, p2, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    iget v4, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget v4, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    invoke-static {v4}, Landroid/hardware/security/keymint/KeyParameterValue;->algorithm(I)Landroid/hardware/security/keymint/KeyParameterValue;
 +
@@ -3635,7 +3707,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    invoke-interface {p0, p2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_2
-+    iget p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
++    iget p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
 +
 +    if-eq p2, v2, :cond_3
 +
@@ -3657,7 +3729,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v3, p2, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    iget v4, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
++    iget v4, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
 +
 +    invoke-static {v4}, Landroid/hardware/security/keymint/KeyParameterValue;->integer(I)Landroid/hardware/security/keymint/KeyParameterValue;
 +
@@ -3670,7 +3742,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    invoke-interface {p0, p2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_3
-+    iget-object p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
++    iget-object p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
 +
 +    invoke-interface {p2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
 +
@@ -3724,7 +3796,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    goto :goto_1
 +
 +    :cond_4
-+    iget-object p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
++    iget-object p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
 +
 +    invoke-interface {p2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
 +
@@ -3778,7 +3850,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    goto :goto_2
 +
 +    :cond_5
-+    iget-object p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
++    iget-object p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
 +
 +    invoke-interface {p2}, Ljava/util/List;->iterator()Ljava/util/Iterator;
 +
@@ -3832,7 +3904,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    goto :goto_3
 +
 +    :cond_6
-+    iget p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
++    iget p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
 +
 +    if-eq p2, v2, :cond_7
 +
@@ -3854,7 +3926,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v3, p2, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    iget v4, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
++    iget v4, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurve:I
 +
 +    invoke-static {v4}, Landroid/hardware/security/keymint/KeyParameterValue;->ecCurve(I)Landroid/hardware/security/keymint/KeyParameterValue;
 +
@@ -3867,7 +3939,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    invoke-interface {p0, p2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_7
-+    iget-object p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
++    iget-object p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
 +
 +    if-eqz p2, :cond_8
 +
@@ -3889,7 +3961,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v3, p2, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    iget-object v4, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
++    iget-object v4, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
 +
 +    invoke-virtual {v4}, Ljava/math/BigInteger;->longValue()J
 +
@@ -3906,7 +3978,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    invoke-interface {p0, p2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_8
-+    iget-object p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
++    iget-object p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
 +
 +    if-eqz p2, :cond_9
 +
@@ -3928,7 +4000,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v3, p2, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    iget-object v4, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
++    iget-object v4, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->activeDateTime:Ljava/util/Date;
 +
 +    invoke-virtual {v4}, Ljava/util/Date;->getTime()J
 +
@@ -3945,7 +4017,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    invoke-interface {p0, p2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_9
-+    iget-object p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
++    iget-object p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
 +
 +    if-eqz p2, :cond_a
 +
@@ -3967,7 +4039,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v3, p2, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    iget-object v4, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
++    iget-object v4, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->originationExpireDateTime:Ljava/util/Date;
 +
 +    invoke-virtual {v4}, Ljava/util/Date;->getTime()J
 +
@@ -3984,7 +4056,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    invoke-interface {p0, p2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_a
-+    iget-object p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
++    iget-object p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
 +
 +    if-eqz p2, :cond_b
 +
@@ -4006,7 +4078,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v3, p2, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    iget-object v4, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
++    iget-object v4, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageExpireDateTime:Ljava/util/Date;
 +
 +    invoke-virtual {v4}, Ljava/util/Date;->getTime()J
 +
@@ -4023,7 +4095,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    invoke-interface {p0, p2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
 +    :cond_b
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getAttestationVersion()I
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getAttestationVersion()I
 +
 +    move-result p2
 +
@@ -4031,7 +4103,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    if-lt p2, v3, :cond_c
 +
-+    iget p2, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
++    iget p2, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
 +
 +    if-eq p2, v2, :cond_c
 +
@@ -4053,7 +4125,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v2, p2, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    iget p1, p1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
++    iget p1, p1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->usageCountLimit:I
 +
 +    invoke-static {p1}, Landroid/hardware/security/keymint/KeyParameterValue;->integer(I)Landroid/hardware/security/keymint/KeyParameterValue;
 +
@@ -4174,7 +4246,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object p2, p1, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getOSVersion()I
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getOSVersion()I
 +
 +    move-result p4
 +
@@ -4206,7 +4278,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object p2, p1, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    invoke-static {v1}, Lio/mesalabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
++    invoke-static {v1}, Lio/lichlabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
 +
 +    move-result p4
 +
@@ -4238,7 +4310,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object p2, p1, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
++    invoke-static {v2}, Lio/lichlabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
 +
 +    move-result p4
 +
@@ -4270,7 +4342,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object p2, p1, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
++    invoke-static {v2}, Lio/lichlabs/lich/KeyboxUtils;->getSecurityPatchLevel(Z)I
 +
 +    move-result p4
 +
@@ -4320,7 +4392,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    invoke-interface {p0, p1}, Ljava/util/List;->add(Ljava/lang/Object;)Z
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getAttestationVersion()I
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getAttestationVersion()I
 +
 +    move-result p1
 +
@@ -4346,7 +4418,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object p2, p1, Landroid/system/keystore2/Authorization;->keyParameter:Landroid/hardware/security/keymint/KeyParameter;
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getModuleHash()[B
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getModuleHash()[B
 +
 +    move-result-object p4
 +
@@ -4400,7 +4472,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    const-string v0, "Ed25519"
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
 +
 +    move-result v1
 +
@@ -4411,7 +4483,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v2
 +
 +    :cond_0
-+    invoke-static/range {p0 .. p0}, Lio/mesalabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
++    invoke-static/range {p0 .. p0}, Lio/lichlabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
 +
 +    move-result-object v1
 +
@@ -4426,19 +4498,19 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v3, v3, Landroid/system/keystore2/KeyMetadata;->authorizations:[Landroid/system/keystore2/Authorization;
 +
-+    invoke-static {v3}, Lio/mesalabs/lich/KeyboxUtils;->getAlgorithmFromAuthorizations([Landroid/system/keystore2/Authorization;)Ljava/lang/String;
++    invoke-static {v3}, Lio/lichlabs/lich/KeyboxUtils;->getAlgorithmFromAuthorizations([Landroid/system/keystore2/Authorization;)Ljava/lang/String;
 +
 +    move-result-object v3
 +
 +    if-eqz v3, :cond_2e
 +
-+    new-instance v5, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;
++    new-instance v5, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;
 +
 +    move-object/from16 v6, p1
 +
-+    invoke-direct {v5, v6}, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;-><init>([Landroid/hardware/security/keymint/KeyParameter;)V
++    invoke-direct {v5, v6}, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;-><init>([Landroid/hardware/security/keymint/KeyParameter;)V
 +
-+    iget-object v6, v5, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object v6, v5, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    invoke-interface {v6}, Ljava/util/List;->isEmpty()Z
 +
@@ -4446,7 +4518,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    if-nez v6, :cond_2
 +
-+    iget-object v6, v5, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object v6, v5, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    invoke-interface {v6}, Ljava/util/List;->getFirst()Ljava/lang/Object;
 +
@@ -4460,7 +4532,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    move-object v6, v2
 +
 +    :goto_0
-+    iget-object v7, v5, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
++    iget-object v7, v5, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
 +
 +    invoke-interface {v7}, Ljava/util/List;->isEmpty()Z
 +
@@ -4468,7 +4540,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    if-nez v7, :cond_3
 +
-+    iget-object v7, v5, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
++    iget-object v7, v5, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->padding:Ljava/util/List;
 +
 +    invoke-interface {v7}, Ljava/util/List;->getFirst()Ljava/lang/Object;
 +
@@ -4482,7 +4554,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    move-object v7, v2
 +
 +    :goto_1
-+    iget-object v8, v5, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
++    iget-object v8, v5, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
 +
 +    invoke-interface {v8}, Ljava/util/List;->isEmpty()Z
 +
@@ -4490,7 +4562,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    if-nez v8, :cond_4
 +
-+    iget-object v2, v5, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
++    iget-object v2, v5, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->digest:Ljava/util/List;
 +
 +    invoke-interface {v2}, Ljava/util/List;->getFirst()Ljava/lang/Object;
 +
@@ -4499,7 +4571,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    check-cast v2, Ljava/lang/Integer;
 +
 +    :cond_4
-+    invoke-static {v2}, Lio/mesalabs/lich/KeyboxUtils;->getSignDigest(Ljava/lang/Integer;)Ljava/lang/String;
++    invoke-static {v2}, Lio/lichlabs/lich/KeyboxUtils;->getSignDigest(Ljava/lang/Integer;)Ljava/lang/String;
 +
 +    move-result-object v8
 +
@@ -4703,7 +4775,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v0
 +
-+    invoke-static {v0, v9}, Lio/mesalabs/lich/KeyboxOperationUtils;->getDecryptOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {v0, v9}, Lio/lichlabs/lich/KeyboxOperationUtils;->getDecryptOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object v0
 +
@@ -4724,7 +4796,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    if-eqz v0, :cond_11
 +
-+    iget-object v0, v5, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
++    iget-object v0, v5, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
 +
 +    invoke-interface {v0}, Ljava/util/List;->isEmpty()Z
 +
@@ -4732,7 +4804,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    if-nez v0, :cond_c
 +
-+    iget-object v0, v5, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
++    iget-object v0, v5, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->mgfDigest:Ljava/util/List;
 +
 +    invoke-interface {v0}, Ljava/util/List;->getFirst()Ljava/lang/Object;
 +
@@ -4810,7 +4882,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v1
 +
-+    invoke-static {v2}, Lio/mesalabs/lich/KeyboxUtils;->getDecryptDigest(Ljava/lang/Integer;)Ljava/lang/String;
++    invoke-static {v2}, Lio/lichlabs/lich/KeyboxUtils;->getDecryptDigest(Ljava/lang/Integer;)Ljava/lang/String;
 +
 +    move-result-object v3
 +
@@ -4832,7 +4904,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v3
 +
-+    invoke-static {v0, v1, v2, v3}, Lio/mesalabs/lich/KeyboxOperationUtils;->getDecryptOperation(Ljava/security/PrivateKey;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {v0, v1, v2, v3}, Lio/lichlabs/lich/KeyboxOperationUtils;->getDecryptOperation(Ljava/security/PrivateKey;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object v0
 +
@@ -4910,7 +4982,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    const-string v1, "RSA/None/PKCS1Padding"
 +
-+    invoke-static {v0, v1}, Lio/mesalabs/lich/KeyboxOperationUtils;->getDecryptOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {v0, v1}, Lio/lichlabs/lich/KeyboxOperationUtils;->getDecryptOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object v0
 +
@@ -4998,7 +5070,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v0
 +
-+    invoke-static {v0, v9}, Lio/mesalabs/lich/KeyboxOperationUtils;->getSignOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {v0, v9}, Lio/lichlabs/lich/KeyboxOperationUtils;->getSignOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object v0
 +
@@ -5041,7 +5113,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v1
 +
-+    invoke-static {v0, v1}, Lio/mesalabs/lich/KeyboxOperationUtils;->getSignOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {v0, v1}, Lio/lichlabs/lich/KeyboxOperationUtils;->getSignOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object v0
 +
@@ -5093,7 +5165,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v1
 +
-+    invoke-static {v0, v1}, Lio/mesalabs/lich/KeyboxOperationUtils;->getSignOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {v0, v1}, Lio/lichlabs/lich/KeyboxOperationUtils;->getSignOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object v0
 +
@@ -5204,7 +5276,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v1
 +
-+    invoke-static {v0, v1}, Lio/mesalabs/lich/KeyboxOperationUtils;->getSignOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {v0, v1}, Lio/lichlabs/lich/KeyboxOperationUtils;->getSignOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object v0
 +
@@ -5243,7 +5315,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v0
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxOperationUtils;->getKeyAgreementOperation(Ljava/security/PrivateKey;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxOperationUtils;->getKeyAgreementOperation(Ljava/security/PrivateKey;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object v0
 +
@@ -5298,7 +5370,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v1
 +
-+    invoke-static {v1, v0}, Lio/mesalabs/lich/KeyboxOperationUtils;->getSignOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {v1, v0}, Lio/lichlabs/lich/KeyboxOperationUtils;->getSignOperation(Ljava/security/PrivateKey;Ljava/lang/String;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object v0
 +
@@ -5391,7 +5463,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +.method public static blacklist onDeleteKey(Landroid/system/keystore2/KeyDescriptor;)Z
 +    .locals 6
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
 +
 +    move-result v0
 +
@@ -5415,7 +5487,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return v1
 +
 +    :cond_1
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxDbHelper;->getInstance()Lio/mesalabs/lich/KeyboxDbHelper;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxDbHelper;->getInstance()Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    move-result-object v0
 +
@@ -5439,7 +5511,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    int-to-long v3, v2
 +
 +    :cond_3
-+    invoke-virtual {v0, v3, v4}, Lio/mesalabs/lich/KeyboxDbHelper;->deleteKeyData(J)Z
++    invoke-virtual {v0, v3, v4}, Lio/lichlabs/lich/KeyboxDbHelper;->deleteKeyData(J)Z
 +
 +    move-result v0
 +
@@ -5475,7 +5547,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object p0
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
 +
 +    const/4 p0, 0x1
 +
@@ -5490,7 +5562,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    const-string v0, "Generated key with alias \""
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
 +
 +    move-result v1
 +
@@ -5501,7 +5573,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v2
 +
 +    :cond_0
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->isCallerSamsungKeystoreUtils()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->isCallerSamsungKeystoreUtils()Z
 +
 +    move-result v1
 +
@@ -5530,11 +5602,11 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v2
 +
 +    :cond_3
-+    new-instance v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;
++    new-instance v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;
 +
-+    invoke-direct {v1, p2}, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;-><init>([Landroid/hardware/security/keymint/KeyParameter;)V
++    invoke-direct {v1, p2}, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;-><init>([Landroid/hardware/security/keymint/KeyParameter;)V
 +
-+    iget p2, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget p2, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    const/4 v3, 0x3
 +
@@ -5542,24 +5614,24 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    if-eq p2, v3, :cond_4
 +
-+    iget p2, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget p2, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    if-eq p2, v4, :cond_4
 +
 +    return-object v2
 +
 +    :cond_4
-+    iget p2, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget p2, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    const/4 v3, 0x2
 +
 +    if-ne p2, v4, :cond_5
 +
-+    sget p2, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
++    sget p2, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
 +
 +    if-ne p2, v3, :cond_5
 +
-+    iget p2, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
++    iget p2, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
 +
 +    const/16 v5, 0x800
 +
@@ -5568,7 +5640,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v2
 +
 +    :cond_5
-+    iget-object p2, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object p2, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    const/4 v5, 0x7
 +
@@ -5582,7 +5654,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    if-eqz p2, :cond_6
 +
-+    iget-object p2, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object p2, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    invoke-interface {p2}, Ljava/util/List;->size()I
 +
@@ -5594,9 +5666,9 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    :cond_6
 +    :try_start_0
-+    iget p2, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget p2, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
-+    sget v5, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
++    sget v5, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
 +
 +    const/4 v6, 0x0
 +
@@ -5608,15 +5680,15 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    move v4, v6
 +
 +    :goto_0
-+    invoke-static {p2, v4}, Lio/mesalabs/lich/KeyboxUtils;->simulateHardwareDelay(IZ)V
++    invoke-static {p2, v4}, Lio/lichlabs/lich/KeyboxUtils;->simulateHardwareDelay(IZ)V
 +
-+    invoke-static {v1}, Lio/mesalabs/lich/KeyboxUtils;->generateKeyPair(Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;)Ljava/security/KeyPair;
++    invoke-static {v1}, Lio/lichlabs/lich/KeyboxUtils;->generateKeyPair(Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;)Ljava/security/KeyPair;
 +
 +    move-result-object p2
 +
-+    sget v3, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
++    sget v3, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
 +
-+    invoke-static {p2, p1, v1, v3}, Lio/mesalabs/lich/KeyboxChainGenerator;->generateCertChain(Ljava/security/KeyPair;Landroid/system/keystore2/KeyDescriptor;Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Ljava/util/List;
++    invoke-static {p2, p1, v1, v3}, Lio/lichlabs/lich/KeyboxChainGenerator;->generateCertChain(Ljava/security/KeyPair;Landroid/system/keystore2/KeyDescriptor;Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;I)Ljava/util/List;
 +
 +    move-result-object p1
 +
@@ -5631,9 +5703,9 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    goto :goto_1
 +
 +    :cond_8
-+    sget v3, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
++    sget v3, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
 +
-+    invoke-static {p1, v1, p0, v3, v6}, Lio/mesalabs/lich/KeyboxImitationHooks;->buildMetadata(Ljava/util/List;Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;Landroid/system/keystore2/KeyDescriptor;II)Landroid/system/keystore2/KeyMetadata;
++    invoke-static {p1, v1, p0, v3, v6}, Lio/lichlabs/lich/KeyboxImitationHooks;->buildMetadata(Ljava/util/List;Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;Landroid/system/keystore2/KeyDescriptor;II)Landroid/system/keystore2/KeyMetadata;
 +
 +    move-result-object p1
 +
@@ -5642,7 +5714,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v2
 +
 +    :cond_9
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxDbHelper;->getInstance()Lio/mesalabs/lich/KeyboxDbHelper;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxDbHelper;->getInstance()Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    move-result-object v1
 +
@@ -5650,7 +5722,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v3, p0, Landroid/system/keystore2/KeyDescriptor;->alias:Ljava/lang/String;
 +
-+    invoke-virtual {v1, v3, p2, p1}, Lio/mesalabs/lich/KeyboxDbHelper;->storeKeyData(Ljava/lang/String;Ljava/security/KeyPair;Landroid/system/keystore2/KeyMetadata;)V
++    invoke-virtual {v1, v3, p2, p1}, Lio/lichlabs/lich/KeyboxDbHelper;->storeKeyData(Ljava/lang/String;Ljava/security/KeyPair;Landroid/system/keystore2/KeyMetadata;)V
 +
 +    :cond_a
 +    new-instance p2, Ljava/lang/StringBuilder;
@@ -5681,7 +5753,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object p0
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
 +    :try_end_0
 +    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
 +
@@ -5706,7 +5778,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +.method public static blacklist onGetKeyEntry(Landroid/system/keystore2/KeyDescriptor;)Landroid/system/keystore2/KeyEntryResponse;
 +    .locals 3
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
 +
 +    move-result v0
 +
@@ -5717,7 +5789,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v1
 +
 +    :cond_0
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
 +
 +    move-result-object v0
 +
@@ -5737,7 +5809,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iput-object v0, v1, Landroid/system/keystore2/KeyEntryResponse;->metadata:Landroid/system/keystore2/KeyMetadata;
 +
-+    sget-object v0, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevel:Landroid/system/keystore2/IKeystoreSecurityLevel;
++    sget-object v0, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevel:Landroid/system/keystore2/IKeystoreSecurityLevel;
 +
 +    iput-object v0, v1, Landroid/system/keystore2/KeyEntryResponse;->iSecurityLevel:Landroid/system/keystore2/IKeystoreSecurityLevel;
 +
@@ -5771,7 +5843,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object p0
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
 +
 +    :cond_1
 +    return-object v1
@@ -5780,7 +5852,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +.method public static blacklist onGetNumberOfEntries(I)Ljava/lang/Integer;
 +    .locals 2
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
 +
 +    move-result v0
 +
@@ -5796,7 +5868,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v1
 +
 +    :cond_1
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxDbHelper;->getInstance()Lio/mesalabs/lich/KeyboxDbHelper;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxDbHelper;->getInstance()Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    move-result-object p0
 +
@@ -5805,7 +5877,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v1
 +
 +    :cond_2
-+    invoke-virtual {p0, v1}, Lio/mesalabs/lich/KeyboxDbHelper;->fetchKeyEntries(Ljava/lang/String;)[Landroid/system/keystore2/KeyDescriptor;
++    invoke-virtual {p0, v1}, Lio/lichlabs/lich/KeyboxDbHelper;->fetchKeyEntries(Ljava/lang/String;)[Landroid/system/keystore2/KeyDescriptor;
 +
 +    move-result-object p0
 +
@@ -5833,7 +5905,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v0
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
 +
 +    array-length p0, p0
 +
@@ -5852,7 +5924,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    const-string v0, "Imported key with alias \""
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
 +
 +    move-result v1
 +
@@ -5883,11 +5955,11 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v2
 +
 +    :cond_2
-+    new-instance v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;
++    new-instance v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;
 +
-+    invoke-direct {v1, p1}, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;-><init>([Landroid/hardware/security/keymint/KeyParameter;)V
++    invoke-direct {v1, p1}, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;-><init>([Landroid/hardware/security/keymint/KeyParameter;)V
 +
-+    iget p1, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget p1, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    const/4 v3, 0x3
 +
@@ -5895,14 +5967,14 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    if-eq p1, v3, :cond_3
 +
-+    iget p1, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget p1, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    if-eq p1, v4, :cond_3
 +
 +    return-object v2
 +
 +    :cond_3
-+    iget-object p1, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object p1, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    const/4 v3, 0x7
 +
@@ -5916,7 +5988,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    if-eqz p1, :cond_8
 +
-+    iget-object p1, v1, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object p1, v1, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    invoke-interface {p1}, Ljava/util/List;->size()I
 +
@@ -5928,7 +6000,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    :cond_4
 +    :try_start_0
-+    sget p1, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
++    sget p1, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
 +
 +    const/4 v3, 0x2
 +
@@ -5970,13 +6042,13 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    invoke-static {v4, v5}, Ljava/lang/Thread;->sleep(J)V
 +
 +    :goto_0
-+    invoke-static {p2}, Lio/mesalabs/lich/KeyboxUtils;->generateKeyPairFromKeyData([B)Ljava/security/KeyPair;
++    invoke-static {p2}, Lio/lichlabs/lich/KeyboxUtils;->generateKeyPairFromKeyData([B)Ljava/security/KeyPair;
 +
 +    move-result-object p1
 +
-+    sget p2, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
++    sget p2, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
 +
-+    invoke-static {v2, v1, p0, p2, v3}, Lio/mesalabs/lich/KeyboxImitationHooks;->buildMetadata(Ljava/util/List;Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;Landroid/system/keystore2/KeyDescriptor;II)Landroid/system/keystore2/KeyMetadata;
++    invoke-static {v2, v1, p0, p2, v3}, Lio/lichlabs/lich/KeyboxImitationHooks;->buildMetadata(Ljava/util/List;Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;Landroid/system/keystore2/KeyDescriptor;II)Landroid/system/keystore2/KeyMetadata;
 +
 +    move-result-object p2
 +
@@ -5985,7 +6057,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v2
 +
 +    :cond_6
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxDbHelper;->getInstance()Lio/mesalabs/lich/KeyboxDbHelper;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxDbHelper;->getInstance()Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    move-result-object v1
 +
@@ -5993,7 +6065,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iget-object v3, p0, Landroid/system/keystore2/KeyDescriptor;->alias:Ljava/lang/String;
 +
-+    invoke-virtual {v1, v3, p1, p2}, Lio/mesalabs/lich/KeyboxDbHelper;->storeKeyData(Ljava/lang/String;Ljava/security/KeyPair;Landroid/system/keystore2/KeyMetadata;)V
++    invoke-virtual {v1, v3, p1, p2}, Lio/lichlabs/lich/KeyboxDbHelper;->storeKeyData(Ljava/lang/String;Ljava/security/KeyPair;Landroid/system/keystore2/KeyMetadata;)V
 +
 +    :cond_7
 +    new-instance p1, Ljava/lang/StringBuilder;
@@ -6024,7 +6096,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object p0
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
 +    :try_end_0
 +    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
 +
@@ -6047,7 +6119,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +.method public static blacklist onListEntries(I)[Landroid/system/keystore2/KeyDescriptor;
 +    .locals 2
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
 +
 +    move-result v0
 +
@@ -6063,7 +6135,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v1
 +
 +    :cond_1
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxDbHelper;->getInstance()Lio/mesalabs/lich/KeyboxDbHelper;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxDbHelper;->getInstance()Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    move-result-object p0
 +
@@ -6072,7 +6144,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v1
 +
 +    :cond_2
-+    invoke-virtual {p0, v1}, Lio/mesalabs/lich/KeyboxDbHelper;->fetchKeyEntries(Ljava/lang/String;)[Landroid/system/keystore2/KeyDescriptor;
++    invoke-virtual {p0, v1}, Lio/lichlabs/lich/KeyboxDbHelper;->fetchKeyEntries(Ljava/lang/String;)[Landroid/system/keystore2/KeyDescriptor;
 +
 +    move-result-object p0
 +
@@ -6100,7 +6172,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object v0
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
 +
 +    return-object p0
 +
@@ -6111,7 +6183,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +.method public static blacklist onListEntriesBatched(ILjava/lang/String;)[Landroid/system/keystore2/KeyDescriptor;
 +    .locals 2
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
 +
 +    move-result v0
 +
@@ -6127,7 +6199,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v1
 +
 +    :cond_1
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxDbHelper;->getInstance()Lio/mesalabs/lich/KeyboxDbHelper;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxDbHelper;->getInstance()Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    move-result-object p0
 +
@@ -6136,7 +6208,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return-object v1
 +
 +    :cond_2
-+    invoke-virtual {p0, p1}, Lio/mesalabs/lich/KeyboxDbHelper;->fetchKeyEntries(Ljava/lang/String;)[Landroid/system/keystore2/KeyDescriptor;
++    invoke-virtual {p0, p1}, Lio/lichlabs/lich/KeyboxDbHelper;->fetchKeyEntries(Ljava/lang/String;)[Landroid/system/keystore2/KeyDescriptor;
 +
 +    move-result-object p0
 +
@@ -6174,7 +6246,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object p1
 +
-+    invoke-static {p1}, Lio/mesalabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {p1}, Lio/lichlabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
 +
 +    return-object p0
 +
@@ -6185,7 +6257,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +.method public static blacklist onUpdateSubcomponent(Landroid/system/keystore2/KeyDescriptor;[B[B)Z
 +    .locals 5
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->isKeyboxAvailable()Z
 +
 +    move-result v0
 +
@@ -6196,7 +6268,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +    return v1
 +
 +    :cond_0
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxUtils;->fetchKeyData(Landroid/system/keystore2/KeyDescriptor;)Landroid/util/Pair;
 +
 +    move-result-object v0
 +
@@ -6212,7 +6284,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    iput-object p2, v2, Landroid/system/keystore2/KeyMetadata;->certificateChain:[B
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxDbHelper;->getInstance()Lio/mesalabs/lich/KeyboxDbHelper;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxDbHelper;->getInstance()Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    move-result-object p1
 +
@@ -6224,7 +6296,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    check-cast p2, Ljava/security/KeyPair;
 +
-+    invoke-virtual {p1, v3, v4, p2, v2}, Lio/mesalabs/lich/KeyboxDbHelper;->updateKeyData(JLjava/security/KeyPair;Landroid/system/keystore2/KeyMetadata;)V
++    invoke-virtual {p1, v3, v4, p2, v2}, Lio/lichlabs/lich/KeyboxDbHelper;->updateKeyData(JLjava/security/KeyPair;Landroid/system/keystore2/KeyMetadata;)V
 +
 +    new-instance p1, Ljava/lang/StringBuilder;
 +
@@ -6256,7 +6328,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +
 +    move-result-object p0
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxImitationHooks;->dlog(Ljava/lang/String;)V
 +
 +    const/4 p0, 0x1
 +
@@ -6269,24 +6341,25 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxImitationHooks.smali b
 +.method public static blacklist setSecurityLevel(Landroid/system/keystore2/IKeystoreSecurityLevel;I)V
 +    .locals 0
 +
-+    sput-object p0, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevel:Landroid/system/keystore2/IKeystoreSecurityLevel;
++    sput-object p0, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevel:Landroid/system/keystore2/IKeystoreSecurityLevel;
 +
-+    sput p1, Lio/mesalabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
++    sput p1, Lio/lichlabs/lich/KeyboxImitationHooks;->sSecurityLevelType:I
 +
 +    return-void
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$DecryptOperation.smali b/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$DecryptOperation.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$DecryptOperation.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$DecryptOperation.smali	2026-02-13 21:44:08.032275220 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$DecryptOperation.smali b/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$DecryptOperation.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$DecryptOperation.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$DecryptOperation.smali	2026-06-29 15:34:52.021797245 -0500
 @@ -0,0 +1,248 @@
-+.class final Lio/mesalabs/lich/KeyboxOperationUtils$DecryptOperation;
++.class final Lio/lichlabs/lich/KeyboxOperationUtils$DecryptOperation;
 +.super Landroid/system/keystore2/IKeystoreOperation$Stub;
 +.source "KeyboxOperationUtils.java"
 +
 +
 +# annotations
 +.annotation system Ldalvik/annotation/EnclosingClass;
-+    value = Lio/mesalabs/lich/KeyboxOperationUtils;
++    value = Lio/lichlabs/lich/KeyboxOperationUtils;
 +.end annotation
 +
 +.annotation system Ldalvik/annotation/InnerClass;
@@ -6314,7 +6387,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$Decrypt
 +
 +    move-result-object p2
 +
-+    iput-object p2, p0, Lio/mesalabs/lich/KeyboxOperationUtils$DecryptOperation;->cipher:Ljavax/crypto/Cipher;
++    iput-object p2, p0, Lio/lichlabs/lich/KeyboxOperationUtils$DecryptOperation;->cipher:Ljavax/crypto/Cipher;
 +
 +    const/4 p0, 0x2
 +
@@ -6327,7 +6400,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$Decrypt
 +    :cond_0
 +    invoke-virtual {p3}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
 +
-+    invoke-static {p3}, Lio/mesalabs/lich/KeyboxUtils;->getDecryptDigest(Ljava/lang/Integer;)Ljava/lang/String;
++    invoke-static {p3}, Lio/lichlabs/lich/KeyboxUtils;->getDecryptDigest(Ljava/lang/Integer;)Ljava/lang/String;
 +
 +    move-result-object p3
 +
@@ -6465,7 +6538,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$Decrypt
 +    if-nez p1, :cond_0
 +
 +    :try_start_0
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$DecryptOperation;->cipher:Ljavax/crypto/Cipher;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$DecryptOperation;->cipher:Ljavax/crypto/Cipher;
 +
 +    invoke-virtual {p0}, Ljavax/crypto/Cipher;->doFinal()[B
 +
@@ -6474,7 +6547,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$Decrypt
 +    return-object p0
 +
 +    :cond_0
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$DecryptOperation;->cipher:Ljavax/crypto/Cipher;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$DecryptOperation;->cipher:Ljavax/crypto/Cipher;
 +
 +    invoke-virtual {p0, p1}, Ljavax/crypto/Cipher;->doFinal([B)[B
 +
@@ -6513,7 +6586,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$Decrypt
 +.method public blacklist update([B)[B
 +    .locals 0
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$DecryptOperation;->cipher:Ljavax/crypto/Cipher;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$DecryptOperation;->cipher:Ljavax/crypto/Cipher;
 +
 +    invoke-virtual {p0, p1}, Ljavax/crypto/Cipher;->update([B)[B
 +
@@ -6527,18 +6600,19 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$Decrypt
 +
 +    return-void
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation.smali b/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation.smali	2026-02-13 21:44:08.032486272 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation.smali b/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation.smali	2026-06-29 15:35:23.341021078 -0500
 @@ -0,0 +1,169 @@
-+.class final Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;
++.class final Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;
 +.super Landroid/system/keystore2/IKeystoreOperation$Stub;
 +.source "KeyboxOperationUtils.java"
 +
 +
 +# annotations
 +.annotation system Ldalvik/annotation/EnclosingClass;
-+    value = Lio/mesalabs/lich/KeyboxOperationUtils;
++    value = Lio/lichlabs/lich/KeyboxOperationUtils;
 +.end annotation
 +
 +.annotation system Ldalvik/annotation/InnerClass;
@@ -6568,7 +6642,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgre
 +
 +    invoke-direct {v0}, Ljava/io/ByteArrayOutputStream;-><init>()V
 +
-+    iput-object v0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->output:Ljava/io/ByteArrayOutputStream;
++    iput-object v0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->output:Ljava/io/ByteArrayOutputStream;
 +
 +    const-string v0, "ECDH"
 +
@@ -6576,7 +6650,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgre
 +
 +    move-result-object v0
 +
-+    iput-object v0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->keyAgreement:Ljavax/crypto/KeyAgreement;
++    iput-object v0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->keyAgreement:Ljavax/crypto/KeyAgreement;
 +
 +    invoke-virtual {v0, p1}, Ljavax/crypto/KeyAgreement;->init(Ljava/security/Key;)V
 +
@@ -6600,7 +6674,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgre
 +    .end annotation
 +
 +    :try_start_0
-+    iget-object p2, p0, Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->output:Ljava/io/ByteArrayOutputStream;
++    iget-object p2, p0, Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->output:Ljava/io/ByteArrayOutputStream;
 +
 +    invoke-virtual {p2, p1}, Ljava/io/ByteArrayOutputStream;->write([B)V
 +
@@ -6612,7 +6686,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgre
 +
 +    new-instance p2, Ljava/security/spec/X509EncodedKeySpec;
 +
-+    iget-object v0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->output:Ljava/io/ByteArrayOutputStream;
++    iget-object v0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->output:Ljava/io/ByteArrayOutputStream;
 +
 +    invoke-virtual {v0}, Ljava/io/ByteArrayOutputStream;->toByteArray()[B
 +
@@ -6624,13 +6698,13 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgre
 +
 +    move-result-object p1
 +
-+    iget-object p2, p0, Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->keyAgreement:Ljavax/crypto/KeyAgreement;
++    iget-object p2, p0, Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->keyAgreement:Ljavax/crypto/KeyAgreement;
 +
 +    const/4 v0, 0x1
 +
 +    invoke-virtual {p2, p1, v0}, Ljavax/crypto/KeyAgreement;->doPhase(Ljava/security/Key;Z)Ljava/security/Key;
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->keyAgreement:Ljavax/crypto/KeyAgreement;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->keyAgreement:Ljavax/crypto/KeyAgreement;
 +
 +    invoke-virtual {p0}, Ljavax/crypto/KeyAgreement;->generateSecret()[B
 +
@@ -6675,7 +6749,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgre
 +    .end annotation
 +
 +    :try_start_0
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->output:Ljava/io/ByteArrayOutputStream;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;->output:Ljava/io/ByteArrayOutputStream;
 +
 +    invoke-virtual {p0, p1}, Ljava/io/ByteArrayOutputStream;->write([B)V
 +    :try_end_0
@@ -6700,18 +6774,19 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$KeyAgre
 +
 +    return-void
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$SignOperation.smali b/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$SignOperation.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$SignOperation.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$SignOperation.smali	2026-02-13 21:44:08.032614743 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$SignOperation.smali b/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$SignOperation.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$SignOperation.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils$SignOperation.smali	2026-06-29 15:35:58.443396906 -0500
 @@ -0,0 +1,202 @@
-+.class final Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;
++.class final Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;
 +.super Landroid/system/keystore2/IKeystoreOperation$Stub;
 +.source "KeyboxOperationUtils.java"
 +
 +
 +# annotations
 +.annotation system Ldalvik/annotation/EnclosingClass;
-+    value = Lio/mesalabs/lich/KeyboxOperationUtils;
++    value = Lio/lichlabs/lich/KeyboxOperationUtils;
 +.end annotation
 +
 +.annotation system Ldalvik/annotation/InnerClass;
@@ -6751,24 +6826,24 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$SignOpe
 +
 +    move-result-object p2
 +
-+    iput-object p2, p0, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;->cipher:Ljavax/crypto/Cipher;
++    iput-object p2, p0, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;->cipher:Ljavax/crypto/Cipher;
 +
 +    const/4 v0, 0x1
 +
 +    invoke-virtual {p2, v0, p1}, Ljavax/crypto/Cipher;->init(ILjava/security/Key;)V
 +
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;->signature:Ljava/security/Signature;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;->signature:Ljava/security/Signature;
 +
 +    return-void
 +
 +    :cond_0
-+    iput-object v1, p0, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;->cipher:Ljavax/crypto/Cipher;
++    iput-object v1, p0, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;->cipher:Ljavax/crypto/Cipher;
 +
 +    invoke-static {p2}, Ljava/security/Signature;->getInstance(Ljava/lang/String;)Ljava/security/Signature;
 +
 +    move-result-object p2
 +
-+    iput-object p2, p0, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;->signature:Ljava/security/Signature;
++    iput-object p2, p0, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;->signature:Ljava/security/Signature;
 +
 +    invoke-virtual {p2, p1}, Ljava/security/Signature;->initSign(Ljava/security/PrivateKey;)V
 +
@@ -6792,7 +6867,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$SignOpe
 +    .end annotation
 +
 +    :try_start_0
-+    iget-object p2, p0, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;->cipher:Ljavax/crypto/Cipher;
++    iget-object p2, p0, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;->cipher:Ljavax/crypto/Cipher;
 +
 +    if-eqz p2, :cond_1
 +
@@ -6812,13 +6887,13 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$SignOpe
 +    return-object p0
 +
 +    :cond_1
-+    iget-object p2, p0, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;->signature:Ljava/security/Signature;
++    iget-object p2, p0, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;->signature:Ljava/security/Signature;
 +
 +    if-eqz p2, :cond_2
 +
 +    invoke-virtual {p2, p1}, Ljava/security/Signature;->update([B)V
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;->signature:Ljava/security/Signature;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;->signature:Ljava/security/Signature;
 +
 +    invoke-virtual {p0}, Ljava/security/Signature;->sign()[B
 +
@@ -6868,7 +6943,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$SignOpe
 +    .end annotation
 +
 +    :try_start_0
-+    iget-object v0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;->cipher:Ljavax/crypto/Cipher;
++    iget-object v0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;->cipher:Ljavax/crypto/Cipher;
 +
 +    if-eqz v0, :cond_0
 +
@@ -6877,7 +6952,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$SignOpe
 +    goto :goto_0
 +
 +    :cond_0
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;->signature:Ljava/security/Signature;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;->signature:Ljava/security/Signature;
 +
 +    if-eqz p0, :cond_1
 +
@@ -6906,11 +6981,12 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils$SignOpe
 +
 +    return-void
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils.smali b/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils.smali	2026-02-13 21:44:08.032748450 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils.smali b/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxOperationUtils.smali	2026-06-29 15:36:23.729036363 -0500
 @@ -0,0 +1,127 @@
-+.class final Lio/mesalabs/lich/KeyboxOperationUtils;
++.class final Lio/lichlabs/lich/KeyboxOperationUtils;
 +.super Ljava/lang/Object;
 +.source "KeyboxOperationUtils.java"
 +
@@ -6918,9 +6994,9 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils.smali b
 +# annotations
 +.annotation system Ldalvik/annotation/MemberClasses;
 +    value = {
-+        Lio/mesalabs/lich/KeyboxOperationUtils$DecryptOperation;,
-+        Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;,
-+        Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;
++        Lio/lichlabs/lich/KeyboxOperationUtils$DecryptOperation;,
++        Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;,
++        Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;
 +    }
 +.end annotation
 +
@@ -6956,7 +7032,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils.smali b
 +
 +    const/4 v0, 0x0
 +
-+    invoke-static {p0, p1, v0, v0}, Lio/mesalabs/lich/KeyboxOperationUtils;->getDecryptOperation(Ljava/security/PrivateKey;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)Landroid/system/keystore2/CreateOperationResponse;
++    invoke-static {p0, p1, v0, v0}, Lio/lichlabs/lich/KeyboxOperationUtils;->getDecryptOperation(Ljava/security/PrivateKey;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)Landroid/system/keystore2/CreateOperationResponse;
 +
 +    move-result-object p0
 +
@@ -6975,15 +7051,15 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils.smali b
 +
 +    invoke-direct {v0}, Landroid/system/keystore2/CreateOperationResponse;-><init>()V
 +
-+    new-instance v1, Lio/mesalabs/lich/KeyboxOperationUtils$DecryptOperation;
++    new-instance v1, Lio/lichlabs/lich/KeyboxOperationUtils$DecryptOperation;
 +
-+    invoke-direct {v1, p0, p1, p2, p3}, Lio/mesalabs/lich/KeyboxOperationUtils$DecryptOperation;-><init>(Ljava/security/PrivateKey;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)V
++    invoke-direct {v1, p0, p1, p2, p3}, Lio/lichlabs/lich/KeyboxOperationUtils$DecryptOperation;-><init>(Ljava/security/PrivateKey;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)V
 +
 +    iput-object v1, v0, Landroid/system/keystore2/CreateOperationResponse;->iOperation:Landroid/system/keystore2/IKeystoreOperation;
 +
 +    const-string p0, "Called createOperation with purpose DECRYPT"
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxOperationUtils;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxOperationUtils;->dlog(Ljava/lang/String;)V
 +
 +    return-object v0
 +.end method
@@ -7000,15 +7076,15 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils.smali b
 +
 +    invoke-direct {v0}, Landroid/system/keystore2/CreateOperationResponse;-><init>()V
 +
-+    new-instance v1, Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;
++    new-instance v1, Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;
 +
-+    invoke-direct {v1, p0}, Lio/mesalabs/lich/KeyboxOperationUtils$KeyAgreementOperation;-><init>(Ljava/security/PrivateKey;)V
++    invoke-direct {v1, p0}, Lio/lichlabs/lich/KeyboxOperationUtils$KeyAgreementOperation;-><init>(Ljava/security/PrivateKey;)V
 +
 +    iput-object v1, v0, Landroid/system/keystore2/CreateOperationResponse;->iOperation:Landroid/system/keystore2/IKeystoreOperation;
 +
 +    const-string p0, "Called createOperation with purpose AGREE_KEY"
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxOperationUtils;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxOperationUtils;->dlog(Ljava/lang/String;)V
 +
 +    return-object v0
 +.end method
@@ -7025,23 +7101,24 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxOperationUtils.smali b
 +
 +    invoke-direct {v0}, Landroid/system/keystore2/CreateOperationResponse;-><init>()V
 +
-+    new-instance v1, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;
++    new-instance v1, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;
 +
-+    invoke-direct {v1, p0, p1}, Lio/mesalabs/lich/KeyboxOperationUtils$SignOperation;-><init>(Ljava/security/PrivateKey;Ljava/lang/String;)V
++    invoke-direct {v1, p0, p1}, Lio/lichlabs/lich/KeyboxOperationUtils$SignOperation;-><init>(Ljava/security/PrivateKey;Ljava/lang/String;)V
 +
 +    iput-object v1, v0, Landroid/system/keystore2/CreateOperationResponse;->iOperation:Landroid/system/keystore2/IKeystoreOperation;
 +
 +    const-string p0, "Called createOperation with purpose SIGN"
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxOperationUtils;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxOperationUtils;->dlog(Ljava/lang/String;)V
 +
 +    return-object v0
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils$$ExternalSyntheticLambda0.smali b/smali_classes6/io/mesalabs/lich/KeyboxUtils$$ExternalSyntheticLambda0.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxUtils$$ExternalSyntheticLambda0.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxUtils$$ExternalSyntheticLambda0.smali	2026-02-13 21:44:08.032874017 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxUtils$$ExternalSyntheticLambda0.smali b/smali_classes7/io/lichlabs/lich/KeyboxUtils$$ExternalSyntheticLambda0.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxUtils$$ExternalSyntheticLambda0.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxUtils$$ExternalSyntheticLambda0.smali	2026-06-29 15:36:51.566775499 -0500
 @@ -0,0 +1,30 @@
-+.class public final synthetic Lio/mesalabs/lich/KeyboxUtils$$ExternalSyntheticLambda0;
++.class public final synthetic Lio/lichlabs/lich/KeyboxUtils$$ExternalSyntheticLambda0;
 +.super Ljava/lang/Object;
 +.source "D8$$SyntheticClass"
 +
@@ -7065,17 +7142,18 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils$$ExternalSynthet
 +
 +    check-cast p1, Ljava/lang/StackTraceElement;
 +
-+    invoke-static {p1}, Lio/mesalabs/lich/KeyboxUtils;->lambda$isCallerSamsungKeystoreUtils$0(Ljava/lang/StackTraceElement;)Z
++    invoke-static {p1}, Lio/lichlabs/lich/KeyboxUtils;->lambda$isCallerSamsungKeystoreUtils$0(Ljava/lang/StackTraceElement;)Z
 +
 +    move-result p0
 +
 +    return p0
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali
---- a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali	2026-02-13 21:44:08.032958466 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyboxUtils.smali b/smali_classes7/io/lichlabs/lich/KeyboxUtils.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyboxUtils.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyboxUtils.smali	2026-06-29 15:47:07.564391382 -0500
 @@ -0,0 +1,2117 @@
-+.class final Lio/mesalabs/lich/KeyboxUtils;
++.class final Lio/lichlabs/lich/KeyboxUtils;
 +.super Ljava/lang/Object;
 +.source "KeyboxUtils.java"
 +
@@ -7154,7 +7232,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +        }
 +    .end annotation
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->getProvider()Lio/mesalabs/lich/IKeyboxProvider;
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->getProvider()Lio/lichlabs/lich/IKeyboxProvider;
 +
 +    move-result-object v0
 +
@@ -7166,14 +7244,14 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    if-eqz p0, :cond_0
 +
-+    invoke-interface {v0}, Lio/mesalabs/lich/IKeyboxProvider;->getEcCertificateChain()[Ljava/lang/String;
++    invoke-interface {v0}, Lio/lichlabs/lich/IKeyboxProvider;->getEcCertificateChain()[Ljava/lang/String;
 +
 +    move-result-object p0
 +
 +    goto :goto_0
 +
 +    :cond_0
-+    invoke-interface {v0}, Lio/mesalabs/lich/IKeyboxProvider;->getRsaCertificateChain()[Ljava/lang/String;
++    invoke-interface {v0}, Lio/lichlabs/lich/IKeyboxProvider;->getRsaCertificateChain()[Ljava/lang/String;
 +
 +    move-result-object p0
 +
@@ -7191,7 +7269,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    aget-object v3, p0, v2
 +
-+    invoke-static {v3}, Lio/mesalabs/lich/KeyboxUtils;->parseCertificate(Ljava/lang/String;)Ljava/security/cert/X509Certificate;
++    invoke-static {v3}, Lio/lichlabs/lich/KeyboxUtils;->parseCertificate(Ljava/lang/String;)Ljava/security/cert/X509Certificate;
 +
 +    move-result-object v3
 +
@@ -7213,7 +7291,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +        }
 +    .end annotation
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->getProvider()Lio/mesalabs/lich/IKeyboxProvider;
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->getProvider()Lio/lichlabs/lich/IKeyboxProvider;
 +
 +    move-result-object v0
 +
@@ -7227,7 +7305,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    if-eqz p0, :cond_0
 +
-+    invoke-interface {v0}, Lio/mesalabs/lich/IKeyboxProvider;->getEcCertificateChain()[Ljava/lang/String;
++    invoke-interface {v0}, Lio/lichlabs/lich/IKeyboxProvider;->getEcCertificateChain()[Ljava/lang/String;
 +
 +    move-result-object p0
 +
@@ -7236,14 +7314,14 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +    goto :goto_0
 +
 +    :cond_0
-+    invoke-interface {v0}, Lio/mesalabs/lich/IKeyboxProvider;->getRsaCertificateChain()[Ljava/lang/String;
++    invoke-interface {v0}, Lio/lichlabs/lich/IKeyboxProvider;->getRsaCertificateChain()[Ljava/lang/String;
 +
 +    move-result-object p0
 +
 +    aget-object p0, p0, v1
 +
 +    :goto_0
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxUtils;->decodePemOrBase64(Ljava/lang/String;)[B
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxUtils;->decodePemOrBase64(Ljava/lang/String;)[B
 +
 +    move-result-object p0
 +
@@ -7283,7 +7361,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +    return-object v1
 +
 +    :cond_0
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxDbHelper;->getInstance()Lio/mesalabs/lich/KeyboxDbHelper;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxDbHelper;->getInstance()Lio/lichlabs/lich/KeyboxDbHelper;
 +
 +    move-result-object v0
 +
@@ -7307,7 +7385,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +    int-to-long v3, p0
 +
 +    :cond_2
-+    invoke-virtual {v0, v3, v4}, Lio/mesalabs/lich/KeyboxDbHelper;->fetchKeyData(J)Landroid/util/Pair;
++    invoke-virtual {v0, v3, v4}, Lio/lichlabs/lich/KeyboxDbHelper;->fetchKeyData(J)Landroid/util/Pair;
 +
 +    move-result-object p0
 +
@@ -7322,7 +7400,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +        }
 +    .end annotation
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->getProvider()Lio/mesalabs/lich/IKeyboxProvider;
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->getProvider()Lio/lichlabs/lich/IKeyboxProvider;
 +
 +    move-result-object v0
 +
@@ -7334,26 +7412,26 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    if-eqz v1, :cond_0
 +
-+    invoke-interface {v0}, Lio/mesalabs/lich/IKeyboxProvider;->getEcPrivateKey()Ljava/lang/String;
++    invoke-interface {v0}, Lio/lichlabs/lich/IKeyboxProvider;->getEcPrivateKey()Ljava/lang/String;
 +
 +    move-result-object v0
 +
 +    goto :goto_0
 +
 +    :cond_0
-+    invoke-interface {v0}, Lio/mesalabs/lich/IKeyboxProvider;->getRsaPrivateKey()Ljava/lang/String;
++    invoke-interface {v0}, Lio/lichlabs/lich/IKeyboxProvider;->getRsaPrivateKey()Ljava/lang/String;
 +
 +    move-result-object v0
 +
 +    :goto_0
-+    invoke-static {v0, p0}, Lio/mesalabs/lich/KeyboxUtils;->parsePrivateKey(Ljava/lang/String;Ljava/lang/String;)Ljava/security/PrivateKey;
++    invoke-static {v0, p0}, Lio/lichlabs/lich/KeyboxUtils;->parsePrivateKey(Ljava/lang/String;Ljava/lang/String;)Ljava/security/PrivateKey;
 +
 +    move-result-object p0
 +
 +    return-object p0
 +.end method
 +
-+.method static blacklist generateKeyPair(Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;)Ljava/security/KeyPair;
++.method static blacklist generateKeyPair(Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;)Ljava/security/KeyPair;
 +    .locals 3
 +    .annotation system Ldalvik/annotation/Throws;
 +        value = {
@@ -7361,7 +7439,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +        }
 +    .end annotation
 +
-+    iget v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
 +
@@ -7385,7 +7463,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
 +
-+    iget-object v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurveName:Ljava/lang/String;
++    iget-object v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurveName:Ljava/lang/String;
 +
 +    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 +
@@ -7395,9 +7473,9 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    move-result-object v0
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxUtils;->dlog(Ljava/lang/String;)V
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxUtils;->dlog(Ljava/lang/String;)V
 +
-+    iget-object v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurveName:Ljava/lang/String;
++    iget-object v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurveName:Ljava/lang/String;
 +
 +    const-string v1, "CURVE_25519"
 +
@@ -7426,7 +7504,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +    :cond_0
 +    new-instance v0, Ljava/security/spec/ECGenParameterSpec;
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurveName:Ljava/lang/String;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->ecCurveName:Ljava/lang/String;
 +
 +    invoke-direct {v0, p0}, Ljava/security/spec/ECGenParameterSpec;-><init>(Ljava/lang/String;)V
 +
@@ -7449,7 +7527,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +    return-object p0
 +
 +    :cond_1
-+    iget v0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget v0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
 +
@@ -7473,7 +7551,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    invoke-direct {v0, v1}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
 +
-+    iget v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
++    iget v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
 +
 +    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
 +
@@ -7483,13 +7561,13 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    move-result-object v0
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxUtils;->dlog(Ljava/lang/String;)V
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxUtils;->dlog(Ljava/lang/String;)V
 +
 +    new-instance v0, Ljava/security/spec/RSAKeyGenParameterSpec;
 +
-+    iget v1, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
++    iget v1, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->keySize:I
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->rsaPublicExponent:Ljava/math/BigInteger;
 +
 +    invoke-direct {v0, v1, p0}, Ljava/security/spec/RSAKeyGenParameterSpec;-><init>(ILjava/math/BigInteger;)V
 +
@@ -7520,7 +7598,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    invoke-direct {v1, v2}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
 +
-+    iget p0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
++    iget p0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->algorithm:I
 +
 +    invoke-virtual {v1, p0}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
 +
@@ -8193,10 +8271,10 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +    return-object p0
 +.end method
 +
-+.method static blacklist getKeyUsage(Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;)I
++.method static blacklist getKeyUsage(Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;)I
 +    .locals 2
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyboxChainGenerator$KeyGenParameters;->purpose:Ljava/util/List;
 +
 +    const/4 v0, 0x2
 +
@@ -8382,7 +8460,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +    :catch_0
 +    const/16 v0, 0x20
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxUtils;->randomBytes(I)[B
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxUtils;->randomBytes(I)[B
 +
 +    move-result-object v0
 +
@@ -8657,7 +8735,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +    :catch_0
 +    const/16 v0, 0x20
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxUtils;->randomBytes(I)[B
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxUtils;->randomBytes(I)[B
 +
 +    move-result-object v0
 +
@@ -8752,7 +8830,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +    :catch_0
 +    const/16 v0, 0x20
 +
-+    invoke-static {v0}, Lio/mesalabs/lich/KeyboxUtils;->randomBytes(I)[B
++    invoke-static {v0}, Lio/lichlabs/lich/KeyboxUtils;->randomBytes(I)[B
 +
 +    move-result-object v0
 +
@@ -8774,9 +8852,9 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    move-result-object v0
 +
-+    new-instance v1, Lio/mesalabs/lich/KeyboxUtils$$ExternalSyntheticLambda0;
++    new-instance v1, Lio/lichlabs/lich/KeyboxUtils$$ExternalSyntheticLambda0;
 +
-+    invoke-direct {v1}, Lio/mesalabs/lich/KeyboxUtils$$ExternalSyntheticLambda0;-><init>()V
++    invoke-direct {v1}, Lio/lichlabs/lich/KeyboxUtils$$ExternalSyntheticLambda0;-><init>()V
 +
 +    invoke-interface {v0, v1}, Ljava/util/stream/Stream;->anyMatch(Ljava/util/function/Predicate;)Z
 +
@@ -8809,7 +8887,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +        }
 +    .end annotation
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxUtils;->decodePemOrBase64(Ljava/lang/String;)[B
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxUtils;->decodePemOrBase64(Ljava/lang/String;)[B
 +
 +    move-result-object p0
 +
@@ -8840,11 +8918,11 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +        }
 +    .end annotation
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyboxUtils;->decodePemOrBase64(Ljava/lang/String;)[B
++    invoke-static {p0}, Lio/lichlabs/lich/KeyboxUtils;->decodePemOrBase64(Ljava/lang/String;)[B
 +
 +    move-result-object p0
 +
-+    invoke-static {p0, p1}, Lio/mesalabs/lich/KeyboxUtils;->parsePrivateKey([BLjava/lang/String;)Ljava/security/PrivateKey;
++    invoke-static {p0, p1}, Lio/lichlabs/lich/KeyboxUtils;->parsePrivateKey([BLjava/lang/String;)Ljava/security/PrivateKey;
 +
 +    move-result-object p0
 +
@@ -9192,21 +9270,22 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyboxUtils.smali b/smali_cl
 +
 +    return-void
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider.smali b/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider.smali
---- a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider.smali	2026-02-13 21:44:08.027805322 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider.smali b/smali_classes7/io/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider.smali	2026-06-29 15:41:41.744590827 -0500
 @@ -0,0 +1,709 @@
-+.class Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;
++.class Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;
 +.super Ljava/lang/Object;
 +.source "KeyProviderManager.java"
 +
 +# interfaces
-+.implements Lio/mesalabs/lich/IKeyboxProvider;
++.implements Lio/lichlabs/lich/IKeyboxProvider;
 +
 +
 +# annotations
 +.annotation system Ldalvik/annotation/EnclosingClass;
-+    value = Lio/mesalabs/lich/KeyProviderManager;
++    value = Lio/lichlabs/lich/KeyProviderManager;
 +.end annotation
 +
 +.annotation system Ldalvik/annotation/InnerClass;
@@ -9238,9 +9317,9 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +
 +    invoke-direct {v0}, Ljava/util/HashMap;-><init>()V
 +
-+    iput-object v0, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iput-object v0, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
-+    invoke-static {}, Lio/mesalabs/lich/KeyboxUtils;->getApplicationContext()Landroid/content/Context;
++    invoke-static {}, Lio/lichlabs/lich/KeyboxUtils;->getApplicationContext()Landroid/content/Context;
 +
 +    move-result-object v0
 +
@@ -9255,15 +9334,15 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +    return-void
 +
 +    :cond_0
-+    invoke-direct {p0, v0}, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->loadFromXmlSetting(Landroid/content/Context;)V
++    invoke-direct {p0, v0}, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->loadFromXmlSetting(Landroid/content/Context;)V
 +
 +    return-void
 +.end method
 +
-+.method synthetic constructor blacklist <init>(Lio/mesalabs/lich/KeyProviderManager-IA;)V
++.method synthetic constructor blacklist <init>(Lio/lichlabs/lich/KeyProviderManager-IA;)V
 +    .locals 0
 +
-+    invoke-direct {p0}, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;-><init>()V
++    invoke-direct {p0}, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;-><init>()V
 +
 +    return-void
 +.end method
@@ -9275,7 +9354,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +
 +    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
 +
-+    iget-object v1, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iget-object v1, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
 +    invoke-interface {v1}, Ljava/util/Map;->keySet()Ljava/util/Set;
 +
@@ -9345,7 +9424,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +
 +    if-ge v1, v2, :cond_2
 +
-+    iget-object v2, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iget-object v2, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
 +    invoke-interface {v0, v1}, Ljava/util/List;->get(I)Ljava/lang/Object;
 +
@@ -9564,7 +9643,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +
 +    if-eqz v5, :cond_6
 +
-+    iget-object p1, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iget-object p1, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
 +    new-instance v7, Ljava/lang/StringBuilder;
 +
@@ -9695,7 +9774,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +
 +    add-int/lit8 v6, v6, 0x1
 +
-+    iget-object p1, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iget-object p1, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
 +    new-instance v7, Ljava/lang/StringBuilder;
 +
@@ -9747,7 +9826,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +    return-void
 +
 +    :cond_8
-+    invoke-virtual {p0}, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->hasKeybox()Z
++    invoke-virtual {p0}, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->hasKeybox()Z
 +
 +    move-result p0
 +
@@ -9762,7 +9841,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +    :cond_9
 +    const-string p0, "Loaded keybox from XML setting"
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyProviderManager;->-$$Nest$smdlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/KeyProviderManager;->-$$Nest$smdlog(Ljava/lang/String;)V
 +    :try_end_3
 +    .catch Ljava/lang/Exception; {:try_start_3 .. :try_end_3} :catch_1
 +
@@ -9795,7 +9874,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +
 +    const-string v0, "EC"
 +
-+    invoke-direct {p0, v0}, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->getCertificateChain(Ljava/lang/String;)[Ljava/lang/String;
++    invoke-direct {p0, v0}, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->getCertificateChain(Ljava/lang/String;)[Ljava/lang/String;
 +
 +    move-result-object p0
 +
@@ -9805,7 +9884,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +.method public blacklist getEcPrivateKey()Ljava/lang/String;
 +    .locals 1
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
 +    const-string v0, "EC.PRIV"
 +
@@ -9823,7 +9902,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +
 +    const-string v0, "RSA"
 +
-+    invoke-direct {p0, v0}, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->getCertificateChain(Ljava/lang/String;)[Ljava/lang/String;
++    invoke-direct {p0, v0}, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->getCertificateChain(Ljava/lang/String;)[Ljava/lang/String;
 +
 +    move-result-object p0
 +
@@ -9833,7 +9912,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +.method public blacklist getRsaPrivateKey()Ljava/lang/String;
 +    .locals 1
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
 +    const-string v0, "RSA.PRIV"
 +
@@ -9849,7 +9928,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +.method public blacklist hasKeybox()Z
 +    .locals 3
 +
-+    iget-object v0, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iget-object v0, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
 +    const-string v1, "EC.PRIV"
 +
@@ -9861,7 +9940,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +
 +    if-eqz v0, :cond_2
 +
-+    iget-object v0, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iget-object v0, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
 +    const-string v2, "RSA.PRIV"
 +
@@ -9874,7 +9953,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +    goto :goto_0
 +
 +    :cond_0
-+    iget-object v0, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iget-object v0, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
 +    const-string v2, "EC.CERT_1"
 +
@@ -9884,7 +9963,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +
 +    if-eqz v0, :cond_2
 +
-+    iget-object p0, p0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
++    iget-object p0, p0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;->keyboxData:Ljava/util/Map;
 +
 +    const-string v0, "RSA.CERT_1"
 +
@@ -9905,18 +9984,20 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager$DefaultKe
 +    :goto_0
 +    return v1
 +.end method
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager-IA.smali b/smali_classes6/io/mesalabs/lich/KeyProviderManager-IA.smali
---- a/smali_classes6/io/mesalabs/lich/KeyProviderManager-IA.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyProviderManager-IA.smali	2026-02-13 21:44:08.028383238 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyProviderManager-IA.smali b/smali_classes7/io/lichlabs/lich/KeyProviderManager-IA.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyProviderManager-IA.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyProviderManager-IA.smali	2026-06-29 15:42:17.713092535 -0500
 @@ -0,0 +1,3 @@
-+.class public final synthetic Lio/mesalabs/lich/KeyProviderManager-IA;
++.class public final synthetic Lio/lichlabs/lich/KeyProviderManager-IA;
 +.super Ljava/lang/Object;
 +.source "D8$$SyntheticClass"
-diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager.smali b/smali_classes6/io/mesalabs/lich/KeyProviderManager.smali
---- a/smali_classes6/io/mesalabs/lich/KeyProviderManager.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/mesalabs/lich/KeyProviderManager.smali	2026-02-13 21:44:08.028534548 -0500
+\ No hay ningún carácter de nueva línea al final del archivo
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/KeyProviderManager.smali b/smali_classes7/io/lichlabs/lich/KeyProviderManager.smali
+--- a/smali_classes7/io/lichlabs/lich/KeyProviderManager.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes7/io/lichlabs/lich/KeyProviderManager.smali	2026-06-29 15:42:48.697339719 -0500
 @@ -0,0 +1,91 @@
-+.class public final Lio/mesalabs/lich/KeyProviderManager;
++.class public final Lio/lichlabs/lich/KeyProviderManager;
 +.super Ljava/lang/Object;
 +.source "KeyProviderManager.java"
 +
@@ -9924,7 +10005,7 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager.smali b/s
 +# annotations
 +.annotation system Ldalvik/annotation/MemberClasses;
 +    value = {
-+        Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;
++        Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;
 +    }
 +.end annotation
 +
@@ -9934,14 +10015,14 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager.smali b/s
 +
 +.field private static final blacklist TAG:Ljava/lang/String; = "KeyProviderManager"
 +
-+.field private static blacklist sInstance:Lio/mesalabs/lich/IKeyboxProvider;
++.field private static blacklist sInstance:Lio/lichlabs/lich/IKeyboxProvider;
 +
 +
 +# direct methods
 +.method static bridge synthetic blacklist -$$Nest$smdlog(Ljava/lang/String;)V
 +    .locals 0
 +
-+    invoke-static {p0}, Lio/mesalabs/lich/KeyProviderManager;->dlog(Ljava/lang/String;)V
++    invoke-static {p0}, Lio/lichlabs/lich/KeyProviderManager;->dlog(Ljava/lang/String;)V
 +
 +    return-void
 +.end method
@@ -9960,23 +10041,23 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager.smali b/s
 +    return-void
 +.end method
 +
-+.method public static blacklist getProvider()Lio/mesalabs/lich/IKeyboxProvider;
++.method public static blacklist getProvider()Lio/lichlabs/lich/IKeyboxProvider;
 +    .locals 2
 +
-+    sget-object v0, Lio/mesalabs/lich/KeyProviderManager;->sInstance:Lio/mesalabs/lich/IKeyboxProvider;
++    sget-object v0, Lio/lichlabs/lich/KeyProviderManager;->sInstance:Lio/lichlabs/lich/IKeyboxProvider;
 +
 +    if-nez v0, :cond_0
 +
-+    new-instance v0, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;
++    new-instance v0, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;
 +
 +    const/4 v1, 0x0
 +
-+    invoke-direct {v0, v1}, Lio/mesalabs/lich/KeyProviderManager$DefaultKeyboxProvider;-><init>(Lio/mesalabs/lich/KeyProviderManager-IA;)V
++    invoke-direct {v0, v1}, Lio/lichlabs/lich/KeyProviderManager$DefaultKeyboxProvider;-><init>(Lio/lichlabs/lich/KeyProviderManager-IA;)V
 +
-+    sput-object v0, Lio/mesalabs/lich/KeyProviderManager;->sInstance:Lio/mesalabs/lich/IKeyboxProvider;
++    sput-object v0, Lio/lichlabs/lich/KeyProviderManager;->sInstance:Lio/lichlabs/lich/IKeyboxProvider;
 +
 +    :cond_0
-+    sget-object v0, Lio/mesalabs/lich/KeyProviderManager;->sInstance:Lio/mesalabs/lich/IKeyboxProvider;
++    sget-object v0, Lio/lichlabs/lich/KeyProviderManager;->sInstance:Lio/lichlabs/lich/IKeyboxProvider;
 +
 +    return-object v0
 +.end method
@@ -9997,13 +10078,14 @@ diff --color -ruN a/smali_classes6/io/mesalabs/lich/KeyProviderManager.smali b/s
 +    return v1
 +
 +    :cond_0
-+    invoke-static {}, Lio/mesalabs/lich/KeyProviderManager;->getProvider()Lio/mesalabs/lich/IKeyboxProvider;
++    invoke-static {}, Lio/lichlabs/lich/KeyProviderManager;->getProvider()Lio/lichlabs/lich/IKeyboxProvider;
 +
 +    move-result-object v0
 +
-+    invoke-interface {v0}, Lio/mesalabs/lich/IKeyboxProvider;->hasKeybox()Z
++    invoke-interface {v0}, Lio/lichlabs/lich/IKeyboxProvider;->hasKeybox()Z
 +
 +    move-result v0
 +
 +    return v0
 +.end method
+\ No hay ningún carácter de nueva línea al final del archivo

@@ -1,7 +1,7 @@
 diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeature.smali b/smali_classes6/com/samsung/android/feature/SemFloatingFeature.smali
---- a/smali_classes6/com/samsung/android/feature/SemFloatingFeature.smali	2025-11-24 10:48:48.566302434 -0500
-+++ b/smali_classes6/com/samsung/android/feature/SemFloatingFeature.smali	2025-11-24 11:37:31.634494163 -0500
-@@ -490,7 +490,7 @@
+--- a/smali_classes6/com/samsung/android/feature/SemFloatingFeature.smali	2026-06-29 08:05:48.688592279 -0500
++++ b/smali_classes6/com/samsung/android/feature/SemFloatingFeature.smali	2026-06-29 08:40:40.312507356 -0500
+@@ -486,7 +486,7 @@
  
  # virtual methods
  .method public whitelist getBoolean(Ljava/lang/String;)Z
@@ -10,7 +10,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeatur
  
      const/4 v0, 0x0
  
-@@ -503,6 +503,19 @@
+@@ -499,6 +499,20 @@
      return v0
  
      :cond_0
@@ -27,10 +27,11 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeatur
 +    return p0
 +
 +    :cond_1
++
      iget-object p0, p0, Lcom/samsung/android/feature/SemFloatingFeature;->mFeatureList:Ljava/util/Hashtable;
  
      invoke-virtual {p0, p1}, Ljava/util/Hashtable;->get(Ljava/lang/Object;)Ljava/lang/Object;
-@@ -511,11 +524,11 @@
+@@ -507,11 +521,11 @@
  
      check-cast p0, Ljava/lang/String;
  
@@ -44,7 +45,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeatur
      invoke-static {p0}, Ljava/lang/Boolean;->parseBoolean(Ljava/lang/String;)Z
  
      move-result p0
-@@ -557,6 +570,19 @@
+@@ -553,6 +567,19 @@
      return p0
  
      :cond_0
@@ -64,7 +65,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeatur
      iget-object p0, p0, Lcom/samsung/android/feature/SemFloatingFeature;->mFeatureList:Ljava/util/Hashtable;
  
      invoke-virtual {p0, p1}, Ljava/util/Hashtable;->get(Ljava/lang/Object;)Ljava/lang/Object;
-@@ -565,11 +591,11 @@
+@@ -561,11 +588,11 @@
  
      check-cast p0, Ljava/lang/String;
  
@@ -78,7 +79,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeatur
      invoke-static {p0}, Ljava/lang/Boolean;->parseBoolean(Ljava/lang/String;)Z
  
      move-result p0
-@@ -722,7 +748,7 @@
+@@ -718,7 +745,7 @@
  .end method
  
  .method public whitelist getString(Ljava/lang/String;)Ljava/lang/String;
@@ -87,7 +88,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeatur
  
      const-string v0, ""
  
-@@ -735,6 +761,17 @@
+@@ -731,6 +758,17 @@
      return-object v0
  
      :cond_0
@@ -105,7 +106,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeatur
      iget-object p0, p0, Lcom/samsung/android/feature/SemFloatingFeature;->mFeatureList:Ljava/util/Hashtable;
  
      invoke-virtual {p0, p1}, Ljava/util/Hashtable;->get(Ljava/lang/Object;)Ljava/lang/Object;
-@@ -743,11 +780,12 @@
+@@ -739,11 +777,12 @@
  
      check-cast p0, Ljava/lang/String;
  
@@ -120,7 +121,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeatur
      return-object p0
  .end method
  
-@@ -785,6 +823,17 @@
+@@ -781,6 +820,17 @@
      return-object p0
  
      :cond_0
@@ -138,7 +139,7 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeatur
      iget-object p0, p0, Lcom/samsung/android/feature/SemFloatingFeature;->mFeatureList:Ljava/util/Hashtable;
  
      invoke-virtual {p0, p1}, Ljava/util/Hashtable;->get(Ljava/lang/Object;)Ljava/lang/Object;
-@@ -793,10 +842,11 @@
+@@ -789,10 +839,11 @@
  
      check-cast p0, Ljava/lang/String;
  
@@ -152,9 +153,9 @@ diff --color -ruN a/smali_classes6/com/samsung/android/feature/SemFloatingFeatur
 +    :goto_0
      return-object p0
  .end method
-diff --color -ruN a/smali_classes6/io/lichlabs/lich/FloatingFeatureHooks.smali b/smali_classes6/io/lichlabs/lich/FloatingFeatureHooks.smali
---- a/smali_classes6/io/lichlabs/lich/FloatingFeatureHooks.smali	1969-12-31 19:00:00.000000000 -0500
-+++ b/smali_classes6/io/lichlabs/lich/FloatingFeatureHooks.smali	2025-11-24 11:41:33.104082092 -0500
+diff --color -ruN a/smali_classes7/io/lichlabs/lich/FloatingFeatureHooks.smali b/smali_classes7/io/lichlabs/lich/FloatingFeatureHooks.smali
+--- a/smali_classes8/io/lichlabs/lich/FloatingFeatureHooks.smali	1969-12-31 19:00:00.000000000 -0500
++++ b/smali_classes8/io/lichlabs/lich/FloatingFeatureHooks.smali	2026-06-29 08:42:19.069099347 -0500
 @@ -0,0 +1,184 @@
 +.class public final Lio/lichlabs/lich/FloatingFeatureHooks;
 +.super Ljava/lang/Object;
@@ -340,4 +341,4 @@ diff --color -ruN a/smali_classes6/io/lichlabs/lich/FloatingFeatureHooks.smali b
 +    :cond_1
 +    return-object v0
 +.end method
-\ No newline at end of file
+\ No hay ningún carácter de nueva línea al final del archivo

@@ -539,7 +539,9 @@ get_galaxy_store_url() {
     check_param "PACKAGE" "$1" || return 1
     local package="$1"
     
-    local devices=("SM-S938B" "SM-S901E")
+    #Default "SM-S938B" "SM-S901E"
+
+    local devices=("SM-S948B" "SM-S938B" "SM-S901E")
     local sdk=$(get_prop system "ro.build.version.sdk")
     local oneui=$(get_prop system "ro.build.version.oneui")
     

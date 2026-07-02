@@ -27,6 +27,7 @@ COPY_LIST=(
     "$PRIV_APP/BiometricSetting:BiometricSetting.apk"
     "$PRIV_APP/SecSettings:SecSettings.apk"
     "$PRIV_APP/SecSettingsIntelligence:SecSettingsIntelligence.apk"
+    "$PRIV_APP/SamsungSmartSuggestions:SamsungSmartSuggestions.apk"
     "$PRODUCT_OVERLAY:framework-res__r11sxxx__auto_generated_rro_product.apk"
     "$SYSTEM_UI/SystemUI:SystemUI.apk"
     "$FRAMEWORK:services.jar"
