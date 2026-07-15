@@ -1,5 +1,5 @@
 smali_patch "SamsungSmartSuggestions.apk" "0001-Now-Brief.patch"
-smali_patch "SamsungSmartSuggestions.apk" "0001-NowNudge.patch"
+# smali_patch "SamsungSmartSuggestions.apk" "0001-NowNudge.patch"
 
 # NowNudge
 #SMALI_PATCH "SamsungSmartSuggestions" \

@@ -13,6 +13,7 @@ touch "$STATE_FILE"
 # Target and Platform patch locations
 PATCH_DIRS=(
     "$dir_work/target/$TARGET/patches"
+    "$dir_work/target/$TARGET/mods"
     "$dir_work/platform/customization/mods"
 )
 
