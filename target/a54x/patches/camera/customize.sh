@@ -85,7 +85,6 @@ add system "system/lib64/libImageTagger.camera.samsung.so" "lib64/libImageTagger
 delete vendor "etc/media_codecs_c2.xml"
 delete vendor "etc/media_codecs_performance_c2.xml"
 delete vendor "etc/media_profiles_V1_0.xml"
-add vendor "vendor/lib64/hw/camera.s5e8835.so" "lib64/hw/camera.s5e8835.so"
 add vendor "vendor/etc/media_codecs_c2.xml" "etc/media_codecs_c2.xml"
 add vendor "vendor/etc/media_codecs_performance_c2.xml" "etc/media_codecs_performance_c2.xml"
 add vendor "vendor/etc/media_profiles_V1_0.xml" "etc/media_profiles_V1_0.xml"
