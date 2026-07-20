@@ -197,10 +197,6 @@ build_samloader() {
         folder "samloader" || { log_error "Could not access the samloader directory"; exit 1; }
         
         local cmds=(
-            "git reset --hard"
-            "git apply \"$dir_work/external/patches/samloader/0001-Update-decryption-keys.patch\""
-            "git apply \"$dir_work/external/patches/samloader/0002-Fix-client-request-params.patch\""
-            "git apply \"$dir_work/external/patches/samloader/0003-Add-timeout-to-version.xml-request.patch\""
             "python3 -m venv \"$dir_work/tools/venv\""
             "source \"$dir_work/tools/venv/bin/activate\" && pip3 install ."
         )
