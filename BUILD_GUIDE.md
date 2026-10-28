@@ -1,6 +1,6 @@
 # LichUI ROM Build Guide (Target: Samsung Galaxy A54 5G - a54x)
 
-This comprehensive guide details all the steps necessary to set up your environment, prepare required dependencies, configure stock firmware, and build the **LichUI** custom ROM for the **Samsung Galaxy A54 5G (`a54x` / SM-A546E)** based on the One UI port (Galaxy S23 FE `SM-S711B`).
+This comprehensive guide details all the steps necessary to set up your environment, prepare required dependencies, configure stock firmware, customize patches/mods, and build the **LichUI** custom ROM for the **Samsung Galaxy A54 5G (`a54x` / SM-A546E)** based on the One UI port (Galaxy S23 FE `SM-S711B`).
 
 ---
 
@@ -15,9 +15,13 @@ This comprehensive guide details all the steps necessary to set up your environm
    - [Source Firmware (S23 FE Port Base)](#source-firmware-s23-fe-port-base)
 5. [Building the ROM](#5-building-the-rom)
 6. [Internal Build Pipeline](#6-internal-build-pipeline)
-7. [Build Output](#7-build-output)
-8. [Maintenance and Clean Commands](#8-maintenance-and-clean-commands)
-9. [Troubleshooting](#9-troubleshooting)
+7. [Customizing: Disabling Patches, APK Patches & Mods (`#` Prefix)](#7-customizing-disabling-patches-apk-patches--mods--prefix)
+   - [Disabling Target Patches & Mods](#1-disabling-target-patches--mods)
+   - [Disabling Entire APK / Smali Patch Folders](#2-disabling-entire-apk--smali-patch-folders)
+   - [Disabling Individual `.patch` Files Inside an APK/Smali Module](#3-disabling-individual-patch-files-inside-an-apksmali-module)
+8. [Build Output](#8-build-output)
+9. [Maintenance and Clean Commands](#9-maintenance-and-clean-commands)
+10. [Troubleshooting](#10-troubleshooting)
 
 ---
 
@@ -200,7 +204,74 @@ flowchart TD
 
 ---
 
-## 7. Build Output
+## 7. Customizing: Disabling Patches, APK Patches & Mods (`#` Prefix)
+
+LichUI Builder features an integrated detection mechanism that allows you to easily disable or bypass any patch, mod, or APK/smali modification without deleting any files, simply by prefixing items with `#`.
+
+### 1. Disabling Target Patches & Mods
+General patches and device mods are located in:
+- `target/<device>/patches/` (e.g., `target/a54x/patches/`)
+- `target/<device>/mods/` (e.g., `target/a54x/mods/`)
+- `platform/customization/mods/`
+
+Each patch or mod folder contains a `customize.sh` script (and optional `module.prop`).
+
+- **To disable**: Rename `customize.sh` to `#customize.sh` inside the module folder:
+  ```bash
+  # Example: Disabling camera_mod in target/a54x/mods/camera_mod
+  mv target/a54x/mods/camera_mod/customize.sh target/a54x/mods/camera_mod/#customize.sh
+  ```
+- **How it works**: The patch engine in `scripts/internal/apply_patches.sh` checks for `#customize.sh`. When detected, it skips execution and reports:
+  ```text
+  [Skipped] (Disabled) camera_mod -> target/a54x/mods/camera_mod
+  ```
+- **To re-enable**: Simply rename `#customize.sh` back to `customize.sh`:
+  ```bash
+  mv target/a54x/mods/camera_mod/#customize.sh target/a54x/mods/camera_mod/customize.sh
+  ```
+
+---
+
+### 2. Disabling Entire APK / Smali Patch Folders
+APK and system JAR patches are located in:
+- `platform/customization/patches/essi/`
+- `platform/customization/patches/common/`
+
+- **To disable an entire patch module (Recommended)**: Prefix the patch folder name with `#`:
+  ```bash
+  # Example: Disabling a patch folder named 'knox_bypass'
+  mv platform/customization/patches/essi/knox_bypass platform/customization/patches/essi/#knox_bypass
+  ```
+- **How it works**: `scripts/internal/apktool.sh` checks `[[ "$patch_name" == "#"* ]] && continue`. When the directory name starts with `#`, the builder will completely ignore the patch directory and will not decompile unnecessary APKs/JARs.
+- **Alternative method**: Rename `customize.sh` inside the patch folder to `#customize.sh`:
+  ```bash
+  mv platform/customization/patches/essi/my_patch/customize.sh platform/customization/patches/essi/my_patch/#customize.sh
+  ```
+  The script will detect `#customize.sh` and log `Skipping disabled patch: my_patch`.
+
+---
+
+### 3. Disabling Individual `.patch` Files Inside an APK/Smali Module
+If a patch folder contains multiple diff/patch files (e.g., `0001-fix.patch`, `0002-feature.patch`):
+- **To disable a specific patch file**: Prefix its filename with `#`:
+  ```bash
+  mv 0002-feature.patch #0002-feature.patch
+  ```
+- **How it works**: `scripts/utils/apktool_utils.sh` skips any patch file matching `#*`:
+  ```bash
+  [[ "$(basename "$patch_file")" == "#"* ]] && continue
+  ```
+
+> [!TIP]
+> If you disabled or modified patches on a workspace where patches have already run, clear the patch state flags before rebuilding:
+> ```bash
+> rm -rf out/flags/.applied_patches out/flags/.apktool
+> ```
+> Or run `source ./build.sh clear` to perform a clean build.
+
+---
+
+## 8. Build Output
 
 Upon successful completion (`LichUI for a54x built successfully`), build artifacts will be located in:
 
@@ -214,7 +285,7 @@ This ZIP can be flashed using a custom recovery (such as TWRP or OrangeFox) comp
 
 ---
 
-## 8. Maintenance and Clean Commands
+## 9. Maintenance and Clean Commands
 
 ### Clean Build Workspace
 To clean build artifacts without losing downloaded firmwares in `out/odin/`:
@@ -231,7 +302,7 @@ source ./build.sh clear
 
 ---
 
-## 9. Troubleshooting
+## 10. Troubleshooting
 
 | Issue / Error | Cause | Solution |
 | :--- | :--- | :--- |
