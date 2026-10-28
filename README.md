@@ -1,42 +1,29 @@
 # LichUI - Builder
 
-## System Requirements
+LichUI Builder is an automated build toolchain and patching framework for building the LichUI custom ROM based on Samsung One UI ports.
 
-### System and recomendations
+Currently supported target:
+- **Samsung Galaxy A54 5G (`a54x` / SM-A546E)** (ported from Galaxy S23 FE `SM-S711B`)
 
-Debian-based Linux system. Currently, this project has been tested and is working correctly on Ubuntu 24.04 and Debian 13.
+---
 
-It also works on Arch Linux, but it should be noted that you will need to install the necessary dependencies on Arch, in addition to making the necessary adjustments:
+## System Requirements & Recommendations
 
-Install clang18
+- **Operating System**: Debian-based Linux distribution (tested on Ubuntu 24.04 and Debian 13) or Arch Linux.
+- **Disk Space**: 70–100 GB of free space recommended.
+- **RAM**: 16 GB or 8 GB + Swap.
+
+### Arch Linux Adjustments
 
 ```bash
 yay -S clang18
-```
-
-Add patch in ~/.zshrc or ~/.bashrc
-
-```bash
 export PATH="/usr/lib/llvm18/bin:$PATH"
 ```
 
-```bash
-source ~/.zshrc
-```
-
-### Font for terminal aesthetics
-
-```bash
-https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
-```
-
-### Basic Dependencies
+### Basic Dependencies (Debian / Ubuntu)
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-```
-
-```bash
 sudo apt install -y \
     git npm attr unzip tar g++ gcc xxd \
     python3 python3-pip python3-venv openjdk-21-jdk \
@@ -48,41 +35,30 @@ sudo apt install -y \
     git-lfs zipalign p7zip-full cpio webp
 ```
 
-## How to Start ?
+### Font for Terminal Aesthetics (Optional)
 
-### Clone the repository
+```bash
+https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/JetBrainsMono.zip
+```
 
-Use the following command to clone the repository and all its necessary submodules:
+---
+
+## Quick Start
+
+### 1. Clone Repository with Submodules
 
 ```bash
 git clone --recurse-submodules https://github.com/MrDemonc/LichUI_Builder.git -b sixteen && cd LichUI_Builder
 ```
 
-### How to build
+### 2. Follow the Build Guide
 
-Build tools:
+Building requires downloading and preparing the target stock firmware (`A546EXXUFEYI4`) before running the build scripts. Please refer to:
 
-```bash
-source ./build.sh tools
-```
+👉 **[BUILD_GUIDE.md](BUILD_GUIDE.md)** for detailed firmware placement, tools compilation, and build execution commands.
 
-Build rom:
+---
 
-```bash
-source ./build.sh a54x
-run make_rom
-```
+## Credits
 
-Clear dir work
-
-```bash
-source ./build.sh clear
-```
-
-### Where is the built rom ?
-
-The rom and manifest will be in "/out/target/$TARGET/"
-
-### Crédits
-
-This project was inspired by the UN1CA project by developer @Salvogiangri. Several of the smali scripts and patches have been used and modified for this project. Many thanks and credits to @Salvogiangri and the UN1CA development team.
+This project was inspired by the UN1CA project by developer [@Salvogiangri](https://github.com/Salvogiangri). Several smali scripts, tools, and patches have been used and modified for this project. Many thanks and credits to @Salvogiangri and the UN1CA development team.
